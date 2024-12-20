@@ -20,6 +20,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use pxlrbt\FilamentSpotlight\SpotlightPlugin;
 use SolutionForest\FilamentPanphp\Components\PanOverview;
 
 class AdminPanelProvider extends PanelProvider
@@ -45,6 +46,9 @@ class AdminPanelProvider extends PanelProvider
                 AccountWidget::class,
                 FilamentInfoWidget::class,
                 PanOverview::class
+            ])
+            ->plugins([
+                SpotlightPlugin::make(),
             ])
             ->middleware([
                 EncryptCookies::class,
