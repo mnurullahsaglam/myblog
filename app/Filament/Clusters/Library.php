@@ -6,5 +6,9 @@ use Filament\Clusters\Cluster;
 
 class Library extends Cluster
 {
-    protected static ?string $navigationIcon = 'heroicon-o-squares-2x2';
+    protected static ?string $navigationIcon = 'heroicon-o-book-open';
+
+    protected static ?string $navigationLabel = 'Kütüphane';
+
+    protected static ?string $clusterBreadcrumb = 'Kütüphane';
 }
