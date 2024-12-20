@@ -20,11 +20,13 @@ class ListWriters extends ListRecords
         return [
             ImportAction::make()
                 ->importer(WriterImporter::class)
+                ->color('info')
                 ->label('İçe Aktar: Yazarlar'),
             ExportAction::make()
                 ->exporter(WriterExporter::class)
-                ->fileName(fn(Export $export): string => 'Okuma Grubu Yazar Listesi')
-                ->label('Dışa Aktar: Yazarlar'),
+                ->color('success')
+                ->label('Dışa Aktar: Yazarlar')
+                ->fileName(fn(Export $export): string => 'Okuma Grubu Yazar Listesi'),
             CreateAction::make(),
         ];
     }

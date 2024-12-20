@@ -20,11 +20,13 @@ class ListBooks extends ListRecords
         return [
             ImportAction::make()
                 ->importer(BookImporter::class)
+                ->color('info')
                 ->label('İçe Aktar: Kitaplar'),
             ExportAction::make()
                 ->exporter(BookExporter::class)
-                ->fileName(fn(Export $export): string => 'Kitap Listesi')
-                ->label('Dışa Aktar: Kitaplar'),
+                ->color('success')
+                ->label('Dışa Aktar: Kitaplar')
+                ->fileName(fn(Export $export): string => 'Kitap Listesi'),
             CreateAction::make(),
         ];
     }

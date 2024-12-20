@@ -20,11 +20,13 @@ class ListPublishers extends ListRecords
         return [
             ImportAction::make()
                 ->importer(PublisherImporter::class)
+                ->color('info')
                 ->label('İçe Aktar: Yayınevleri'),
             ExportAction::make()
                 ->exporter(PublisherExporter::class)
-                ->fileName(fn(Export $export): string => 'Yayınevi Listesi')
-                ->label('Dışa Aktar: Yayınevleri'),
+                ->color('success')
+                ->label('Dışa Aktar: Yayınevleri')
+                ->fileName(fn(Export $export): string => 'Yayınevi Listesi'),
             CreateAction::make(),
         ];
     }
