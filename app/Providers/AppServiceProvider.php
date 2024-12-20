@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use Filament\Actions\CreateAction;
 use Filament\Actions\ExportAction;
 use Filament\Actions\ImportAction;
 use Filament\Tables\Actions\ExportBulkAction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
@@ -28,6 +30,10 @@ class AppServiceProvider extends ServiceProvider
         URL::forceHttps(app()->isProduction());
 
         Vite::useAggressivePrefetching();
+
+        Gate::define('viewPulse', function (User $user) {
+            return $user->email === config('app.admin_email');
+        });
 
         CreateAction::configureUsing(function (CreateAction $action) {
             $action->icon('heroicon-o-plus');
