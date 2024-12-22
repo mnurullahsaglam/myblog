@@ -2,25 +2,21 @@
 
 namespace App\Models;
 
+use App\Traits\CategoriableRelation;
 use App\Traits\DefaultSlugOptions;
 use App\Traits\SlugAsRouteKeyName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Sluggable\HasSlug;
 
-class Publisher extends Model
+class Post extends Model
 {
-    use HasFactory, HasSlug, SlugAsRouteKeyName, DefaultSlugOptions;
+    use HasFactory, HasSlug, SlugAsRouteKeyName, DefaultSlugOptions, CategoriableRelation;
 
     protected $fillable = [
-        'name',
+        'title',
         'slug',
+        'content',
         'image',
     ];
-
-    public function books(): HasMany
-    {
-        return $this->hasMany(Book::class);
-    }
 }

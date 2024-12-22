@@ -6,6 +6,7 @@ use App\Filament\Clusters\Library;
 use App\Filament\Clusters\Library\Resources\BookResource\Pages\CreateBook;
 use App\Filament\Clusters\Library\Resources\BookResource\Pages\EditBook;
 use App\Filament\Clusters\Library\Resources\BookResource\Pages\ListBooks;
+use App\Filament\Clusters\Library\Resources\BookResource\Widgets\BooksOverview;
 use App\Filament\Exports\BookExporter;
 use App\Models\Book;
 use Filament\Actions\Exports\Models\Export;
@@ -18,7 +19,6 @@ use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ExportBulkAction;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -89,34 +89,22 @@ class BookResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('name')
             ->columns([
+                TextColumn::make('name')
+                    ->label('Kitap Adı')
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('writer.name')
+                    ->label('Yazar')
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('publisher.name')
+                    ->label('Yayınevi')
                     ->searchable()
                     ->sortable(),
-
-                TextColumn::make('name')
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('original_name'),
-
-                TextColumn::make('slug')
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('page_count'),
-
-                TextColumn::make('publication_date'),
-
-                TextColumn::make('publication_location'),
-
-                TextColumn::make('edition_number'),
-
-                ImageColumn::make('image'),
             ])
             ->filters([
                 //
@@ -166,5 +154,12 @@ class BookResource extends Resource
         }
 
         return $details;
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            BooksOverview::class,
+        ];
     }
 }

@@ -19,7 +19,6 @@ use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ExportBulkAction;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
@@ -84,10 +83,14 @@ class WriterResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label('İsim')
                     ->searchable()
                     ->sortable(),
 
-                ImageColumn::make('image'),
+                TextColumn::make('books_count')
+                    ->label('Kitap Sayısı')
+                    ->counts('books')
+                    ->sortable(),
             ])
             ->filters([
                 //

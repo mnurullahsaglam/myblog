@@ -4,6 +4,7 @@ namespace App\Filament\Clusters\Library\Resources\BookResource\Pages;
 
 use App\Filament\Clusters\Library\Imports\BookImporter;
 use App\Filament\Clusters\Library\Resources\BookResource;
+use App\Filament\Clusters\Library\Resources\BookResource\Widgets\BooksOverview;
 use App\Filament\Exports\BookExporter;
 use Filament\Actions\CreateAction;
 use Filament\Actions\ExportAction;
@@ -28,6 +29,13 @@ class ListBooks extends ListRecords
                 ->label('Dışa Aktar: Kitaplar')
                 ->fileName(fn(Export $export): string => 'Kitap Listesi'),
             CreateAction::make(),
+        ];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            BooksOverview::class,
         ];
     }
 }

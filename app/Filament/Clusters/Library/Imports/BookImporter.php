@@ -46,7 +46,6 @@ class BookImporter extends Importer
 
             ImportColumn::make('original_name')
                 ->label('Orijinal Adı')
-                ->requiredMapping()
                 ->rules(['nullable', 'string', 'min:3', 'max:255'])
                 ->exampleHeader('Orijinal Adı'),
 

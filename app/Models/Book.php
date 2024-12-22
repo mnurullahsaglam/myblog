@@ -2,13 +2,17 @@
 
 namespace App\Models;
 
+use App\Traits\CategoriableRelation;
+use App\Traits\DefaultSlugOptions;
+use App\Traits\SlugAsRouteKeyName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\Sluggable\HasSlug;
 
 class Book extends Model
 {
-    use HasFactory;
+    use HasFactory, HasSlug, SlugAsRouteKeyName, DefaultSlugOptions, CategoriableRelation;
 
     protected $fillable = [
         'writer_id',
