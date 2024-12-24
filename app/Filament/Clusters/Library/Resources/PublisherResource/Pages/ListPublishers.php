@@ -7,7 +7,6 @@ use App\Filament\Clusters\Library\Resources\PublisherResource;
 use App\Filament\Exports\PublisherExporter;
 use Filament\Actions\CreateAction;
 use Filament\Actions\ExportAction;
-use Filament\Actions\Exports\Models\Export;
 use Filament\Actions\ImportAction;
 use Filament\Resources\Pages\ListRecords;
 
@@ -21,12 +20,11 @@ class ListPublishers extends ListRecords
             ImportAction::make()
                 ->importer(PublisherImporter::class)
                 ->color('info')
-                ->label('İçe Aktar: Yayınevleri'),
+                ->translateLabel(),
             ExportAction::make()
                 ->exporter(PublisherExporter::class)
                 ->color('success')
-                ->label('Dışa Aktar: Yayınevleri')
-                ->fileName(fn(Export $export): string => 'Yayınevi Listesi'),
+                ->translateLabel(),
             CreateAction::make(),
         ];
     }

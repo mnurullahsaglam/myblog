@@ -1,0 +1,23 @@
+{
+    "Writer": "Yazar",
+    "Publisher": "Yayınevi",
+    "Name": "İsim",
+    "Original name": "Orijinal İsim",
+    "Page count": "Sayfa Sayısı",
+    "Publication date": "Yayın Tarihi",
+    "Publication location": "Yayın Yeri",
+    "Edition number": "Baskı Sayısı",
+    "ISBN": "ISBN",
+    "Image": "Görsel",
+    "Bio": "Biyografi",
+    "Birth year": "Doğum Yılı",
+    "Death year": "Ölüm Yılı",
+    "Birth place": "Doğum Yeri",
+    "Death place": "Ölüm Yeri",
+    "Nationality": "Uyruk",
+    "Books count": "Kitap Sayısı",
+    "Book": "Kitap",
+    "Books": "Kitaplar",
+    "Writers": "Yazarlar",
+    "Publishers": "Yayınevleri"
+}

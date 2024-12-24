@@ -7,7 +7,6 @@ use App\Filament\Clusters\Library\Resources\WriterResource;
 use App\Filament\Exports\WriterExporter;
 use Filament\Actions\CreateAction;
 use Filament\Actions\ExportAction;
-use Filament\Actions\Exports\Models\Export;
 use Filament\Actions\ImportAction;
 use Filament\Resources\Pages\ListRecords;
 
@@ -20,13 +19,10 @@ class ListWriters extends ListRecords
         return [
             ImportAction::make()
                 ->importer(WriterImporter::class)
-                ->color('info')
-                ->label('İçe Aktar: Yazarlar'),
+                ->color('info'),
             ExportAction::make()
                 ->exporter(WriterExporter::class)
-                ->color('success')
-                ->label('Dışa Aktar: Yazarlar')
-                ->fileName(fn(Export $export): string => 'Okuma Grubu Yazar Listesi'),
+                ->color('success'),
             CreateAction::make(),
         ];
     }

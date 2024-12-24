@@ -8,7 +8,6 @@ use App\Filament\Clusters\Library\Resources\BookResource\Widgets\BooksOverview;
 use App\Filament\Exports\BookExporter;
 use Filament\Actions\CreateAction;
 use Filament\Actions\ExportAction;
-use Filament\Actions\Exports\Models\Export;
 use Filament\Actions\ImportAction;
 use Filament\Resources\Pages\ListRecords;
 
@@ -21,13 +20,10 @@ class ListBooks extends ListRecords
         return [
             ImportAction::make()
                 ->importer(BookImporter::class)
-                ->color('info')
-                ->label('İçe Aktar: Kitaplar'),
+                ->color('info'),
             ExportAction::make()
                 ->exporter(BookExporter::class)
-                ->color('success')
-                ->label('Dışa Aktar: Kitaplar')
-                ->fileName(fn(Export $export): string => 'Kitap Listesi'),
+                ->color('success'),
             CreateAction::make(),
         ];
     }

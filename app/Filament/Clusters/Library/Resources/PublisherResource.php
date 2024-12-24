@@ -6,7 +6,6 @@ use App\Filament\Clusters\Library;
 use App\Filament\Clusters\Library\Resources\PublisherResource\Pages\ListPublishers;
 use App\Filament\Exports\PublisherExporter;
 use App\Models\Publisher;
-use Filament\Actions\Exports\Models\Export;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -25,11 +24,17 @@ class PublisherResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $modelLabel = 'Yayınevi';
-
-    protected static ?string $pluralLabel = 'Yayınevleri';
-
     protected static ?string $cluster = Library::class;
+
+    public static function getModelLabel(): string
+    {
+        return __('Publisher');
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return __('Publishers');
+    }
 
     public static function form(Form $form): Form
     {
@@ -40,6 +45,8 @@ class PublisherResource extends Resource
                     ->string()
                     ->minLength(3)
                     ->maxLength(255)
+                    ->autofocus()
+                    ->autocapitalize()
                     ->columnSpanFull(),
             ]);
     }
@@ -49,13 +56,11 @@ class PublisherResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('İsim')
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('books_count')
                     ->counts('books')
-                    ->label('Kitap Sayısı')
                     ->sortable(),
             ])
             ->filters([
@@ -67,9 +72,7 @@ class PublisherResource extends Resource
             ])
             ->bulkActions([
                 ExportBulkAction::make()
-                    ->exporter(PublisherExporter::class)
-                    ->fileName(fn(Export $export): string => 'Yayınevi Listesi')
-                    ->label('Dışa Aktar: Yayınevleri'),
+                    ->exporter(PublisherExporter::class),
                 DeleteBulkAction::make(),
             ]);
     }

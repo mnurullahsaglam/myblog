@@ -9,8 +9,7 @@ use App\Filament\Clusters\Library\Resources\BookResource\Pages\ListBooks;
 use App\Filament\Clusters\Library\Resources\BookResource\Widgets\BooksOverview;
 use App\Filament\Exports\BookExporter;
 use App\Models\Book;
-use Filament\Actions\Exports\Models\Export;
-use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -23,7 +22,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
 class BookResource extends Resource
 {
@@ -33,11 +31,17 @@ class BookResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-book-open';
 
-    protected static ?string $modelLabel = 'Kitap';
-
-    protected static ?string $pluralLabel = 'Kitaplar';
-
     protected static ?string $cluster = Library::class;
+
+    public static function getModelLabel(): string
+    {
+        return __('Book');
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return __('Books');
+    }
 
     public static function form(Form $form): Form
     {
@@ -46,24 +50,42 @@ class BookResource extends Resource
                 Select::make('writer_id')
                     ->relationship('writer', 'name')
                     ->searchable()
-                    ->required(),
+                    ->preload()
+                    ->required()
+                    ->createOptionForm([
+                        TextInput::make('name')
+                            ->label('İsim')
+                            ->required()
+                            ->autofocus()
+                            ->autocapitalize(),
+                    ]),
 
                 Select::make('publisher_id')
                     ->relationship('publisher', 'name')
                     ->searchable()
-                    ->required(),
+                    ->preload()
+                    ->required()
+                    ->createOptionForm([
+                        TextInput::make('name')
+                            ->label('İsim')
+                            ->required()
+                            ->autofocus()
+                            ->autocapitalize(),
+                    ]),
 
                 TextInput::make('name')
                     ->required()
-                    ->reactive()
-                    ->afterStateUpdated(fn($state, callable $set) => $set('slug', Str::slug($state))),
+                    ->string()
+                    ->minLength(3)
+                    ->maxLength(255)
+                    ->autocapitalize()
+                    ->autofocus(),
 
-                TextInput::make('original_name'),
-
-                TextInput::make('slug')
-                    ->disabled()
-                    ->required()
-                    ->unique(Book::class, 'slug', fn($record) => $record),
+                TextInput::make('original_name')
+                    ->string()
+                    ->minLength(3)
+                    ->maxLength(255)
+                    ->autocapitalize(),
 
                 TextInput::make('page_count')
                     ->integer(),
@@ -76,13 +98,10 @@ class BookResource extends Resource
                 TextInput::make('edition_number')
                     ->integer(),
 
-                Placeholder::make('created_at')
-                    ->label('Created Date')
-                    ->content(fn(?Book $record): string => $record?->created_at?->diffForHumans() ?? '-'),
-
-                Placeholder::make('updated_at')
-                    ->label('Last Modified Date')
-                    ->content(fn(?Book $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                FileUpload::make('image')
+                    ->image()
+                    ->directory('books')
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -92,17 +111,14 @@ class BookResource extends Resource
             ->defaultSort('name')
             ->columns([
                 TextColumn::make('name')
-                    ->label('Kitap Adı')
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('writer.name')
-                    ->label('Yazar')
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('publisher.name')
-                    ->label('Yayınevi')
                     ->searchable()
                     ->sortable(),
             ])
@@ -115,9 +131,7 @@ class BookResource extends Resource
             ])
             ->bulkActions([
                 ExportBulkAction::make()
-                    ->exporter(BookExporter::class)
-                    ->fileName(fn(Export $export): string => 'Kitap Listesi')
-                    ->label('Dışa Aktar: Kitaplar'),
+                    ->exporter(BookExporter::class),
                 DeleteBulkAction::make(),
             ]);
     }

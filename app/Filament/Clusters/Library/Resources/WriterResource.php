@@ -8,7 +8,6 @@ use App\Filament\Clusters\Library\Resources\WriterResource\Pages\EditWriter;
 use App\Filament\Clusters\Library\Resources\WriterResource\Pages\ListWriters;
 use App\Filament\Exports\WriterExporter;
 use App\Models\Writer;
-use Filament\Actions\Exports\Models\Export;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
@@ -29,52 +28,51 @@ class WriterResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user';
 
-    protected static ?string $modelLabel = 'Yazar';
-
-    protected static ?string $pluralLabel = 'Yazarlar';
-
     protected static ?string $cluster = Library::class;
+
+    public static function getModelLabel(): string
+    {
+        return __('Writer');
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return __('Writers');
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 TextInput::make('name')
-                    ->label('İsim')
                     ->required()
                     ->maxLength(255)
                     ->autofocus()
                     ->columnSpanFull(),
 
                 FileUpload::make('image')
-                    ->label('Fotoğraf')
                     ->image()
                     ->directory('writers')
                     ->columnSpanFull(),
 
                 RichEditor::make('bio')
-                    ->label('Biyografi')
                     ->maxLength(65535)
                     ->columnSpanFull(),
 
                 TextInput::make('birth_year')
                     ->numeric()
                     ->minValue(0)
-                    ->maxValue(date('Y'))
-                    ->label('Doğum Yılı'),
+                    ->maxValue(date('Y')),
 
                 TextInput::make('death_year')
                     ->numeric()
                     ->minValue(0)
-                    ->maxValue(date('Y'))
-                    ->label('Ölüm Yılı'),
+                    ->maxValue(date('Y')),
 
                 TextInput::make('birth_place')
-                    ->label('Doğum Yeri')
                     ->maxLength(255),
 
                 TextInput::make('death_place')
-                    ->label('Ölüm Yeri')
                     ->maxLength(255),
             ]);
     }
@@ -84,12 +82,10 @@ class WriterResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('İsim')
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('books_count')
-                    ->label('Kitap Sayısı')
                     ->counts('books')
                     ->sortable(),
             ])
@@ -102,9 +98,7 @@ class WriterResource extends Resource
             ])
             ->bulkActions([
                 ExportBulkAction::make()
-                    ->exporter(WriterExporter::class)
-                    ->fileName(fn(Export $export): string => 'Yazar Listesi')
-                    ->label('Dışa Aktar: Yazarlar'),
+                    ->exporter(WriterExporter::class),
                 DeleteBulkAction::make(),
             ]);
     }
