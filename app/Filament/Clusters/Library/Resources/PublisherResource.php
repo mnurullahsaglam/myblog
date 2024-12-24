@@ -31,7 +31,7 @@ class PublisherResource extends Resource
         return __('Publisher');
     }
 
-    public static function getPluralLabel(): ?string
+    public static function getPluralModelLabel(): string
     {
         return __('Publishers');
     }

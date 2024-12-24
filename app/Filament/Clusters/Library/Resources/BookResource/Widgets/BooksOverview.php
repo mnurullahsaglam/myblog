@@ -12,10 +12,10 @@ class BooksOverview extends BaseWidget
     protected function getStats(): array
     {
         return [
-            Stat::make('Kitap Sayısı', $this->getBookCount()),
-            Stat::make('Yazar Sayısı', $this->getWriterCount()),
-            Stat::make('Yayınevi Sayısı', $this->getPublisherCount()),
-            Stat::make('Sayfa Sayısı', $this->getPageCount()),
+            Stat::make(__('Book count'), $this->getBookCount()),
+            Stat::make(__('Writer count'), $this->getWriterCount()),
+            Stat::make(__('Publisher count'), $this->getPublisherCount()),
+            Stat::make(__('Page count'), $this->getPageCount()),
         ];
     }
 

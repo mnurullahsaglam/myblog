@@ -19,12 +19,10 @@ class ListPublishers extends ListRecords
         return [
             ImportAction::make()
                 ->importer(PublisherImporter::class)
-                ->color('info')
-                ->translateLabel(),
+                ->color('info'),
             ExportAction::make()
                 ->exporter(PublisherExporter::class)
-                ->color('success')
-                ->translateLabel(),
+                ->color('success'),
             CreateAction::make(),
         ];
     }
