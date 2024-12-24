@@ -22,7 +22,7 @@ class PublisherResource extends Resource
 
     protected static ?string $slug = 'publishers';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-building-library';
 
     protected static ?string $cluster = Library::class;
 
