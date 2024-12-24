@@ -9,7 +9,6 @@ use App\Filament\Clusters\Library\Resources\WriterResource\Pages\ListWriters;
 use App\Filament\Exports\WriterExporter;
 use App\Models\Writer;
 use Filament\Actions\Exports\Models\Export;
-use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
@@ -21,7 +20,6 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Support\Str;
 
 class WriterResource extends Resource
 {
@@ -42,14 +40,11 @@ class WriterResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')
+                    ->label('İsim')
                     ->required()
-                    ->reactive()
-                    ->afterStateUpdated(fn($state, callable $set) => $set('slug', Str::slug($state))),
-
-                TextInput::make('slug')
-                    ->disabled()
-                    ->required()
-                    ->unique(Writer::class, 'slug', fn($record) => $record),
+                    ->maxLength(255)
+                    ->autofocus()
+                    ->columnSpanFull(),
 
                 FileUpload::make('image')
                     ->label('Fotoğraf')
@@ -62,11 +57,17 @@ class WriterResource extends Resource
                     ->maxLength(65535)
                     ->columnSpanFull(),
 
-                DatePicker::make('birth_date')
-                    ->label('Doğum Tarihi'),
+                TextInput::make('birth_year')
+                    ->numeric()
+                    ->minValue(0)
+                    ->maxValue(date('Y'))
+                    ->label('Doğum Yılı'),
 
-                DatePicker::make('death_date')
-                    ->label('Ölüm Tarihi'),
+                TextInput::make('death_year')
+                    ->numeric()
+                    ->minValue(0)
+                    ->maxValue(date('Y'))
+                    ->label('Ölüm Yılı'),
 
                 TextInput::make('birth_place')
                     ->label('Doğum Yeri')

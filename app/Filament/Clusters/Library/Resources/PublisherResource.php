@@ -9,7 +9,6 @@ use App\Filament\Clusters\Library\Resources\PublisherResource\Pages\ListPublishe
 use App\Filament\Exports\PublisherExporter;
 use App\Models\Publisher;
 use Filament\Actions\Exports\Models\Export;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -43,19 +42,6 @@ class PublisherResource extends Resource
                     ->required()
                     ->reactive()
                     ->afterStateUpdated(fn($state, callable $set) => $set('slug', Str::slug($state))),
-
-                TextInput::make('slug')
-                    ->disabled()
-                    ->required()
-                    ->unique(Publisher::class, 'slug', fn($record) => $record),
-
-                Placeholder::make('created_at')
-                    ->label('Created Date')
-                    ->content(fn(?Publisher $record): string => $record?->created_at?->diffForHumans() ?? '-'),
-
-                Placeholder::make('updated_at')
-                    ->label('Last Modified Date')
-                    ->content(fn(?Publisher $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
             ]);
     }
 
