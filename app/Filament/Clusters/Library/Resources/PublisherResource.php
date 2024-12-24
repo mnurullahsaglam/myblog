@@ -3,8 +3,6 @@
 namespace App\Filament\Clusters\Library\Resources;
 
 use App\Filament\Clusters\Library;
-use App\Filament\Clusters\Library\Resources\PublisherResource\Pages\CreatePublisher;
-use App\Filament\Clusters\Library\Resources\PublisherResource\Pages\EditPublisher;
 use App\Filament\Clusters\Library\Resources\PublisherResource\Pages\ListPublishers;
 use App\Filament\Exports\PublisherExporter;
 use App\Models\Publisher;
@@ -18,7 +16,6 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Support\Str;
 
 class PublisherResource extends Resource
 {
@@ -40,8 +37,10 @@ class PublisherResource extends Resource
             ->schema([
                 TextInput::make('name')
                     ->required()
-                    ->reactive()
-                    ->afterStateUpdated(fn($state, callable $set) => $set('slug', Str::slug($state))),
+                    ->string()
+                    ->minLength(3)
+                    ->maxLength(255)
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -79,8 +78,6 @@ class PublisherResource extends Resource
     {
         return [
             'index' => ListPublishers::route('/'),
-            'create' => CreatePublisher::route('/create'),
-            'edit' => EditPublisher::route('/{record}/edit'),
         ];
     }
 
