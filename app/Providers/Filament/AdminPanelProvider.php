@@ -21,6 +21,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use pxlrbt\FilamentEnvironmentIndicator\EnvironmentIndicatorPlugin;
 use pxlrbt\FilamentSpotlight\SpotlightPlugin;
 use SolutionForest\FilamentPanphp\Components\PanOverview;
 
@@ -53,6 +54,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 SpotlightPlugin::make(),
+                EnvironmentIndicatorPlugin::make(),
             ])
             ->middleware([
                 EncryptCookies::class,
