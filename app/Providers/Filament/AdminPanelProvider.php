@@ -4,6 +4,8 @@ namespace App\Providers\Filament;
 
 use App\Filament\Clusters\Library\Resources\BookResource\Widgets\BooksOverview;
 use App\Filament\Pages\Login;
+use App\Filament\Pages\TasksBoardBoardPage;
+use Devonab\FilamentEasyFooter\EasyFooterPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -44,6 +46,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\\Filament\\Clusters')
             ->pages([
                 Dashboard::class,
+                TasksBoardBoardPage::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
@@ -55,6 +58,10 @@ class AdminPanelProvider extends PanelProvider
             ->plugins([
                 SpotlightPlugin::make(),
                 EnvironmentIndicatorPlugin::make(),
+                EasyFooterPlugin::make()
+                    ->withBorder()
+                    ->withLoadTime()
+                    ->withGithub(),
             ])
             ->middleware([
                 EncryptCookies::class,
