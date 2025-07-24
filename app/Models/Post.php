@@ -12,11 +12,4 @@ use Spatie\Sluggable\HasSlug;
 class Post extends Model
 {
     use HasFactory, HasSlug, SlugAsRouteKeyName, DefaultSlugOptions, CategoriableRelation;
-
-    protected $fillable = [
-        'title',
-        'slug',
-        'content',
-        'image',
-    ];
 }

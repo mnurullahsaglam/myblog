@@ -13,12 +13,6 @@ class Publisher extends Model
 {
     use HasFactory, HasSlug, SlugAsRouteKeyName, DefaultSlugOptions;
 
-    protected $fillable = [
-        'name',
-        'slug',
-        'image',
-    ];
-
     public function books(): HasMany
     {
         return $this->hasMany(Book::class);

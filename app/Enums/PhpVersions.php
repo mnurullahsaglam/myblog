@@ -2,7 +2,10 @@
 
 namespace App\Enums;
 
-enum PhpVersions: string
+use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasLabel;
+
+enum PhpVersions: string implements HasLabel, HasColor
 {
     case PHP_7_4 = '7.4';
     case PHP_8_0 = '8.0';
@@ -11,7 +14,7 @@ enum PhpVersions: string
     case PHP_8_3 = '8.3';
     case PHP_8_4 = '8.4';
 
-    public function label(): string
+    public function getLabel(): string
     {
         return match ($this) {
             self::PHP_7_4 => 'PHP 7.4',
@@ -20,6 +23,15 @@ enum PhpVersions: string
             self::PHP_8_2 => 'PHP 8.2',
             self::PHP_8_3 => 'PHP 8.3',
             self::PHP_8_4 => 'PHP 8.4',
+        };
+    }
+
+    public function getColor(): string|array|null
+    {
+        return match ($this) {
+            self::PHP_7_4, self::PHP_8_0 => 'danger',
+            self::PHP_8_1, self::PHP_8_2 => 'warning',
+            self::PHP_8_3, self::PHP_8_4 => 'success',
         };
     }
 }

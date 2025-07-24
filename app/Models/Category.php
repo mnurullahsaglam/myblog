@@ -13,13 +13,6 @@ class Category extends Model
 {
     use HasFactory, HasSlug, SlugAsRouteKeyName, DefaultSlugOptions;
 
-    protected $fillable = [
-        'name',
-        'slug',
-        'categoriable_id',
-        'categoriable_type',
-    ];
-
     public function categoriable(): MorphTo
     {
         return $this->morphTo();

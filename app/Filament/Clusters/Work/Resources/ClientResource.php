@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Clusters\Work\Resources;
 
+use App\Filament\Clusters\Work;
+use App\Filament\Clusters\Work\Resources;
 use App\Filament\Resources\ClientResource\Pages;
 use App\Models\Client;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -23,11 +24,13 @@ class ClientResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $cluster = Work::class;
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                TextInput::make('name')
+                TextInput::make('title')
                     ->required(),
 
                 TextInput::make('email')
@@ -36,16 +39,11 @@ class ClientResource extends Resource
                 TextInput::make('address')
                     ->required(),
 
-                TextInput::make('tax_no')
+                TextInput::make('country')
                     ->required(),
 
-                Placeholder::make('created_at')
-                    ->label('Created Date')
-                    ->content(fn(?Client $record): string => $record?->created_at?->diffForHumans() ?? '-'),
-
-                Placeholder::make('updated_at')
-                    ->label('Last Modified Date')
-                    ->content(fn(?Client $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                TextInput::make('tax_no')
+                    ->required(),
             ]);
     }
 
@@ -53,7 +51,7 @@ class ClientResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
+                TextColumn::make('title')
                     ->searchable()
                     ->sortable(),
 
@@ -62,6 +60,8 @@ class ClientResource extends Resource
                     ->sortable(),
 
                 TextColumn::make('address'),
+
+                TextColumn::make('country'),
 
                 TextColumn::make('tax_no'),
             ])
@@ -82,9 +82,9 @@ class ClientResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListClients::route('/'),
-            'create' => Pages\CreateClient::route('/create'),
-            'edit' => Pages\EditClient::route('/{record}/edit'),
+            'index' => Resources\ClientResource\Pages\ListClients::route('/'),
+            'create' => Resources\ClientResource\Pages\CreateClient::route('/create'),
+            'edit' => Resources\ClientResource\Pages\EditClient::route('/{record}/edit'),
         ];
     }
 

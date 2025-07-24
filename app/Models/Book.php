@@ -15,26 +15,6 @@ class Book extends Model
 {
     use HasFactory, HasSlug, SlugAsRouteKeyName, DefaultSlugOptions, CategoriableRelation, ImageUrlAttribute;
 
-    protected $fillable = [
-        'writer_id',
-        'publisher_id',
-        'name',
-        'original_name',
-        'slug',
-        'page_count',
-        'publication_date',
-        'publication_location',
-        'edition_number',
-        'image',
-    ];
-
-    protected function casts(): array
-    {
-        return [
-            'publication_date' => 'integer',
-        ];
-    }
-
     public function writer(): BelongsTo
     {
         return $this->belongsTo(Writer::class);
@@ -43,5 +23,12 @@ class Book extends Model
     public function publisher(): BelongsTo
     {
         return $this->belongsTo(Publisher::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'publication_date' => 'integer',
+        ];
     }
 }

@@ -27,6 +27,8 @@ class AppServiceProvider extends ServiceProvider
     {
         DB::prohibitDestructiveCommands(app()->isProduction());
 
+        Model::unguard();
+
         Model::shouldBeStrict();
 
         URL::forceHttps(app()->isProduction());

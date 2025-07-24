@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Clusters\Work\Resources;
 
+use App\Filament\Clusters\Work;
+use App\Filament\Clusters\Work\Resources;
 use App\Filament\Resources\ProjectResource\Pages;
 use App\Models\Project;
 use Filament\Forms\Components\DatePicker;
@@ -27,6 +29,8 @@ class ProjectResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $cluster = Work::class;
+
     public static function form(Form $form): Form
     {
         return $form
@@ -37,7 +41,7 @@ class ProjectResource extends Resource
                 DatePicker::make('due_date'),
 
                 Select::make('client_id')
-                    ->relationship('client', 'name')
+                    ->relationship('client', 'title')
                     ->searchable(),
 
                 Placeholder::make('created_at')
@@ -61,7 +65,7 @@ class ProjectResource extends Resource
                 TextColumn::make('due_date')
                     ->date(),
 
-                TextColumn::make('client.name')
+                TextColumn::make('client.title')
                     ->searchable()
                     ->sortable(),
             ])
@@ -82,9 +86,9 @@ class ProjectResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListProjects::route('/'),
-            'create' => Pages\CreateProject::route('/create'),
-            'edit' => Pages\EditProject::route('/{record}/edit'),
+            'index' => Resources\ProjectResource\Pages\ListProjects::route('/'),
+            'create' => Resources\ProjectResource\Pages\CreateProject::route('/create'),
+            'edit' => Resources\ProjectResource\Pages\EditProject::route('/{record}/edit'),
         ];
     }
 

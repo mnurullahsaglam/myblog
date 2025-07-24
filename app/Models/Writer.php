@@ -13,16 +13,10 @@ class Writer extends Model
 {
     use HasFactory, HasSlug, SlugAsRouteKeyName, DefaultSlugOptions;
 
-    protected $fillable = [
-        'name',
-        'slug',
-        'bio',
-        'birth_place',
-        'death_place',
-        'birth_year',
-        'death_year',
-        'image',
-    ];
+    public function books(): HasMany
+    {
+        return $this->hasMany(Book::class);
+    }
 
     protected function casts(): array
     {
@@ -30,10 +24,5 @@ class Writer extends Model
             'birth_year' => 'integer',
             'death_year' => 'integer',
         ];
-    }
-
-    public function books(): HasMany
-    {
-        return $this->hasMany(Book::class);
     }
 }

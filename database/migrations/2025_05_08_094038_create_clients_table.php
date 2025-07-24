@@ -10,8 +10,9 @@ return new class extends Migration {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
 
-            $table->string('name');
+            $table->string('title');
             $table->string('email');
+            $table->string('country');
             $table->string('address');
             $table->string('tax_no');
 
