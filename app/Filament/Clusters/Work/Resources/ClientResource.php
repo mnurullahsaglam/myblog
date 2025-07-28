@@ -22,7 +22,7 @@ class ClientResource extends Resource
 
     protected static ?string $slug = 'clients';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     protected static ?string $cluster = Work::class;
 

@@ -4,7 +4,6 @@ namespace App\Filament\Clusters\Work\Resources;
 
 use App\Filament\Clusters\Work;
 use App\Filament\Clusters\Work\Resources;
-use App\Filament\Resources\ProjectResource\Pages;
 use App\Models\Project;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Placeholder;
@@ -27,7 +26,7 @@ class ProjectResource extends Resource
 
     protected static ?string $slug = 'projects';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-folder-open';
 
     protected static ?string $cluster = Work::class;
 
