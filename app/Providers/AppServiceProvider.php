@@ -35,6 +35,9 @@ class AppServiceProvider extends ServiceProvider
 
         Vite::useAggressivePrefetching();
 
+        // Register Task Observer for GitHub sync
+        \App\Models\Task::observe(\App\Observers\TaskObserver::class);
+
         Gate::define('viewPulse', function (User $user) {
             return $user->email === config('app.admin_email');
         });
