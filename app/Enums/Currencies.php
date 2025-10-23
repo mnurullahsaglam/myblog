@@ -11,13 +11,18 @@ enum Currencies: string implements HasLabel
     case GBP = 'GBP';
     case TRY = 'TRY';
 
+    case GOLD = 'XAU';
+    case SILVER = 'XAG';
+
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::USD => 'US Dollar (USD)',
-            self::EUR => 'Euro (EUR)',
-            self::GBP => 'British Pound (GBP)',
-            self::TRY => 'Turkish Lira (TRY)',
+            self::USD => 'US Dollar',
+            self::EUR => 'Euro',
+            self::GBP => 'British Pound',
+            self::TRY => 'Turkish Lira',
+            self::GOLD => 'Gold (XAU)',
+            self::SILVER => 'Silver (XAG)',
         };
     }
 
@@ -28,6 +33,7 @@ enum Currencies: string implements HasLabel
             self::EUR => '€',
             self::GBP => '£',
             self::TRY => '₺',
+            self::GOLD, self::SILVER => 'g',
         };
     }
 }

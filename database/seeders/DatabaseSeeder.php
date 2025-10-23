@@ -147,5 +147,174 @@ class DatabaseSeeder extends Seeder
                 Task::create($taskData);
             }
         }
+
+        // Create sample budget data
+        $this->createBudgetData();
+    }
+
+    private function createBudgetData(): void
+    {
+        // Create income categories
+        $incomeCategories = [
+            ['name' => 'Freelance Work', 'description' => 'Income from freelance projects', 'color' => '#10B981'],
+            ['name' => 'Client Payments', 'description' => 'Payments from regular clients', 'color' => '#3B82F6'],
+            ['name' => 'Investment Returns', 'description' => 'Returns from investments', 'color' => '#8B5CF6'],
+            ['name' => 'Other Income', 'description' => 'Miscellaneous income sources', 'color' => '#6B7280'],
+        ];
+
+        foreach ($incomeCategories as $categoryData) {
+            \App\Models\IncomeCategory::create($categoryData);
+        }
+
+        // Create expense categories
+        $expenseCategories = [
+            ['name' => 'Office Supplies', 'description' => 'Office equipment and supplies', 'color' => '#EF4444'],
+            ['name' => 'Software & Tools', 'description' => 'Software subscriptions and tools', 'color' => '#F59E0B'],
+            ['name' => 'Marketing', 'description' => 'Marketing and advertising expenses', 'color' => '#EC4899'],
+            ['name' => 'Travel', 'description' => 'Business travel expenses', 'color' => '#06B6D4'],
+            ['name' => 'Utilities', 'description' => 'Internet, phone, electricity', 'color' => '#84CC16'],
+            ['name' => 'Food & Dining', 'description' => 'Meals and dining expenses', 'color' => '#F97316'],
+        ];
+
+        foreach ($expenseCategories as $categoryData) {
+            \App\Models\ExpenseCategory::create($categoryData);
+        }
+
+        // Create sample debts
+        $debts = [
+            [
+                'creditor_name' => 'Tech Solutions Ltd',
+                'creditor_type' => 'institute',
+                'amount' => 5000.00,
+                'currency' => 'TRY',
+                'due_date' => now()->addDays(15),
+                'status' => 'pending',
+                'description' => 'Payment for web development services',
+                'date' => now()->subDays(20),
+            ],
+            [
+                'creditor_name' => 'John Smith',
+                'creditor_type' => 'person',
+                'amount' => 500.00,
+                'currency' => 'USD',
+                'due_date' => now()->addDays(30),
+                'status' => 'pending',
+                'description' => 'Borrowed money for equipment',
+                'date' => now()->subDays(10),
+            ],
+            [
+                'creditor_name' => 'Design Agency',
+                'creditor_type' => 'institute',
+                'amount' => 2000.00,
+                'currency' => 'TRY',
+                'due_date' => now()->subDays(5), // Overdue
+                'status' => 'pending',
+                'description' => 'Logo design and branding work',
+                'date' => now()->subDays(45),
+            ],
+        ];
+
+        foreach ($debts as $debtData) {
+            \App\Models\Debt::create($debtData);
+        }
+
+        // Create sample incomes
+        $firstClient = \App\Models\Client::first();
+        $incomeCategory = \App\Models\IncomeCategory::first();
+
+        $incomes = [
+            [
+                'client_id' => $firstClient?->id,
+                'income_category_id' => $incomeCategory?->id,
+                'amount' => 15000.00,
+                'currency' => 'TRY',
+                'description' => 'Web development project payment',
+                'date' => now()->subDays(5),
+            ],
+            [
+                'income_category_id' => $incomeCategory?->id,
+                'amount' => 2500.00,
+                'currency' => 'USD',
+                'description' => 'Consulting work for international client',
+                'date' => now()->subDays(10),
+            ],
+            [
+                'income_category_id' => \App\Models\IncomeCategory::skip(2)->first()?->id,
+                'amount' => 750.00,
+                'currency' => 'EUR',
+                'description' => 'Investment dividend payment',
+                'date' => now()->subDays(15),
+            ],
+            [
+                'income_category_id' => \App\Models\IncomeCategory::skip(2)->first()?->id,
+                'amount' => 10.50,
+                'currency' => 'XAU',
+                'description' => 'Gold sale from investment portfolio',
+                'date' => now()->subDays(20),
+            ],
+            [
+                'income_category_id' => \App\Models\IncomeCategory::skip(2)->first()?->id,
+                'amount' => 250.75,
+                'currency' => 'XAG',
+                'description' => 'Silver sale from precious metals collection',
+                'date' => now()->subDays(25),
+            ],
+        ];
+
+        foreach ($incomes as $incomeData) {
+            \App\Models\Income::create($incomeData);
+        }
+
+        // Create sample expenses
+        $expenseCategory = \App\Models\ExpenseCategory::first();
+
+        $expenses = [
+            [
+                'expense_category_id' => $expenseCategory?->id,
+                'amount' => 1200.00,
+                'currency' => 'TRY',
+                'description' => 'New laptop for development work',
+                'date' => now()->subDays(3),
+            ],
+            [
+                'expense_category_id' => \App\Models\ExpenseCategory::skip(1)->first()?->id,
+                'amount' => 99.99,
+                'currency' => 'USD',
+                'description' => 'Adobe Creative Suite subscription',
+                'date' => now()->subDays(7),
+            ],
+            [
+                'expense_category_id' => \App\Models\ExpenseCategory::skip(4)->first()?->id,
+                'amount' => 450.00,
+                'currency' => 'TRY',
+                'description' => 'Internet and phone bills',
+                'date' => now()->subDays(12),
+            ],
+            [
+                'expense_category_id' => \App\Models\ExpenseCategory::skip(5)->first()?->id,
+                'amount' => 250.00,
+                'currency' => 'TRY',
+                'description' => 'Client dinner meeting',
+                'date' => now()->subDays(8),
+            ],
+            [
+                'expense_category_id' => \App\Models\ExpenseCategory::skip(2)->first()?->id,
+                'amount' => 5.25,
+                'currency' => 'XAU',
+                'description' => 'Gold purchase for investment (5.25 grams)',
+                'date' => now()->subDays(18),
+            ],
+            [
+                'expense_category_id' => \App\Models\ExpenseCategory::skip(2)->first()?->id,
+                'amount' => 100.00,
+                'currency' => 'XAG',
+                'description' => 'Silver purchase for portfolio (100 grams)',
+                'date' => now()->subDays(22),
+            ],
+        ];
+
+        foreach ($expenses as $expenseData) {
+            \App\Models\Expense::create($expenseData);
+        }
     }
 }

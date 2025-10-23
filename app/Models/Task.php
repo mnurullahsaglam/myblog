@@ -2,26 +2,22 @@
 
 namespace App\Models;
 
+use App\Observers\TaskObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[ObservedBy([TaskObserver::class])]
 class Task extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
-        'project_id',
-        'repository_id',
-        'title',
-        'description',
-        'status',
-        'sort_order',
-        'github_issue_number',
-        'github_issue_url',
-        'github_issue_state',
-        'github_issue_labels',
-        'github_assignee',
-        'github_created_at',
-        'github_updated_at',
-        'github_closed_at',
+        'project_id', 'repository_id', 'title', 'description', 'status', 'sort_order',
+        'github_issue_number', 'github_issue_url', 'github_issue_state',
+        'github_issue_labels', 'github_assignee', 'github_created_at',
+        'github_updated_at', 'github_closed_at',
     ];
 
     protected $casts = [
@@ -48,12 +44,12 @@ class Task extends Model
 
     public function getGithubLabelsStringAttribute(): string
     {
-        if (empty($this->github_issue_labels)) {
+        if (!$this->github_issue_labels) {
             return '';
         }
 
         return collect($this->github_issue_labels)
             ->pluck('name')
-            ->implode(', ');
+            ->join(', ');
     }
 }
