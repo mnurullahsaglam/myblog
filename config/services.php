@@ -38,4 +38,9 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+
+    'wakatime' => [
+        'app_id' => env('WAKATIME_APP_ID'),
+        'app_secret' => env('WAKATIME_APP_SECRET'),
+    ],
 ];
