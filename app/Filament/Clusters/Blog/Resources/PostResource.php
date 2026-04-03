@@ -5,10 +5,10 @@ namespace App\Filament\Clusters\Blog\Resources;
 use App\Filament\Clusters\Blog;
 use App\Filament\Resources\PostResource\Pages;
 use App\Models\Post;
+use Filament\Schemas\Schema;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
@@ -25,11 +25,11 @@ class PostResource extends Resource
 
     protected static ?string $slug = 'posts';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $cluster = Blog::class;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
         return $form
             ->schema([

@@ -9,10 +9,10 @@ use App\Filament\Clusters\Library\Resources\BookResource\Pages\ListBooks;
 use App\Filament\Clusters\Library\Resources\BookResource\Widgets\BooksOverview;
 use App\Filament\Exports\BookExporter;
 use App\Models\Book;
+use Filament\Schemas\Schema;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
@@ -29,7 +29,7 @@ class BookResource extends Resource
 
     protected static ?string $slug = 'books';
 
-    protected static ?string $navigationIcon = 'heroicon-o-book-open';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-book-open';
 
     protected static ?string $cluster = Library::class;
 
@@ -43,7 +43,7 @@ class BookResource extends Resource
         return __('Books');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
         return $form
             ->schema([

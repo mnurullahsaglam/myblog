@@ -6,8 +6,8 @@ use App\Filament\Clusters\Library;
 use App\Filament\Clusters\Library\Resources\PublisherResource\Pages\ListPublishers;
 use App\Filament\Exports\PublisherExporter;
 use App\Models\Publisher;
+use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
@@ -22,7 +22,7 @@ class PublisherResource extends Resource
 
     protected static ?string $slug = 'publishers';
 
-    protected static ?string $navigationIcon = 'heroicon-o-building-library';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-building-library';
 
     protected static ?string $cluster = Library::class;
 
@@ -36,7 +36,7 @@ class PublisherResource extends Resource
         return __('Publishers');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
         return $form
             ->schema([

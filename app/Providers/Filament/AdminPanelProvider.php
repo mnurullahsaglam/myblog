@@ -14,7 +14,7 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Support\Enums\Width;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -25,8 +25,6 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use pxlrbt\FilamentEnvironmentIndicator\EnvironmentIndicatorPlugin;
 use pxlrbt\FilamentSpotlight\SpotlightPlugin;
-use SolutionForest\FilamentPanphp\Components\PanOverview;
-
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
@@ -35,6 +33,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->login(Login::class)
             ->profile()
             ->databaseNotifications()
@@ -53,7 +52,6 @@ class AdminPanelProvider extends PanelProvider
                 AccountWidget::class,
                 FilamentInfoWidget::class,
                 BooksOverview::class,
-                PanOverview::class,
             ])
             ->plugins([
                 SpotlightPlugin::make(),
@@ -78,6 +76,6 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->topNavigation()
-            ->maxContentWidth(MaxWidth::ScreenExtraLarge);
+            ->maxContentWidth(Width::ScreenExtraLarge);
     }
 }

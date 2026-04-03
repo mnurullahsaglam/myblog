@@ -20,7 +20,7 @@
         (function (h, a) {
             typeof vt == "object" && typeof It == "object" ? It.exports = a() : typeof define == "function" && define.amd ? define([], a) : typeof vt == "object" ? vt.Pusher = a() : h.Pusher = a()
         })(window, function () {
-            return function (l) {
+            return (function (l) {
                 var h = {};
 
                 function a(c) {
@@ -53,9 +53,9 @@
                 }, a.o = function (c, s) {
                     return Object.prototype.hasOwnProperty.call(c, s)
                 }, a.p = "", a(a.s = 2)
-            }([function (l, h, a) {
+            })([(function (l, h, a) {
                 "use strict";
-                var c = this && this.__extends || function () {
+                var c = this && this.__extends || (function () {
                     var b = function (v, y) {
                         return b = Object.setPrototypeOf || {__proto__: []} instanceof Array && function (w, O) {
                             w.__proto__ = O
@@ -72,9 +72,9 @@
 
                         v.prototype = y === null ? Object.create(y) : (w.prototype = y.prototype, new w)
                     }
-                }();
+                })();
                 Object.defineProperty(h, "__esModule", {value: !0});
-                var s = 256, f = function () {
+                var s = 256, f = (function () {
                     function b(v) {
                         v === void 0 && (v = "="), this._paddingCharacter = v
                     }
@@ -84,12 +84,12 @@
                     }, b.prototype.encode = function (v) {
                         for (var y = "", w = 0; w < v.length - 2; w += 3) {
                             var O = v[w] << 16 | v[w + 1] << 8 | v[w + 2];
-                            y += this._encodeByte(O >>> 3 * 6 & 63), y += this._encodeByte(O >>> 2 * 6 & 63), y += this._encodeByte(O >>> 1 * 6 & 63), y += this._encodeByte(O >>> 0 * 6 & 63)
+                            y += this._encodeByte(O >>> 18 & 63), y += this._encodeByte(O >>> 12 & 63), y += this._encodeByte(O >>> 6 & 63), y += this._encodeByte(O >>> 0 & 63)
                         }
                         var I = v.length - w;
                         if (I > 0) {
                             var O = v[w] << 16 | (I === 2 ? v[w + 1] << 8 : 0);
-                            y += this._encodeByte(O >>> 3 * 6 & 63), y += this._encodeByte(O >>> 2 * 6 & 63), I === 2 ? y += this._encodeByte(O >>> 1 * 6 & 63) : y += this._paddingCharacter || "", y += this._paddingCharacter || ""
+                            y += this._encodeByte(O >>> 18 & 63), y += this._encodeByte(O >>> 12 & 63), I === 2 ? y += this._encodeByte(O >>> 6 & 63) : y += this._paddingCharacter || "", y += this._paddingCharacter || ""
                         }
                         return y
                     }, b.prototype.maxDecodedLength = function (v) {
@@ -115,7 +115,7 @@
                         }
                         return y
                     }, b
-                }();
+                })();
                 h.Coder = f;
                 var d = new f;
 
@@ -130,7 +130,7 @@
                 }
 
                 h.decode = P;
-                var T = function (b) {
+                var T = (function (b) {
                     c(v, b);
 
                     function v() {
@@ -144,7 +144,7 @@
                         var w = s;
                         return w += (44 - y & y - 46) >>> 8 & -s + y - 45 + 62, w += (94 - y & y - 96) >>> 8 & -s + y - 95 + 63, w += (47 - y & y - 58) >>> 8 & -s + y - 48 + 52, w += (64 - y & y - 91) >>> 8 & -s + y - 65 + 0, w += (96 - y & y - 123) >>> 8 & -s + y - 97 + 26, w
                     }, v
-                }(f);
+                })(f);
                 h.URLSafeCoder = T;
                 var S = new T;
 
@@ -165,7 +165,7 @@
                 }, h.decodedLength = function (b) {
                     return d.decodedLength(b)
                 }
-            }, function (l, h, a) {
+            }), (function (l, h, a) {
                 "use strict";
                 Object.defineProperty(h, "__esModule", {value: !0});
                 var c = "utf8: invalid string", s = "utf8: invalid source encoding";
@@ -226,12 +226,12 @@
                 }
 
                 h.decode = N
-            }, function (l, h, a) {
+            }), (function (l, h, a) {
                 l.exports = a(3).default
-            }, function (l, h, a) {
+            }), (function (l, h, a) {
                 "use strict";
                 a.r(h);
-                var c = function () {
+                var c = (function () {
                     function e(t, n) {
                         this.lastId = 0, this.prefix = t, this.name = n
                     }
@@ -246,7 +246,7 @@
                     }, e.prototype.remove = function (t) {
                         delete this[t.number]
                     }, e
-                }(), s = new c("_pusher_script_", "Pusher.ScriptReceivers"), f = {
+                })(), s = new c("_pusher_script_", "Pusher.ScriptReceivers"), f = {
                     VERSION: "7.6.0",
                     PROTOCOL: 7,
                     wsPort: 80,
@@ -268,7 +268,7 @@
                     cdn_http: "http://js.pusher.com",
                     cdn_https: "https://js.pusher.com",
                     dependency_suffix: ""
-                }, d = f, N = function () {
+                }, d = f, N = (function () {
                     function e(t) {
                         this.options = t, this.receivers = t.receivers || s, this.loading = {}
                     }
@@ -294,7 +294,7 @@
                     }, e.prototype.getPath = function (t, n) {
                         return this.getRoot(n) + "/" + t + this.options.suffix + ".js"
                     }, e
-                }(), P = N, T = new c("_pusher_dependencies", "Pusher.DependenciesReceivers"), S = new P({
+                })(), P = N, T = new c("_pusher_dependencies", "Pusher.DependenciesReceivers"), S = new P({
                     cdn_http: d.cdn_http,
                     cdn_https: d.cdn_https,
                     version: d.VERSION,
@@ -318,7 +318,7 @@
                 (function (e) {
                     e.UserAuthentication = "user-authentication", e.ChannelAuthorization = "channel-authorization"
                 })(v || (v = {}));
-                var y = function () {
+                var y = (function () {
                     var e = function (t, n) {
                         return e = Object.setPrototypeOf || {__proto__: []} instanceof Array && function (r, i) {
                             r.__proto__ = i
@@ -335,7 +335,7 @@
 
                         t.prototype = n === null ? Object.create(n) : (r.prototype = n.prototype, new r)
                     }
-                }(), w = function (e) {
+                })(), w = (function (e) {
                     y(t, e);
 
                     function t(n) {
@@ -344,7 +344,7 @@
                     }
 
                     return t
-                }(Error), O = function (e) {
+                })(Error), O = (function (e) {
                     y(t, e);
 
                     function t(n) {
@@ -353,7 +353,7 @@
                     }
 
                     return t
-                }(Error), I = function (e) {
+                })(Error), I = (function (e) {
                     y(t, e);
 
                     function t(n) {
@@ -362,7 +362,7 @@
                     }
 
                     return t
-                }(Error), q = function (e) {
+                })(Error), q = (function (e) {
                     y(t, e);
 
                     function t(n) {
@@ -371,7 +371,7 @@
                     }
 
                     return t
-                }(Error), M = function (e) {
+                })(Error), M = (function (e) {
                     y(t, e);
 
                     function t(n) {
@@ -380,7 +380,7 @@
                     }
 
                     return t
-                }(Error), J = function (e) {
+                })(Error), J = (function (e) {
                     y(t, e);
 
                     function t(n) {
@@ -389,7 +389,7 @@
                     }
 
                     return t
-                }(Error), F = function (e) {
+                })(Error), F = (function (e) {
                     y(t, e);
 
                     function t(n) {
@@ -398,7 +398,7 @@
                     }
 
                     return t
-                }(Error), z = function (e) {
+                })(Error), z = (function (e) {
                     y(t, e);
 
                     function t(n) {
@@ -407,7 +407,7 @@
                     }
 
                     return t
-                }(Error), B = function (e) {
+                })(Error), B = (function (e) {
                     y(t, e);
 
                     function t(n, r) {
@@ -416,7 +416,7 @@
                     }
 
                     return t
-                }(Error), ke = function (e, t, n, r, i) {
+                })(Error), ke = function (e, t, n, r, i) {
                     var o = m.createXHR();
                     o.open("POST", n.endpoint, !0), o.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                     for (var u in n.headers) o.setRequestHeader(u, n.headers[u]);
@@ -465,7 +465,7 @@
                     return r.join("")
                 }, Ee = window.btoa || function (e) {
                     return e.replace(/[\s\S]{1,3}/g, Ae)
-                }, Le = function () {
+                }, Le = (function () {
                     function e(t, n, r, i) {
                         var o = this;
                         this.clear = n, this.timer = t(function () {
@@ -478,7 +478,7 @@
                     }, e.prototype.ensureAborted = function () {
                         this.timer && (this.clear(this.timer), this.timer = null)
                     }, e
-                }(), jt = Le, Nt = function () {
+                })(), jt = Le, Nt = (function () {
                     var e = function (t, n) {
                         return e = Object.setPrototypeOf || {__proto__: []} instanceof Array && function (r, i) {
                             r.__proto__ = i
@@ -495,7 +495,7 @@
 
                         t.prototype = n === null ? Object.create(n) : (r.prototype = n.prototype, new r)
                     }
-                }();
+                })();
 
                 function Re(e) {
                     window.clearTimeout(e)
@@ -505,7 +505,7 @@
                     window.clearInterval(e)
                 }
 
-                var Q = function (e) {
+                var Q = (function (e) {
                     Nt(t, e);
 
                     function t(n, r) {
@@ -515,7 +515,7 @@
                     }
 
                     return t
-                }(jt), je = function (e) {
+                })(jt), je = (function (e) {
                     Nt(t, e);
 
                     function t(n, r) {
@@ -525,7 +525,7 @@
                     }
 
                     return t
-                }(jt), Ne = {
+                })(jt), Ne = {
                     now: function () {
                         return Date.now ? Date.now() : new Date().valueOf()
                     }, defer: function (e) {
@@ -642,7 +642,7 @@
 
                 function Be(e) {
                     var t = [], n = [];
-                    return function r(i, o) {
+                    return (function r(i, o) {
                         var u, p, _;
                         switch (typeof i) {
                             case"object":
@@ -658,7 +658,7 @@
                             case"boolean":
                                 return i
                         }
-                    }(e, "$")
+                    })(e, "$")
                 }
 
                 function ut(e) {
@@ -669,7 +669,7 @@
                     }
                 }
 
-                var Xe = function () {
+                var Xe = (function () {
                     function e() {
                         this.globalLog = function (t) {
                             window.console && window.console.log && window.console.log(t)
@@ -697,7 +697,7 @@
                             o(i)
                         }
                     }, e
-                }(), A = new Xe, Je = function (e, t, n, r, i) {
+                })(), A = new Xe, Je = function (e, t, n, r, i) {
                     (n.headers !== void 0 || n.headersProvider != null) && A.warn("To send headers with the " + r.toString() + " request, you must use AJAX, rather than JSONP.");
                     var o = e.nextAuthCallbackID.toString();
                     e.nextAuthCallbackID++;
@@ -709,7 +709,7 @@
                     p.src = n.endpoint + "?callback=" + encodeURIComponent(_) + "&" + t;
                     var g = u.getElementsByTagName("head")[0] || u.documentElement;
                     g.insertBefore(p, g.firstChild)
-                }, We = Je, Ve = function () {
+                }, We = Je, Ve = (function () {
                     function e(t) {
                         this.src = t
                     }
@@ -728,7 +728,7 @@
                     }, e.prototype.cleanup = function () {
                         this.script && (this.script.onload = this.script.onerror = null, this.script.onreadystatechange = null), this.script && this.script.parentNode && this.script.parentNode.removeChild(this.script), this.errorScript && this.errorScript.parentNode && this.errorScript.parentNode.removeChild(this.errorScript), this.script = null, this.errorScript = null
                     }, e
-                }(), Ge = Ve, Qe = function () {
+                })(), Ge = Ve, Qe = (function () {
                     function e(t, n) {
                         this.url = t, this.data = n
                     }
@@ -741,7 +741,7 @@
                     }, e.prototype.cleanup = function () {
                         this.request && this.request.cleanup()
                     }, e
-                }(), Ke = Qe, Ye = function (e, t) {
+                })(), Ke = Qe, Ye = function (e, t) {
                     return function (n, r) {
                         var i = "http" + (t ? "s" : "") + "://", o = i + (e.host || e.options.host) + e.options.path,
                             u = m.createJSONPRequest(o, n), p = m.ScriptReceivers.create(function (_, g) {
@@ -778,7 +778,7 @@
                     }, getPath: function (e, t) {
                         return gt(e)
                     }
-                }, rn = function () {
+                }, rn = (function () {
                     function e() {
                         this._callbacks = {}
                     }
@@ -806,13 +806,13 @@
                             delete this._callbacks[n]
                         }, this)
                     }, e
-                }(), on = rn;
+                })(), on = rn;
 
                 function _t(e) {
                     return "_" + e
                 }
 
-                var sn = function () {
+                var sn = (function () {
                         function e(t) {
                             this.callbacks = new on, this.global_callbacks = [], this.failThrough = t
                         }
@@ -835,7 +835,7 @@
                             if (r ? u.push(n, r) : n && u.push(n), o && o.length > 0) for (var i = 0; i < o.length; i++) o[i].fn.apply(o[i].context || window, u); else this.failThrough && this.failThrough(t, n);
                             return this
                         }, e
-                    }(), V = sn, an = function () {
+                    })(), V = sn, an = (function () {
                         var e = function (t, n) {
                             return e = Object.setPrototypeOf || {__proto__: []} instanceof Array && function (r, i) {
                                 r.__proto__ = i
@@ -852,7 +852,7 @@
 
                             t.prototype = n === null ? Object.create(n) : (r.prototype = n.prototype, new r)
                         }
-                    }(), cn = function (e) {
+                    })(), cn = (function (e) {
                         an(t, e);
 
                         function t(n, r, i, o, u) {
@@ -928,7 +928,7 @@
                         }, t.prototype.buildTimelineMessage = function (n) {
                             return U({cid: this.id}, n)
                         }, t
-                    }(V), un = cn, hn = function () {
+                    })(V), un = cn, hn = (function () {
                         function e(t) {
                             this.hooks = t
                         }
@@ -938,7 +938,7 @@
                         }, e.prototype.createConnection = function (t, n, r, i) {
                             return new un(this.hooks, t, n, r, i)
                         }, e
-                    }(), tt = hn, ln = new tt({
+                    })(), tt = hn, ln = new tt({
                         urls: tn, handlesActivityChecks: !1, supportsPing: !1, isInitialized: function () {
                             return !!m.getWebSocketAPI()
                         }, isSupported: function () {
@@ -990,7 +990,7 @@
                         }
                     }, yn = new tt(U({}, Bt, Wt)), gn = new tt(U({}, Xt, Wt));
                 ht.xdr_streaming = yn, ht.xdr_polling = gn, ht.sockjs = vn;
-                var _n = ht, bn = function () {
+                var _n = ht, bn = (function () {
                     var e = function (t, n) {
                         return e = Object.setPrototypeOf || {__proto__: []} instanceof Array && function (r, i) {
                             r.__proto__ = i
@@ -1007,7 +1007,7 @@
 
                         t.prototype = n === null ? Object.create(n) : (r.prototype = n.prototype, new r)
                     }
-                }(), mn = function (e) {
+                })(), mn = (function (e) {
                     bn(t, e);
 
                     function t() {
@@ -1022,7 +1022,7 @@
                     return t.prototype.isOnline = function () {
                         return window.navigator.onLine === void 0 ? !0 : window.navigator.onLine
                     }, t
-                }(V), wn = new mn, kn = function () {
+                })(V), wn = new mn, kn = (function () {
                     function e(t, n, r) {
                         this.manager = t, this.transport = n, this.minPingDelay = r.minPingDelay, this.maxPingDelay = r.maxPingDelay, this.pingDelay = void 0
                     }
@@ -1042,7 +1042,7 @@
                     }, e.prototype.isSupported = function (t) {
                         return this.manager.isAlive() && this.transport.isSupported(t)
                     }, e
-                }(), Sn = kn, Vt = {
+                })(), Sn = kn, Vt = {
                     decodeMessage: function (e) {
                         try {
                             var t = JSON.parse(e.data), n = t.data;
@@ -1081,7 +1081,7 @@
                             data: {code: e.code, message: e.reason || e.message}
                         } : null
                     }
-                }, K = Vt, Cn = function () {
+                }, K = Vt, Cn = (function () {
                     var e = function (t, n) {
                         return e = Object.setPrototypeOf || {__proto__: []} instanceof Array && function (r, i) {
                             r.__proto__ = i
@@ -1098,7 +1098,7 @@
 
                         t.prototype = n === null ? Object.create(n) : (r.prototype = n.prototype, new r)
                     }
-                }(), Tn = function (e) {
+                })(), Tn = (function (e) {
                     Cn(t, e);
 
                     function t(n, r) {
@@ -1159,7 +1159,7 @@
                         var r = K.getCloseAction(n), i = K.getCloseError(n);
                         i && this.emit("error", i), r && this.emit(r, {action: r, error: i})
                     }, t
-                }(V), Pn = Tn, xn = function () {
+                })(V), Pn = Tn, xn = (function () {
                     function e(t, n) {
                         this.transport = t, this.callback = n, this.bindListeners()
                     }
@@ -1191,7 +1191,7 @@
                     }, e.prototype.finish = function (t, n) {
                         this.callback(U({transport: this.transport, action: t}, n))
                     }, e
-                }(), On = xn, An = function () {
+                })(), On = xn, An = (function () {
                     function e(t, n) {
                         this.timeline = t, this.options = n || {}
                     }
@@ -1199,7 +1199,7 @@
                     return e.prototype.send = function (t, n) {
                         this.timeline.isEmpty() || this.timeline.send(m.TimelineTransport.getAgent(this, t), n)
                     }, e
-                }(), En = An, Ln = function () {
+                })(), En = An, Ln = (function () {
                     var e = function (t, n) {
                         return e = Object.setPrototypeOf || {__proto__: []} instanceof Array && function (r, i) {
                             r.__proto__ = i
@@ -1216,7 +1216,7 @@
 
                         t.prototype = n === null ? Object.create(n) : (r.prototype = n.prototype, new r)
                     }
-                }(), Rn = function (e) {
+                })(), Rn = (function (e) {
                     Ln(t, e);
 
                     function t(n, r) {
@@ -1266,7 +1266,7 @@
                     }, t.prototype.reinstateSubscription = function () {
                         this.subscriptionCancelled = !1
                     }, t
-                }(V), bt = Rn, In = function () {
+                })(V), bt = Rn, In = (function () {
                     var e = function (t, n) {
                         return e = Object.setPrototypeOf || {__proto__: []} instanceof Array && function (r, i) {
                             r.__proto__ = i
@@ -1283,7 +1283,7 @@
 
                         t.prototype = n === null ? Object.create(n) : (r.prototype = n.prototype, new r)
                     }
-                }(), jn = function (e) {
+                })(), jn = (function (e) {
                     In(t, e);
 
                     function t() {
@@ -1293,7 +1293,7 @@
                     return t.prototype.authorize = function (n, r) {
                         return this.pusher.config.channelAuthorizer({channelName: this.name, socketId: n}, r)
                     }, t
-                }(bt), mt = jn, Nn = function () {
+                })(bt), mt = jn, Nn = (function () {
                     function e() {
                         this.reset()
                     }
@@ -1320,7 +1320,7 @@
                     }, e.prototype.reset = function () {
                         this.members = {}, this.count = 0, this.myID = null, this.me = null
                     }, e
-                }(), qn = Nn, Un = function () {
+                })(), qn = Nn, Un = (function () {
                     var e = function (t, n) {
                         return e = Object.setPrototypeOf || {__proto__: []} instanceof Array && function (r, i) {
                             r.__proto__ = i
@@ -1337,7 +1337,7 @@
 
                         t.prototype = n === null ? Object.create(n) : (r.prototype = n.prototype, new r)
                     }
-                }(), Dn = function (e, t, n, r) {
+                })(), Dn = function (e, t, n, r) {
                     function i(o) {
                         return o instanceof n ? o : new n(function (u) {
                             u(o)
@@ -1434,7 +1434,7 @@
                         if (g[0] & 5) throw g[1];
                         return {value: g[0] ? g[1] : void 0, done: !0}
                     }
-                }, Mn = function (e) {
+                }, Mn = (function (e) {
                     Un(t, e);
 
                     function t(n, r) {
@@ -1491,7 +1491,7 @@
                     }, t.prototype.disconnect = function () {
                         this.members.reset(), e.prototype.disconnect.call(this)
                     }, t
-                }(mt), zn = Mn, Fn = a(1), wt = a(0), Bn = function () {
+                })(mt), zn = Mn, Fn = a(1), wt = a(0), Bn = (function () {
                     var e = function (t, n) {
                         return e = Object.setPrototypeOf || {__proto__: []} instanceof Array && function (r, i) {
                             r.__proto__ = i
@@ -1508,7 +1508,7 @@
 
                         t.prototype = n === null ? Object.create(n) : (r.prototype = n.prototype, new r)
                     }
-                }(), Xn = function (e) {
+                })(), Xn = (function (e) {
                     Bn(t, e);
 
                     function t(n, r, i) {
@@ -1583,7 +1583,7 @@
                             return r
                         }
                     }, t
-                }(mt), Jn = Xn, Wn = function () {
+                })(mt), Jn = Xn, Wn = (function () {
                     var e = function (t, n) {
                         return e = Object.setPrototypeOf || {__proto__: []} instanceof Array && function (r, i) {
                             r.__proto__ = i
@@ -1600,7 +1600,7 @@
 
                         t.prototype = n === null ? Object.create(n) : (r.prototype = n.prototype, new r)
                     }
-                }(), Vn = function (e) {
+                })(), Vn = (function (e) {
                     Wn(t, e);
 
                     function t(n, r) {
@@ -1742,7 +1742,7 @@
                     }, t.prototype.shouldRetry = function () {
                         return this.state === "connecting" || this.state === "connected"
                     }, t
-                }(V), Gn = Vn, Qn = function () {
+                })(V), Gn = Vn, Qn = (function () {
                     function e() {
                         this.channels = {}
                     }
@@ -1761,7 +1761,7 @@
                             t.disconnect()
                         })
                     }, e
-                }(), Kn = Qn;
+                })(), Kn = Qn;
 
                 function Yn(e, t) {
                     if (e.indexOf("private-encrypted-") === 0) {
@@ -1797,7 +1797,7 @@
                     }, createAssistantToTheTransportManager: function (e, t, n) {
                         return new Sn(e, t, n)
                     }
-                }, G = $n, Zn = function () {
+                }, G = $n, Zn = (function () {
                     function e(t) {
                         this.options = t || {}, this.livesLeft = this.options.lives || 1 / 0
                     }
@@ -1812,7 +1812,7 @@
                     }, e.prototype.reportDeath = function () {
                         this.livesLeft -= 1
                     }, e
-                }(), Gt = Zn, tr = function () {
+                })(), Gt = Zn, tr = (function () {
                     function e(t, n) {
                         this.strategies = t, this.loop = !!n.loop, this.failFast = !!n.failFast, this.timeout = n.timeout, this.timeoutLimit = n.timeoutLimit
                     }
@@ -1850,7 +1850,7 @@
                             }
                         }
                     }, e
-                }(), Y = tr, er = function () {
+                })(), Y = tr, er = (function () {
                     function e(t) {
                         this.strategies = t
                     }
@@ -1870,7 +1870,7 @@
                             }
                         })
                     }, e
-                }(), kt = er;
+                })(), kt = er;
 
                 function nr(e, t, n) {
                     var r = Dt(e, function (i, o, u, p) {
@@ -1897,7 +1897,7 @@
                     !e.error && !e.aborted && (e.abort(), e.aborted = !0)
                 }
 
-                var or = function () {
+                var or = (function () {
                     function e(t, n, r) {
                         this.strategy = t, this.transports = n, this.ttl = r.ttl || 1800 * 1e3, this.usingTLS = r.useTLS, this.timeline = r.timeline
                     }
@@ -1925,7 +1925,7 @@
                             }
                         }
                     }, e
-                }(), sr = or;
+                })(), sr = or;
 
                 function St(e) {
                     return "pusherTransport" + (e ? "TLS" : "NonTLS")
@@ -1958,7 +1958,7 @@
                     }
                 }
 
-                var ur = function () {
+                var ur = (function () {
                     function e(t, n) {
                         var r = n.delay;
                         this.strategy = t, this.options = {delay: r}
@@ -1978,7 +1978,7 @@
                             }
                         }
                     }, e
-                }(), lt = ur, hr = function () {
+                })(), lt = ur, hr = (function () {
                     function e(t, n, r) {
                         this.test = t, this.trueBranch = n, this.falseBranch = r
                     }
@@ -1990,7 +1990,7 @@
                         var r = this.test() ? this.trueBranch : this.falseBranch;
                         return r.connect(t, n)
                     }, e
-                }(), it = hr, lr = function () {
+                })(), it = hr, lr = (function () {
                     function e(t) {
                         this.strategy = t
                     }
@@ -2003,7 +2003,7 @@
                         });
                         return r
                     }, e
-                }(), fr = lr;
+                })(), fr = lr;
 
                 function ot(e) {
                     return function () {
@@ -2043,12 +2043,12 @@
                         timeline: t.timeline,
                         useTLS: t.useTLS
                     })
-                }, dr = pr, vr = function () {
+                }, dr = pr, vr = (function () {
                     var e = this;
                     e.timeline.info(e.buildTimelineMessage({transport: e.name + (e.options.useTLS ? "s" : "")})), e.hooks.isInitialized() ? e.changeState("initialized") : e.hooks.file ? (e.changeState("initializing"), S.load(e.hooks.file, {useTLS: e.options.useTLS}, function (t, n) {
                         e.hooks.isInitialized() ? (e.changeState("initialized"), n(!0)) : (t && e.onError(t), e.onClose(), n(!1))
                     })) : e.onClose()
-                }, yr = {
+                }), yr = {
                     getRequest: function (e) {
                         var t = new window.XDomainRequest;
                         return t.ontimeout = function () {
@@ -2063,7 +2063,7 @@
                     }, abortRequest: function (e) {
                         e.ontimeout = e.onerror = e.onprogress = e.onload = null, e.abort()
                     }
-                }, gr = yr, _r = function () {
+                }, gr = yr, _r = (function () {
                     var e = function (t, n) {
                         return e = Object.setPrototypeOf || {__proto__: []} instanceof Array && function (r, i) {
                             r.__proto__ = i
@@ -2080,7 +2080,7 @@
 
                         t.prototype = n === null ? Object.create(n) : (r.prototype = n.prototype, new r)
                     }
-                }(), br = 256 * 1024, mr = function (e) {
+                })(), br = 256 * 1024, mr = (function (e) {
                     _r(t, e);
 
                     function t(n, r, i) {
@@ -2108,11 +2108,11 @@
                     }, t.prototype.isBufferTooLong = function (n) {
                         return this.position === n.length && n.length > br
                     }, t
-                }(V), wr = mr, Ct;
+                })(V), wr = mr, Ct;
                 (function (e) {
                     e[e.CONNECTING = 0] = "CONNECTING", e[e.OPEN = 1] = "OPEN", e[e.CLOSED = 3] = "CLOSED"
                 })(Ct || (Ct = {}));
-                var $ = Ct, kr = 1, Sr = function () {
+                var $ = Ct, kr = 1, Sr = (function () {
                     function e(t, n) {
                         this.hooks = t, this.session = Yt(1e3) + "/" + xr(8), this.location = Cr(n), this.readyState = $.CONNECTING, this.openStream()
                     }
@@ -2187,7 +2187,7 @@
                     }, e.prototype.closeStream = function () {
                         this.stream && (this.stream.unbind_all(), this.stream.close(), this.stream = null)
                     }, e
-                }();
+                })();
 
                 function Cr(e) {
                     var t = /([^\?]*)\/*(\??.*)/.exec(e);
@@ -2367,7 +2367,7 @@
                 (function (e) {
                     e[e.ERROR = 3] = "ERROR", e[e.INFO = 6] = "INFO", e[e.DEBUG = 7] = "DEBUG"
                 })(Tt || (Tt = {}));
-                var ft = Tt, Dr = function () {
+                var ft = Tt, Dr = (function () {
                     function e(t, n, r) {
                         this.key = t, this.session = n, this.events = [], this.options = r || {}, this.sent = 0, this.uniqueID = 0
                     }
@@ -2399,7 +2399,7 @@
                     }, e.prototype.generateUniqueID = function () {
                         return this.uniqueID++, this.uniqueID
                     }, e
-                }(), Hr = Dr, Mr = function () {
+                })(), Hr = Dr, Mr = (function () {
                     function e(t, n, r, i) {
                         this.name = t, this.priority = n, this.transport = r, this.options = i || {}
                     }
@@ -2436,7 +2436,7 @@
                             }
                         }
                     }, e
-                }(), zr = Mr;
+                })(), zr = Mr;
 
                 function Zt(e, t) {
                     return j.defer(function () {
@@ -2578,7 +2578,7 @@
                     return "customHandler" in n && n.customHandler != null ? n.customHandler : Kr(n)
                 }
 
-                var si = function () {
+                var si = (function () {
                     var e = function (t, n) {
                         return e = Object.setPrototypeOf || {__proto__: []} instanceof Array && function (r, i) {
                             r.__proto__ = i
@@ -2595,7 +2595,7 @@
 
                         t.prototype = n === null ? Object.create(n) : (r.prototype = n.prototype, new r)
                     }
-                }(), ai = function (e) {
+                })(), ai = (function (e) {
                     si(t, e);
 
                     function t(n) {
@@ -2617,7 +2617,7 @@
                             i === "pusher_internal:watchlist_events" && n.handleEvent(r)
                         })
                     }, t
-                }(V), ci = ai;
+                })(V), ci = ai;
 
                 function ui() {
                     var e, t, n = new Promise(function (r, i) {
@@ -2626,7 +2626,7 @@
                     return {promise: n, resolve: e, reject: t}
                 }
 
-                var hi = ui, li = function () {
+                var hi = ui, li = (function () {
                     var e = function (t, n) {
                         return e = Object.setPrototypeOf || {__proto__: []} instanceof Array && function (r, i) {
                             r.__proto__ = i
@@ -2643,7 +2643,7 @@
 
                         t.prototype = n === null ? Object.create(n) : (r.prototype = n.prototype, new r)
                     }
-                }(), fi = function (e) {
+                })(), fi = (function (e) {
                     li(t, e);
 
                     function t(n) {
@@ -2700,7 +2700,7 @@
                             r.then(u).catch(u), this.signinDonePromise = r, this._signinDoneResolve = i
                         }
                     }, t
-                }(V), pi = fi, ee = function () {
+                })(V), pi = fi, ee = (function () {
                     function e(t, n) {
                         var r = this;
                         if (di(t), n = n || {}, !n.cluster && !(n.wsHost || n.httpHost)) {
@@ -2792,14 +2792,14 @@
                     }, e.prototype.signin = function () {
                         this.user.signin()
                     }, e.instances = [], e.isReady = !1, e.logToConsole = !1, e.Runtime = m, e.ScriptReceivers = m.ScriptReceivers, e.DependenciesReceivers = m.DependenciesReceivers, e.auth_callbacks = m.auth_callbacks, e
-                }(), Pt = h.default = ee;
+                })(), Pt = h.default = ee;
 
                 function di(e) {
                     if (e == null) throw "You must pass your app key when you instantiate Pusher."
                 }
 
                 m.setup(ee)
-            }])
+            })])
         })
     });
 
@@ -2894,7 +2894,7 @@
         }
     }
 
-    var Et = function () {
+    var Et = (function () {
         function l() {
             L(this, l)
         }
@@ -2912,7 +2912,7 @@
                 return this.stopListening(".client-" + a, c)
             }
         }]), l
-    }(), de = function () {
+    })(), de = (function () {
         function l(h) {
             L(this, l), this.namespace = h
         }
@@ -2926,7 +2926,7 @@
                 this.namespace = a
             }
         }]), l
-    }();
+    })();
 
     function Ni(l) {
         try {
@@ -2937,7 +2937,7 @@
         return !0
     }
 
-    var Lt = function (l) {
+    var Lt = (function (l) {
         D(a, l);
         var h = H(a);
 
@@ -2994,7 +2994,7 @@
                 return this.subscription.bind(s, f), this
             }
         }]), a
-    }(Et), ve = function (l) {
+    })(Et), ve = (function (l) {
         D(a, l);
         var h = H(a);
 
@@ -3007,7 +3007,7 @@
                 return this.pusher.channels.channels[this.name].trigger("client-".concat(s), f), this
             }
         }]), a
-    }(Lt), qi = function (l) {
+    })(Lt), qi = (function (l) {
         D(a, l);
         var h = H(a);
 
@@ -3020,7 +3020,7 @@
                 return this.pusher.channels.channels[this.name].trigger("client-".concat(s), f), this
             }
         }]), a
-    }(Lt), Ui = function (l) {
+    })(Lt), Ui = (function (l) {
         D(a, l);
         var h = H(a);
 
@@ -3053,7 +3053,7 @@
                 }), this
             }
         }]), a
-    }(ve), ye = function (l) {
+    })(ve), ye = (function (l) {
         D(a, l);
         var h = H(a);
 
@@ -3111,7 +3111,7 @@
                 })), (!f || this.listeners[s].length === 0) && (this.events[s] && (this.socket.removeListener(s, this.events[s]), delete this.events[s]), delete this.listeners[s])
             }
         }]), a
-    }(Et), ge = function (l) {
+    })(Et), ge = (function (l) {
         D(a, l);
         var h = H(a);
 
@@ -3124,7 +3124,7 @@
                 return this.socket.emit("client event", {channel: this.name, event: "client-".concat(s), data: f}), this
             }
         }]), a
-    }(ye), Di = function (l) {
+    })(ye), Di = (function (l) {
         D(a, l);
         var h = H(a);
 
@@ -3157,7 +3157,7 @@
                 }), this
             }
         }]), a
-    }(ge), dt = function (l) {
+    })(ge), dt = (function (l) {
         D(a, l);
         var h = H(a);
 
@@ -3196,7 +3196,7 @@
                 return this
             }
         }]), a
-    }(Et), _e = function (l) {
+    })(Et), _e = (function (l) {
         D(a, l);
         var h = H(a);
 
@@ -3209,7 +3209,7 @@
                 return this
             }
         }]), a
-    }(dt), Hi = function (l) {
+    })(dt), Hi = (function (l) {
         D(a, l);
         var h = H(a);
 
@@ -3222,7 +3222,7 @@
                 return this
             }
         }]), a
-    }(dt), Mi = function (l) {
+    })(dt), Mi = (function (l) {
         D(a, l);
         var h = H(a);
 
@@ -3247,7 +3247,7 @@
                 return this
             }
         }]), a
-    }(_e), Rt = function () {
+    })(_e), Rt = (function () {
         function l(h) {
             L(this, l), this._defaultOptions = {
                 auth: {headers: {}},
@@ -3274,7 +3274,7 @@
                 return typeof window < "u" && window.Laravel && window.Laravel.csrfToken ? window.Laravel.csrfToken : this.options.csrfToken ? this.options.csrfToken : typeof document < "u" && typeof document.querySelector == "function" && (a = document.querySelector('meta[name="csrf-token"]')) ? a.getAttribute("content") : null
             }
         }]), l
-    }(), fe = function (l) {
+    })(), fe = (function (l) {
         D(a, l);
         var h = H(a);
 
@@ -3331,7 +3331,7 @@
                 this.pusher.disconnect()
             }
         }]), a
-    }(Rt), pe = function (l) {
+    })(Rt), pe = (function (l) {
         D(a, l);
         var h = H(a);
 
@@ -3391,7 +3391,7 @@
                 this.socket.disconnect()
             }
         }]), a
-    }(Rt), zi = function (l) {
+    })(Rt), zi = (function (l) {
         D(a, l);
         var h = H(a);
 
@@ -3437,7 +3437,7 @@
             key: "disconnect", value: function () {
             }
         }]), a
-    }(Rt), be = function () {
+    })(Rt), be = (function () {
         function l(h) {
             L(this, l), this.options = h, this.connect(), this.options.withoutInterceptors || this.registerInterceptors()
         }
@@ -3520,7 +3520,7 @@
                 })
             }
         }]), l
-    }();
+    })();
     var we = Li(me(), 1);
     window.EchoFactory = be;
     window.Pusher = we.default;

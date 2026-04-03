@@ -1,4 +1,4 @@
-<div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+<div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3 shadow-xs hover:shadow-md transition-shadow cursor-pointer"
      wire:click="$dispatch('open-task-modal', { taskId: {{ $record->id }} })">
 
     <!-- Task Title -->
@@ -8,7 +8,7 @@
         </h3>
 
         @if($record->is_github_issue)
-            <div class="flex-shrink-0 ml-2">
+            <div class="shrink-0 ml-2">
                 <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
                     <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd"
@@ -32,7 +32,7 @@
     @if($record->github_issue_labels && count($record->github_issue_labels) > 0)
         <div class="flex flex-wrap gap-1 mb-2">
             @foreach(collect($record->github_issue_labels)->take(3) as $label)
-                <span class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium"
+                <span class="inline-flex items-center px-1.5 py-0.5 rounded-sm text-xs font-medium"
                       style="background-color: #{{ $label['color'] ?? 'gray' }}20; color: #{{ $label['color'] ?? 'gray' }};">
                     {{ $label['name'] }}
                 </span>

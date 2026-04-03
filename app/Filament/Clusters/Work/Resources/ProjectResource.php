@@ -5,11 +5,11 @@ namespace App\Filament\Clusters\Work\Resources;
 use App\Filament\Clusters\Work;
 use App\Filament\Clusters\Work\Resources;
 use App\Models\Project;
+use Filament\Schemas\Schema;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
@@ -26,11 +26,11 @@ class ProjectResource extends Resource
 
     protected static ?string $slug = 'projects';
 
-    protected static ?string $navigationIcon = 'heroicon-o-folder-open';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-folder-open';
 
     protected static ?string $cluster = Work::class;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
         return $form
             ->schema([

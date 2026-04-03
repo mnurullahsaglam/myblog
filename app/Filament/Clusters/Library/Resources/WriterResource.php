@@ -8,10 +8,10 @@ use App\Filament\Clusters\Library\Resources\WriterResource\Pages\EditWriter;
 use App\Filament\Clusters\Library\Resources\WriterResource\Pages\ListWriters;
 use App\Filament\Exports\WriterExporter;
 use App\Models\Writer;
+use Filament\Schemas\Schema;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
@@ -26,7 +26,7 @@ class WriterResource extends Resource
 
     protected static ?string $slug = 'writers';
 
-    protected static ?string $navigationIcon = 'heroicon-o-user';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user';
 
     protected static ?string $cluster = Library::class;
 
@@ -40,7 +40,7 @@ class WriterResource extends Resource
         return __('Writers');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
         return $form
             ->schema([

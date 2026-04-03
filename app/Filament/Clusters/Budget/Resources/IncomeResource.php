@@ -6,11 +6,11 @@ use App\Enums\Currencies;
 use App\Filament\Clusters\Budget;
 use App\Filament\Clusters\Budget\Resources\IncomeResource\Pages;
 use App\Models\Income;
+use Filament\Schemas\Schema;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\BulkActionGroup;
@@ -29,7 +29,7 @@ class IncomeResource extends Resource
 {
     protected static ?string $model = Income::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-plus-circle';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-plus-circle';
 
     protected static ?string $cluster = Budget::class;
 
@@ -155,7 +155,7 @@ class IncomeResource extends Resource
             ->defaultSort('date', 'desc');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
         return $form
             ->schema([

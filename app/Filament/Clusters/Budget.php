@@ -6,7 +6,7 @@ use Filament\Clusters\Cluster;
 
 class Budget extends Cluster
 {
-    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-banknotes';
 
     protected static ?string $navigationLabel = 'Budget Management';
 

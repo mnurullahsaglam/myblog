@@ -6,11 +6,11 @@ use App\Enums\Currencies;
 use App\Filament\Clusters\Work;
 use App\Filament\Clusters\Work\Resources\InvoiceResource\Pages;
 use App\Models\Invoice;
+use Filament\Schemas\Schema;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
@@ -22,11 +22,11 @@ class InvoiceResource extends Resource
 {
     protected static ?string $model = Invoice::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-receipt-percent';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-receipt-percent';
 
     protected static ?string $cluster = Work::class;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
         return $form
             ->schema([

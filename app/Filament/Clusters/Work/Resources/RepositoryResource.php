@@ -5,13 +5,13 @@ namespace App\Filament\Clusters\Work\Resources;
 use App\Filament\Clusters\Work;
 use App\Filament\Clusters\Work\Resources\RepositoryResource\Pages;
 use App\Models\Repository;
+use Filament\Schemas\Schema;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
@@ -28,11 +28,11 @@ class RepositoryResource extends Resource
 
     protected static ?string $slug = 'repositories';
 
-    protected static ?string $navigationIcon = 'heroicon-o-code-bracket';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-code-bracket';
 
     protected static ?string $cluster = Work::class;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
         return $form
             ->schema([

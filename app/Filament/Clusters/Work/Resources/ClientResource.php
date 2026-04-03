@@ -6,8 +6,8 @@ use App\Filament\Clusters\Work;
 use App\Filament\Clusters\Work\Resources;
 use App\Filament\Resources\ClientResource\Pages;
 use App\Models\Client;
+use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
@@ -22,11 +22,11 @@ class ClientResource extends Resource
 
     protected static ?string $slug = 'clients';
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user-group';
 
     protected static ?string $cluster = Work::class;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $form): Schema
     {
         return $form
             ->schema([

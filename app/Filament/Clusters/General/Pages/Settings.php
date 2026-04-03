@@ -4,17 +4,17 @@ namespace App\Filament\Clusters\General\Pages;
 
 use App\Filament\Clusters\General;
 use App\Models\Setting;
+use Filament\Schemas\Schema;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Support\Exceptions\Halt;
 
 class Settings extends Page
 {
-    protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-cog-6-tooth';
 
-    protected static string $view = 'filament.clusters.general.pages.settings';
+    protected string $view = 'filament.clusters.general.pages.settings';
 
     protected static ?string $cluster = General::class;
 
@@ -44,7 +44,7 @@ class Settings extends Page
         return $data;
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $form): Schema
     {
         return $form
             ->schema([

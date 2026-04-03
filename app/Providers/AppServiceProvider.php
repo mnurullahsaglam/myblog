@@ -7,7 +7,7 @@ use Filament\Actions\CreateAction;
 use Filament\Actions\ExportAction;
 use Filament\Actions\ImportAction;
 use Filament\Forms\Components\Field;
-use Filament\Tables\Actions\ExportBulkAction;
+use Filament\Actions\ExportBulkAction;
 use Filament\Tables\Columns\Column;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
