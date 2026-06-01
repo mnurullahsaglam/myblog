@@ -1,16 +1,17 @@
 <?php
 
 use App\Http\Controllers\BookController;
-use App\Services\WakaTimeService;
+use App\Http\Controllers\WakaTimeOAuthController;
 use Illuminate\Support\Facades\Route;
-
-Route::get('testing', function () {
-    $service = new WakaTimeService();
-    $service->authenticate();
-});
 
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::resource('books', BookController::class);
+
+// WakaTime OAuth bootstrap (one-time consent). Behind auth so only the logged-in admin can connect.
+Route::middleware('auth')->group(function (): void {
+    Route::get('wakatime/connect', [WakaTimeOAuthController::class, 'connect'])->name('wakatime.connect');
+    Route::get('wakatime/callback', [WakaTimeOAuthController::class, 'callback'])->name('wakatime.callback');
+});

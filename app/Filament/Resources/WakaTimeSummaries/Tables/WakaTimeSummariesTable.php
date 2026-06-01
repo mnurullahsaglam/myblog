@@ -1,0 +1,56 @@
+<?php
+
+namespace App\Filament\Resources\WakaTimeSummaries\Tables;
+
+use App\Models\WakaTimeSummary;
+use App\Models\WakaTimeSummaryEntry;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
+
+class WakaTimeSummariesTable
+{
+    public static function configure(Table $table): Table
+    {
+        return $table
+            ->modifyQueryUsing(fn ($query) => $query->with('entries'))
+            ->defaultSort('date', 'desc')
+            ->columns([
+                TextColumn::make('date')
+                    ->date('M j, Y')
+                    ->sortable()
+                    ->weight('bold'),
+                TextColumn::make('total_human')
+                    ->label('Total')
+                    ->sortable(query: fn ($query, string $direction) => $query->orderBy('total_seconds', $direction))
+                    ->badge()
+                    ->color('success'),
+                TextColumn::make('top_project')
+                    ->label('Top project')
+                    ->getStateUsing(fn (WakaTimeSummary $record): ?string => self::topName($record, WakaTimeSummaryEntry::TYPE_PROJECT))
+                    ->placeholder('—'),
+                TextColumn::make('top_language')
+                    ->label('Top language')
+                    ->getStateUsing(fn (WakaTimeSummary $record): ?string => self::topName($record, WakaTimeSummaryEntry::TYPE_LANGUAGE))
+                    ->placeholder('—'),
+            ])
+            ->recordActions([
+                ViewAction::make(),
+            ])
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
+
+    private static function topName(WakaTimeSummary $record, string $type): ?string
+    {
+        return $record->entries
+            ->where('type', $type)
+            ->sortByDesc('seconds')
+            ->value('name');
+    }
+}
