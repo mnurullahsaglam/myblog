@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Enums\Currencies;
@@ -47,7 +49,7 @@ class Income extends Model
 
     public function getFormattedAmountAttribute(): string
     {
-        return $this->currency->getSymbol() . ' ' . number_format($this->amount, 2);
+        return $this->currency->getSymbol().' '.number_format($this->amount, 2);
     }
 
     public function getSourceAttribute(): string
@@ -55,17 +57,17 @@ class Income extends Model
         if ($this->relationLoaded('client') && $this->client) {
             return $this->client->title;
         } elseif ($this->relationLoaded('invoice') && $this->invoice) {
-            return 'Invoice #' . $this->invoice->id;
+            return 'Invoice #'.$this->invoice->id;
         } elseif ($this->relationLoaded('debt') && $this->debt) {
-            return 'Debt from ' . $this->debt->creditor_name;
+            return 'Debt from '.$this->debt->creditor_name;
         }
 
         // Fallback: try to load relationships if not already loaded
-        if ($this->client_id && !$this->relationLoaded('client')) {
+        if ($this->client_id && ! $this->relationLoaded('client')) {
             return optional($this->client)->title ?? 'Client';
-        } elseif ($this->invoice_id && !$this->relationLoaded('invoice')) {
-            return 'Invoice #' . $this->invoice_id;
-        } elseif ($this->debt_id && !$this->relationLoaded('debt')) {
+        } elseif ($this->invoice_id && ! $this->relationLoaded('invoice')) {
+            return 'Invoice #'.$this->invoice_id;
+        } elseif ($this->debt_id && ! $this->relationLoaded('debt')) {
             return 'Debt Payment';
         }
 

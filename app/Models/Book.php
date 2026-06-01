@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Traits\CategoriableRelation;
@@ -13,7 +15,7 @@ use Spatie\Sluggable\HasSlug;
 
 class Book extends Model
 {
-    use HasFactory, HasSlug, SlugAsRouteKeyName, DefaultSlugOptions, CategoriableRelation, ImageUrlAttribute;
+    use CategoriableRelation, DefaultSlugOptions, HasFactory, HasSlug, ImageUrlAttribute, SlugAsRouteKeyName;
 
     public function writer(): BelongsTo
     {

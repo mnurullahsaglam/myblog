@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters\Budget\Resources;
 
 use App\Enums\Currencies;
@@ -8,7 +10,13 @@ use App\Filament\Clusters\Budget\Resources\DebtResource\Pages;
 use App\Models\Debt;
 use App\Models\Expense;
 use App\Services\ExchangeRateService;
-use Filament\Schemas\Schema;
+use BackedEnum;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -17,12 +25,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
-use Filament\Actions\Action;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
@@ -34,7 +37,7 @@ class DebtResource extends Resource
 {
     protected static ?string $model = Debt::class;
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-exclamation-triangle';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-exclamation-triangle';
 
     protected static ?string $cluster = Budget::class;
 
@@ -51,14 +54,14 @@ class DebtResource extends Resource
 
                 TextColumn::make('creditor_type')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'person' => 'info',
                         'institute' => 'warning',
                     }),
 
                 TextColumn::make('amount')
                     ->label('Original Amount')
-                    ->money(fn(Debt $record) => $record->currency->value)
+                    ->money(fn (Debt $record) => $record->currency->value)
                     ->sortable(),
 
                 TextColumn::make('converted_amount')
@@ -78,7 +81,8 @@ class DebtResource extends Resource
                         );
 
                         $targetCurrencyEnum = Currencies::tryFrom($targetCurrency) ?? Currencies::TRY;
-                        return $targetCurrencyEnum->getSymbol() . ' ' . number_format($convertedAmount, 2);
+
+                        return $targetCurrencyEnum->getSymbol().' '.number_format($convertedAmount, 2);
                     })
                     ->sortable(false),
 
@@ -87,21 +91,28 @@ class DebtResource extends Resource
 
                 TextColumn::make('status')
                     ->badge()
-                    ->color(fn(Debt $record) => $record->status_color),
+                    ->color(fn (Debt $record) => $record->status_color),
 
                 TextColumn::make('due_date_status')
                     ->label('Due Status')
-                    ->getStateUsing(fn(Debt $record): string => $record->due_date_status)
+                    ->getStateUsing(fn (Debt $record): string => $record->due_date_status)
                     ->color(function (Debt $record): string {
-                        if (!$record->due_date || $record->status === 'paid') {
+                        if (! $record->due_date || $record->status === 'paid') {
                             return 'gray';
                         }
 
                         $days = $record->days_until_due;
-                        if ($days === null) return 'gray';
+                        if ($days === null) {
+                            return 'gray';
+                        }
 
-                        if ($days < 0) return 'danger';
-                        if ($days <= 7) return 'warning';
+                        if ($days < 0) {
+                            return 'danger';
+                        }
+                        if ($days <= 7) {
+                            return 'warning';
+                        }
+
                         return 'success';
                     }),
 
@@ -137,13 +148,13 @@ class DebtResource extends Resource
 
                 SelectFilter::make('currency')
                     ->options(collect(Currencies::cases())
-                        ->mapWithKeys(fn($currency) => [$currency->value => $currency->getLabel()]))
+                        ->mapWithKeys(fn ($currency) => [$currency->value => $currency->getLabel()]))
                     ->multiple(),
 
                 SelectFilter::make('conversion_currency')
                     ->label('Convert To Currency')
                     ->options(collect(Currencies::cases())
-                        ->mapWithKeys(fn($currency) => [$currency->value => $currency->getLabel() . ' (' . $currency->getSymbol() . ')']))
+                        ->mapWithKeys(fn ($currency) => [$currency->value => $currency->getLabel().' ('.$currency->getSymbol().')']))
                     ->default('TRY')
                     ->selectablePlaceholder(false)
                     ->query(function (Builder $query, array $data) {
@@ -153,14 +164,14 @@ class DebtResource extends Resource
 
                 Filter::make('overdue')
                     ->label('Overdue Debts')
-                    ->query(fn(Builder $query): Builder => $query
+                    ->query(fn (Builder $query): Builder => $query
                         ->where('status', 'pending')
                         ->whereNotNull('due_date')
                         ->where('due_date', '<', now())),
 
                 Filter::make('due_soon')
                     ->label('Due Within 7 Days')
-                    ->query(fn(Builder $query): Builder => $query
+                    ->query(fn (Builder $query): Builder => $query
                         ->where('status', 'pending')
                         ->whereNotNull('due_date')
                         ->whereBetween('due_date', [now(), now()->addDays(7)])),
@@ -176,21 +187,22 @@ class DebtResource extends Resource
                         return $query
                             ->when(
                                 $data['from_date'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('date', '>=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('date', '>=', $date),
                             )
                             ->when(
                                 $data['to_date'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('date', '<=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('date', '<=', $date),
                             );
                     })
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
                         if ($data['from_date'] ?? null) {
-                            $indicators[] = 'From ' . Carbon::parse($data['from_date'])->toFormattedDateString();
+                            $indicators[] = 'From '.Carbon::parse($data['from_date'])->toFormattedDateString();
                         }
                         if ($data['to_date'] ?? null) {
-                            $indicators[] = 'Until ' . Carbon::parse($data['to_date'])->toFormattedDateString();
+                            $indicators[] = 'Until '.Carbon::parse($data['to_date'])->toFormattedDateString();
                         }
+
                         return $indicators;
                     }),
 
@@ -206,21 +218,22 @@ class DebtResource extends Resource
                         return $query
                             ->when(
                                 $data['due_from_date'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('due_date', '>=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('due_date', '>=', $date),
                             )
                             ->when(
                                 $data['due_to_date'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('due_date', '<=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('due_date', '<=', $date),
                             );
                     })
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
                         if ($data['due_from_date'] ?? null) {
-                            $indicators[] = 'Due from ' . Carbon::parse($data['due_from_date'])->toFormattedDateString();
+                            $indicators[] = 'Due from '.Carbon::parse($data['due_from_date'])->toFormattedDateString();
                         }
                         if ($data['due_to_date'] ?? null) {
-                            $indicators[] = 'Due until ' . Carbon::parse($data['due_to_date'])->toFormattedDateString();
+                            $indicators[] = 'Due until '.Carbon::parse($data['due_to_date'])->toFormattedDateString();
                         }
+
                         return $indicators;
                     }),
             ])
@@ -229,21 +242,21 @@ class DebtResource extends Resource
                     ->label('Pay Debt')
                     ->icon('heroicon-o-banknotes')
                     ->color('success')
-                    ->visible(fn(Debt $record) => $record->status === 'pending')
+                    ->visible(fn (Debt $record) => $record->status === 'pending')
                     ->form([
                         TextInput::make('payment_amount')
                             ->label('Payment Amount')
                             ->numeric()
                             ->required()
                             ->minValue(0.01)
-                            ->maxValue(fn(Debt $record) => $record->amount)
-                            ->default(fn(Debt $record) => $record->amount)
-                            ->prefix(fn(Debt $record) => $record->currency->getSymbol())
-                            ->helperText(fn(Debt $record) => 'Maximum amount: ' . $record->formatted_amount),
+                            ->maxValue(fn (Debt $record) => $record->amount)
+                            ->default(fn (Debt $record) => $record->amount)
+                            ->prefix(fn (Debt $record) => $record->currency->getSymbol())
+                            ->helperText(fn (Debt $record) => 'Maximum amount: '.$record->formatted_amount),
 
                         Textarea::make('payment_description')
                             ->label('Payment Description')
-                            ->default(fn(Debt $record) => "Payment for debt to {$record->creditor_name}")
+                            ->default(fn (Debt $record) => "Payment for debt to {$record->creditor_name}")
                             ->rows(2),
 
                         FileUpload::make('receipt')
@@ -273,7 +286,7 @@ class DebtResource extends Resource
                             // Fully paid
                             $record->update([
                                 'amount' => 0,
-                                'status' => 'paid'
+                                'status' => 'paid',
                             ]);
 
                             Notification::make()
@@ -287,7 +300,7 @@ class DebtResource extends Resource
 
                             Notification::make()
                                 ->title('Partial payment recorded')
-                                ->body("Paid {$record->currency->getSymbol()}" . number_format($paymentAmount, 2) . ". Remaining: {$record->currency->getSymbol()}" . number_format($remainingAmount, 2))
+                                ->body("Paid {$record->currency->getSymbol()}".number_format($paymentAmount, 2).". Remaining: {$record->currency->getSymbol()}".number_format($remainingAmount, 2))
                                 ->success()
                                 ->send();
                         }
@@ -330,12 +343,13 @@ class DebtResource extends Resource
                     ->prefix(function (Get $get) {
                         $currency = $get('currency');
                         $currencyInstance = $currency instanceof Currencies ? $currency : Currencies::tryFrom($currency) ?? Currencies::TRY;
+
                         return $currencyInstance->getSymbol();
                     }),
 
                 Select::make('currency')
                     ->options(collect(Currencies::cases())
-                        ->mapWithKeys(fn($currency) => [$currency->value => $currency->getLabel() . ' (' . $currency->getSymbol() . ')']))
+                        ->mapWithKeys(fn ($currency) => [$currency->value => $currency->getLabel().' ('.$currency->getSymbol().')']))
                     ->default('TRY')
                     ->required()
                     ->live(),
@@ -371,4 +385,4 @@ class DebtResource extends Resource
             'edit' => Pages\EditDebt::route('/{record}/edit'),
         ];
     }
-} 
+}

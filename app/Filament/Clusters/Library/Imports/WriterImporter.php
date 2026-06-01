@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters\Library\Imports;
 
 use App\Models\Writer;
@@ -61,10 +63,10 @@ class WriterImporter extends Importer
 
     public static function getCompletedNotificationBody(Import $import): string
     {
-        $body = 'İçeri aktarım tamamlandı. ' . number_format($import->successful_rows) . ' yazar eklendi.';
+        $body = 'İçeri aktarım tamamlandı. '.number_format($import->successful_rows).' yazar eklendi.';
 
         if ($failedRowsCount = $import->getFailedRowsCount()) {
-            $body .= ' ' . number_format($failedRowsCount) . ' yazar içeri aktarılamadı.';
+            $body .= ' '.number_format($failedRowsCount).' yazar içeri aktarılamadı.';
         }
 
         return $body;

@@ -1,20 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters\Work\Resources;
 
 use App\Filament\Clusters\Work;
-use App\Filament\Clusters\Work\Resources;
 use App\Models\Project;
-use Filament\Schemas\Schema;
+use BackedEnum;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -26,7 +28,7 @@ class ProjectResource extends Resource
 
     protected static ?string $slug = 'projects';
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-folder-open';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-folder-open';
 
     protected static ?string $cluster = Work::class;
 
@@ -45,11 +47,11 @@ class ProjectResource extends Resource
 
                 Placeholder::make('created_at')
                     ->label('Created Date')
-                    ->content(fn(?Project $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                    ->content(fn (?Project $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
                 Placeholder::make('updated_at')
                     ->label('Last Modified Date')
-                    ->content(fn(?Project $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                    ->content(fn (?Project $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
             ]);
     }
 
@@ -85,9 +87,9 @@ class ProjectResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Resources\ProjectResource\Pages\ListProjects::route('/'),
-            'create' => Resources\ProjectResource\Pages\CreateProject::route('/create'),
-            'edit' => Resources\ProjectResource\Pages\EditProject::route('/{record}/edit'),
+            'index' => ProjectResource\Pages\ListProjects::route('/'),
+            'create' => ProjectResource\Pages\CreateProject::route('/create'),
+            'edit' => ProjectResource\Pages\EditProject::route('/{record}/edit'),
         ];
     }
 

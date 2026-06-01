@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Models\Repository;
 use App\Models\Task;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 
@@ -22,8 +25,9 @@ class SyncGitHubIssues extends Command
     {
         $this->githubToken = $this->option('token') ?? config('services.github.personal_access_token');
 
-        if (!$this->githubToken) {
+        if (! $this->githubToken) {
             $this->error('GitHub token is required. Set GITHUB_TOKEN environment variable or use --token option.');
+
             return self::FAILURE;
         }
 
@@ -37,6 +41,7 @@ class SyncGitHubIssues extends Command
 
         if ($repositories->isEmpty()) {
             $this->info('No repositories found to sync.');
+
             return self::SUCCESS;
         }
 
@@ -47,6 +52,7 @@ class SyncGitHubIssues extends Command
         }
 
         $this->info('✅ Issue synchronization completed successfully!');
+
         return self::SUCCESS;
     }
 
@@ -56,6 +62,7 @@ class SyncGitHubIssues extends Command
 
         if ($repositories->isEmpty()) {
             $this->error('No active repositories found.');
+
             return collect();
         }
 
@@ -100,7 +107,7 @@ class SyncGitHubIssues extends Command
 
             $this->info("   ✅ Synced {$syncedCount} new issues, updated {$updatedCount} existing issues");
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->error("   ❌ Failed to sync {$repository->full_name}: {$e->getMessage()}");
         }
     }
@@ -124,15 +131,15 @@ class SyncGitHubIssues extends Command
                 'direction' => 'desc',
             ]);
 
-            if (!$response->successful()) {
-                throw new \Exception("GitHub API error: {$response->status()} - {$response->body()}");
+            if (! $response->successful()) {
+                throw new Exception("GitHub API error: {$response->status()} - {$response->body()}");
             }
 
             $issues = $response->json();
 
             // Filter out pull requests (GitHub API includes PRs in issues endpoint)
             $issuesOnly = array_filter($issues, function ($issue) {
-                return !isset($issue['pull_request']);
+                return ! isset($issue['pull_request']);
             });
 
             $allIssues = array_merge($allIssues, $issuesOnly);
@@ -166,9 +173,11 @@ class SyncGitHubIssues extends Command
 
         if ($existingTask) {
             $existingTask->update($taskData);
+
             return false; // Updated existing
         } else {
             Task::create($taskData);
+
             return true; // Created new
         }
     }
@@ -181,4 +190,4 @@ class SyncGitHubIssues extends Command
             default => 'todo',
         };
     }
-} 
+}

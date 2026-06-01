@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters\Budget\Resources\DebtResource\Widgets;
 
 use App\Services\ExchangeRateService;
@@ -20,7 +22,7 @@ class ExchangeRateWidget extends StatsOverviewWidget
 
         return [
             Stat::make('Exchange Rates', 'Live Currency Conversion')
-                ->description('Last updated: ' . $lastUpdated)
+                ->description('Last updated: '.$lastUpdated)
                 ->descriptionIcon('heroicon-m-currency-dollar')
                 ->color('success'),
 
@@ -30,4 +32,4 @@ class ExchangeRateWidget extends StatsOverviewWidget
                 ->color('info'),
         ];
     }
-} 
+}

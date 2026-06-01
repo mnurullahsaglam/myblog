@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters\Library\Resources;
 
 use App\Filament\Clusters\Library;
@@ -9,15 +11,16 @@ use App\Filament\Clusters\Library\Resources\BookResource\Pages\ListBooks;
 use App\Filament\Clusters\Library\Resources\BookResource\Widgets\BooksOverview;
 use App\Filament\Exports\BookExporter;
 use App\Models\Book;
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Resources\Resource;
+use BackedEnum;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ExportBulkAction;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -29,7 +32,7 @@ class BookResource extends Resource
 
     protected static ?string $slug = 'books';
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-book-open';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-book-open';
 
     protected static ?string $cluster = Library::class;
 

@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Enums\Currencies;
+use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -10,7 +13,9 @@ use Illuminate\Support\Facades\Log;
 class ExchangeRateService
 {
     private string $openExchangeApiKey;
+
     private string $metalsApiKey;
+
     private string $baseCurrency = 'TRY';
 
     public function __construct()
@@ -22,7 +27,7 @@ class ExchangeRateService
     /**
      * Get converted amount for display in tables
      */
-    public function getConvertedAmount(float $amount, string $fromCurrency, string $displayCurrency = null): array
+    public function getConvertedAmount(float $amount, string $fromCurrency, ?string $displayCurrency = null): array
     {
         $displayCurrency = $displayCurrency ?? $this->baseCurrency;
 
@@ -54,7 +59,7 @@ class ExchangeRateService
         $currencyEnum = Currencies::tryFrom($currency);
         $symbol = $currencyEnum?->getSymbol() ?? $currency;
 
-        return $symbol . ' ' . number_format($amount, 2);
+        return $symbol.' '.number_format($amount, 2);
     }
 
     /**
@@ -67,6 +72,7 @@ class ExchangeRateService
         }
 
         $rate = $this->getExchangeRate($fromCurrency, $toCurrency);
+
         return round($amount * $rate, 2);
     }
 
@@ -125,8 +131,8 @@ class ExchangeRateService
 
             Log::info('Exchange rates fetched successfully', ['rates_count' => count($rates)]);
 
-        } catch (\Exception $e) {
-            Log::error('Failed to fetch exchange rates: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('Failed to fetch exchange rates: '.$e->getMessage());
 
             // Return fallback rates
             return $this->getFallbackRates();
@@ -151,7 +157,7 @@ class ExchangeRateService
             return $response->json('rates', []);
         }
 
-        throw new \Exception('OpenExchangeRates API failed: ' . $response->body());
+        throw new Exception('OpenExchangeRates API failed: '.$response->body());
     }
 
     /**
@@ -192,7 +198,8 @@ class ExchangeRateService
         return collect($popular)
             ->mapWithKeys(function ($code) {
                 $currency = Currencies::tryFrom($code);
-                return [$code => $currency?->getLabel() . ' (' . $currency?->getSymbol() . ')'];
+
+                return [$code => $currency?->getLabel().' ('.$currency?->getSymbol().')'];
             })
             ->toArray();
     }
@@ -205,9 +212,11 @@ class ExchangeRateService
         try {
             Cache::forget('exchange_rates');
             $this->getAllRates();
+
             return true;
-        } catch (\Exception $e) {
-            Log::error('Failed to refresh exchange rates: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('Failed to refresh exchange rates: '.$e->getMessage());
+
             return false;
         }
     }
@@ -239,4 +248,4 @@ class ExchangeRateService
             default => 'open',
         };
     }
-} 
+}

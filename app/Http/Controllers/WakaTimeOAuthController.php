@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Services\WakaTimeService;
@@ -7,6 +9,7 @@ use Filament\Notifications\Notification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Throwable;
 
 class WakaTimeOAuthController extends Controller
 {
@@ -31,7 +34,7 @@ class WakaTimeOAuthController extends Controller
         $panel = filament()->getDefaultPanel()->getUrl();
 
         if ($request->filled('error')) {
-            return $this->back($panel, false, 'WakaTime authorization was denied: ' . $request->string('error'));
+            return $this->back($panel, false, 'WakaTime authorization was denied: '.$request->string('error'));
         }
 
         $expectedState = $request->session()->pull('wakatime_oauth_state');
@@ -42,10 +45,10 @@ class WakaTimeOAuthController extends Controller
 
         try {
             $this->wakatime->exchangeCodeForToken($request->string('code')->toString());
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             report($e);
 
-            return $this->back($panel, false, 'Failed to connect WakaTime: ' . $e->getMessage());
+            return $this->back($panel, false, 'Failed to connect WakaTime: '.$e->getMessage());
         }
 
         return $this->back($panel, true, 'WakaTime connected successfully. Your daily sync is now active.');

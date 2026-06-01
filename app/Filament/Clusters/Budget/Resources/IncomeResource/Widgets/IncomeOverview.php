@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters\Budget\Resources\IncomeResource\Widgets;
 
 use App\Models\Debt;
@@ -98,4 +100,4 @@ class IncomeOverview extends BaseWidget
 
         return $total;
     }
-} 
+}

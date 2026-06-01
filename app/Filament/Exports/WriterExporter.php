@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Exports;
 
 use App\Models\Writer;
@@ -29,7 +31,7 @@ class WriterExporter extends Exporter
                 ->label('Ölüm Yeri'),
             ExportColumn::make('is_finished')
                 ->label('Durum')
-                ->formatStateUsing(fn(Writer $record) => $record ? 'Tamamlandı' : 'Tamamlanmadı'),
+                ->formatStateUsing(fn (Writer $record) => $record ? 'Tamamlandı' : 'Tamamlanmadı'),
             ExportColumn::make('books_count')->counts('books')
                 ->label('Kitap Sayısı'),
         ];
@@ -37,10 +39,10 @@ class WriterExporter extends Exporter
 
     public static function getCompletedNotificationBody(Export $export): string
     {
-        $body = 'Yazarların dışarı aktarılması tamamlandı. ' . number_format($export->successful_rows) . ' yazar dışarı aktarıldı.';
+        $body = 'Yazarların dışarı aktarılması tamamlandı. '.number_format($export->successful_rows).' yazar dışarı aktarıldı.';
 
         if ($failedRowsCount = $export->getFailedRowsCount()) {
-            $body .= ' ' . number_format($failedRowsCount) . ' yazar dışarı aktarılamadı.';
+            $body .= ' '.number_format($failedRowsCount).' yazar dışarı aktarılamadı.';
         }
 
         return $body;

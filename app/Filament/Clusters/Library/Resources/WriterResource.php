@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters\Library\Resources;
 
 use App\Filament\Clusters\Library;
@@ -8,15 +10,16 @@ use App\Filament\Clusters\Library\Resources\WriterResource\Pages\EditWriter;
 use App\Filament\Clusters\Library\Resources\WriterResource\Pages\ListWriters;
 use App\Filament\Exports\WriterExporter;
 use App\Models\Writer;
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\TextInput;
-use Filament\Resources\Resource;
+use BackedEnum;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ExportBulkAction;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\TextInput;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -26,7 +29,7 @@ class WriterResource extends Resource
 
     protected static ?string $slug = 'writers';
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-user';
 
     protected static ?string $cluster = Library::class;
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Widgets;
 
 use App\Filament\Widgets\Concerns\InteractsWithWakaTimeData;
@@ -24,7 +26,7 @@ class WakaTimeAiOverview extends BaseWidget
         $aiShare = $totalLines > 0 ? round($aiLines / $totalLines * 100) : 0;
 
         return [
-            Stat::make('AI-driven', $aiShare . '%')
+            Stat::make('AI-driven', $aiShare.'%')
                 ->description('share of added lines')
                 ->color('info'),
             Stat::make('AI lines', $this->formatNumber($aiLines))
@@ -32,8 +34,8 @@ class WakaTimeAiOverview extends BaseWidget
                 ->color('info'),
             Stat::make('Human lines', $this->formatNumber($humanLines))
                 ->descriptionIcon('heroicon-m-user'),
-            Stat::make('AI spend', '$' . number_format($this->grandTotalSum('ai_agent_total_cost'), 2))
-                ->description($this->formatNumber($this->grandTotalSum('ai_input_tokens') + $this->grandTotalSum('ai_output_tokens')) . ' tokens')
+            Stat::make('AI spend', '$'.number_format($this->grandTotalSum('ai_agent_total_cost'), 2))
+                ->description($this->formatNumber($this->grandTotalSum('ai_input_tokens') + $this->grandTotalSum('ai_output_tokens')).' tokens')
                 ->color('warning'),
         ];
     }

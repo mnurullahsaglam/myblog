@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\WakaTimeSummaries;
 
+use App\Filament\Clusters\Work;
 use App\Filament\Resources\WakaTimeSummaries\Pages\ListWakaTimeSummaries;
 use App\Filament\Resources\WakaTimeSummaries\Pages\ViewWakaTimeSummary;
 use App\Filament\Resources\WakaTimeSummaries\RelationManagers\EntriesRelationManager;
 use App\Filament\Resources\WakaTimeSummaries\Schemas\WakaTimeSummaryInfolist;
-use App\Filament\Clusters\Work;
 use App\Filament\Resources\WakaTimeSummaries\Tables\WakaTimeSummariesTable;
 use App\Models\WakaTimeSummary;
 use BackedEnum;

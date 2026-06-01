@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters\Budget\Resources\ExpenseResource\Pages;
 
 use App\Filament\Clusters\Budget\Resources\ExpenseResource;
@@ -17,4 +19,4 @@ class EditExpense extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
-} 
+}

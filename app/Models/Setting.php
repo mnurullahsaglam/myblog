@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +17,7 @@ class Setting extends Model
 
         return Cache::remember($cacheKey, 3600, function () use ($group, $name, $default) {
             $setting = static::where('group', $group)->where('name', $name)->first();
+
             return $setting ? $setting->value : $default;
         });
     }

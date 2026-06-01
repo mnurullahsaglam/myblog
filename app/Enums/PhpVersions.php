@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Enums;
 
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 
-enum PhpVersions: string implements HasLabel, HasColor
+enum PhpVersions: string implements HasColor, HasLabel
 {
     case PHP_7_4 = '7.4';
     case PHP_8_0 = '8.0';

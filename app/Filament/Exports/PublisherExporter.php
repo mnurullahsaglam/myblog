@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Exports;
 
 use App\Models\Publisher;
@@ -24,10 +26,10 @@ class PublisherExporter extends Exporter
 
     public static function getCompletedNotificationBody(Export $export): string
     {
-        $body = 'Yayınevlerinin dışarı aktarılması tamamlandı. ' . number_format($export->successful_rows) . ' yazar dışarı aktarıldı.';
+        $body = 'Yayınevlerinin dışarı aktarılması tamamlandı. '.number_format($export->successful_rows).' yazar dışarı aktarıldı.';
 
         if ($failedRowsCount = $export->getFailedRowsCount()) {
-            $body .= ' ' . number_format($failedRowsCount) . ' yayınevi dışarı aktarılamadı.';
+            $body .= ' '.number_format($failedRowsCount).' yayınevi dışarı aktarılamadı.';
         }
 
         return $body;

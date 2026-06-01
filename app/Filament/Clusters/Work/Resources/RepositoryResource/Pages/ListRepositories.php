@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters\Work\Resources\RepositoryResource\Pages;
 
 use App\Filament\Clusters\Work\Resources\RepositoryResource;
@@ -16,4 +18,4 @@ class ListRepositories extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
-} 
+}

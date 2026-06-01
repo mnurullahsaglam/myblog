@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -44,6 +46,6 @@ return [
         'app_secret' => env('WAKATIME_APP_SECRET'),
         // Derives from APP_URL so it works in both local (myblog.test) and production.
         // Register every environment's value as a Redirect URI in your WakaTime app.
-        'redirect' => env('WAKATIME_REDIRECT_URI', rtrim((string) env('APP_URL'), '/') . '/wakatime/callback'),
+        'redirect' => env('WAKATIME_REDIRECT_URI', rtrim((string) env('APP_URL'), '/').'/wakatime/callback'),
     ],
 ];

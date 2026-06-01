@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Enums\Currencies;
@@ -41,7 +43,7 @@ class Debt extends Model
 
     public function getFormattedAmountAttribute(): string
     {
-        return $this->currency->getSymbol() . ' ' . number_format($this->amount, 2);
+        return $this->currency->getSymbol().' '.number_format($this->amount, 2);
     }
 
     public function getIsPendingAttribute(): bool
@@ -65,21 +67,21 @@ class Debt extends Model
 
     public function getDaysUntilDueAttribute(): ?int
     {
-        if (!$this->due_date || !$this->isPending) {
+        if (! $this->due_date || ! $this->isPending) {
             return null;
         }
 
-        return (int)now()->diffInDays($this->due_date, false);
+        return (int) now()->diffInDays($this->due_date, false);
     }
 
     public function getHasDueDateAttribute(): bool
     {
-        return !is_null($this->due_date);
+        return ! is_null($this->due_date);
     }
 
     public function getDueDateStatusAttribute(): string
     {
-        if (!$this->due_date) {
+        if (! $this->due_date) {
             return 'No due date';
         }
 
@@ -88,14 +90,16 @@ class Debt extends Model
         }
 
         $days = $this->days_until_due;
-        if ($days === null) return 'No due date';
+        if ($days === null) {
+            return 'No due date';
+        }
 
         if ($days < 0) {
-            return abs($days) . ' days overdue';
+            return abs($days).' days overdue';
         } elseif ($days === 0) {
             return 'Due today';
         }
 
-        return $days . ' days remaining';
+        return $days.' days remaining';
     }
 }

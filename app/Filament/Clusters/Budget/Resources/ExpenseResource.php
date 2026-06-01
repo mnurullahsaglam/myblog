@@ -1,12 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters\Budget\Resources;
 
 use App\Enums\Currencies;
 use App\Filament\Clusters\Budget;
 use App\Filament\Clusters\Budget\Resources\ExpenseResource\Pages;
 use App\Models\Expense;
-use Filament\Schemas\Schema;
+use BackedEnum;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -14,11 +21,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
@@ -31,7 +34,7 @@ class ExpenseResource extends Resource
 {
     protected static ?string $model = Expense::class;
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-minus-circle';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-minus-circle';
 
     protected static ?string $cluster = Budget::class;
 
@@ -42,7 +45,7 @@ class ExpenseResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('amount')
-                    ->money(fn(Expense $record) => $record->currency->value)
+                    ->money(fn (Expense $record) => $record->currency->value)
                     ->sortable(),
 
                 TextColumn::make('currency')
@@ -52,13 +55,14 @@ class ExpenseResource extends Resource
                 TextColumn::make('expenseCategory.name')
                     ->label('Category')
                     ->badge()
-                    ->color(fn(Expense $record) => $record->expenseCategory?->color ? 'primary' : 'gray')
+                    ->color(fn (Expense $record) => $record->expenseCategory?->color ? 'primary' : 'gray')
                     ->sortable(),
 
                 TextColumn::make('description')
                     ->limit(50)
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
+
                         return strlen($state) <= 50 ? null : $state;
                     }),
 
@@ -91,7 +95,7 @@ class ExpenseResource extends Resource
 
                 SelectFilter::make('currency')
                     ->options(collect(Currencies::cases())
-                        ->mapWithKeys(fn($currency) => [$currency->value => $currency->getLabel()]))
+                        ->mapWithKeys(fn ($currency) => [$currency->value => $currency->getLabel()]))
                     ->multiple(),
 
                 SelectFilter::make('debt_id')
@@ -111,31 +115,32 @@ class ExpenseResource extends Resource
                         return $query
                             ->when(
                                 $data['from_date'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('date', '>=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('date', '>=', $date),
                             )
                             ->when(
                                 $data['to_date'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('date', '<=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('date', '<=', $date),
                             );
                     })
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
                         if ($data['from_date'] ?? null) {
-                            $indicators[] = 'From ' . Carbon::parse($data['from_date'])->toFormattedDateString();
+                            $indicators[] = 'From '.Carbon::parse($data['from_date'])->toFormattedDateString();
                         }
                         if ($data['to_date'] ?? null) {
-                            $indicators[] = 'Until ' . Carbon::parse($data['to_date'])->toFormattedDateString();
+                            $indicators[] = 'Until '.Carbon::parse($data['to_date'])->toFormattedDateString();
                         }
+
                         return $indicators;
                     }),
 
                 Filter::make('has_receipt')
                     ->label('Has Receipt')
-                    ->query(fn(Builder $query): Builder => $query->whereNotNull('receipt_path')),
+                    ->query(fn (Builder $query): Builder => $query->whereNotNull('receipt_path')),
 
                 Filter::make('no_receipt')
                     ->label('No Receipt')
-                    ->query(fn(Builder $query): Builder => $query->whereNull('receipt_path')),
+                    ->query(fn (Builder $query): Builder => $query->whereNull('receipt_path')),
             ])
             ->actions([
                 ViewAction::make(),
@@ -162,12 +167,13 @@ class ExpenseResource extends Resource
                     ->prefix(function (Get $get) {
                         $currency = $get('currency');
                         $currencyInstance = $currency instanceof Currencies ? $currency : Currencies::tryFrom($currency) ?? Currencies::TRY;
+
                         return $currencyInstance->getSymbol();
                     }),
 
                 Select::make('currency')
                     ->options(collect(Currencies::cases())
-                        ->mapWithKeys(fn($currency) => [$currency->value => $currency->getLabel() . ' (' . $currency->getSymbol() . ')']))
+                        ->mapWithKeys(fn ($currency) => [$currency->value => $currency->getLabel().' ('.$currency->getSymbol().')']))
                     ->default('TRY')
                     ->required()
                     ->live(),
@@ -213,4 +219,4 @@ class ExpenseResource extends Resource
             'edit' => Pages\EditExpense::route('/{record}/edit'),
         ];
     }
-} 
+}

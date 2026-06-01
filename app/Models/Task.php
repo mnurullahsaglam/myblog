@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Observers\TaskObserver;
@@ -39,12 +41,12 @@ class Task extends Model
 
     public function getIsGithubIssueAttribute(): bool
     {
-        return !is_null($this->github_issue_number);
+        return ! is_null($this->github_issue_number);
     }
 
     public function getGithubLabelsStringAttribute(): string
     {
-        if (!$this->github_issue_labels) {
+        if (! $this->github_issue_labels) {
             return '';
         }
 

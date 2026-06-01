@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use App\Models\User;
 use Filament\Actions\CreateAction;
 use Filament\Actions\ExportAction;
+use Filament\Actions\ExportBulkAction;
 use Filament\Actions\ImportAction;
 use Filament\Forms\Components\Field;
-use Filament\Actions\ExportBulkAction;
 use Filament\Tables\Columns\Column;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;

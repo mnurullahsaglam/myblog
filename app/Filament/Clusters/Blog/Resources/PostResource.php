@@ -1,19 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters\Blog\Resources;
 
 use App\Filament\Clusters\Blog;
-use App\Filament\Resources\PostResource\Pages;
 use App\Models\Post;
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\MarkdownEditor;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\TextInput;
-use Filament\Resources\Resource;
+use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\TextInput;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -25,7 +27,7 @@ class PostResource extends Resource
 
     protected static ?string $slug = 'posts';
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $cluster = Blog::class;
 
@@ -36,23 +38,23 @@ class PostResource extends Resource
                 TextInput::make('title')
                     ->required()
                     ->reactive()
-                    ->afterStateUpdated(fn($state, callable $set) => $set('slug', Str::slug($state))),
+                    ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
 
                 TextInput::make('slug')
                     ->disabled()
                     ->required()
-                    ->unique(Post::class, 'slug', fn($record) => $record),
+                    ->unique(Post::class, 'slug', fn ($record) => $record),
 
                 MarkdownEditor::make('content')
                     ->required(),
 
                 Placeholder::make('created_at')
                     ->label('Created Date')
-                    ->content(fn(?Post $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                    ->content(fn (?Post $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
                 Placeholder::make('updated_at')
                     ->label('Last Modified Date')
-                    ->content(fn(?Post $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                    ->content(fn (?Post $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
             ]);
     }
 
@@ -87,9 +89,9 @@ class PostResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => \App\Filament\Clusters\Blog\Resources\PostResource\Pages\ListPosts::route('/'),
-            'create' => \App\Filament\Clusters\Blog\Resources\PostResource\Pages\CreatePost::route('/create'),
-            'edit' => \App\Filament\Clusters\Blog\Resources\PostResource\Pages\EditPost::route('/{record}/edit'),
+            'index' => PostResource\Pages\ListPosts::route('/'),
+            'create' => PostResource\Pages\CreatePost::route('/create'),
+            'edit' => PostResource\Pages\EditPost::route('/{record}/edit'),
         ];
     }
 

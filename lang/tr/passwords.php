@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -17,6 +19,6 @@ return [
     'sent' => 'Parola sıfırlama bağlantınızı e-posta adresinize gönderdik!',
     'throttled' => 'Lütfen tekrar denemeden önce bekleyin.',
     'token' => 'Bu parola sıfırlama belirteci geçersiz.',
-    'user' => "Bu e-posta adresine sahip bir kullanıcı bulamıyoruz.",
+    'user' => 'Bu e-posta adresine sahip bir kullanıcı bulamıyoruz.',
 
 ];

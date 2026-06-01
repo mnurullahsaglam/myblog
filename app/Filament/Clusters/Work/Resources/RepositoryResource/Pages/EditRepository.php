@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters\Work\Resources\RepositoryResource\Pages;
 
 use App\Filament\Clusters\Work\Resources\RepositoryResource;
@@ -17,4 +19,4 @@ class EditRepository extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
-} 
+}

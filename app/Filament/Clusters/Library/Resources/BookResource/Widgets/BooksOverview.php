@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters\Library\Resources\BookResource\Widgets;
 
 use App\Models\Book;

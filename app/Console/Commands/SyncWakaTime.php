@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Models\User;
@@ -10,6 +12,7 @@ use Filament\Notifications\Notification;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class SyncWakaTime extends Command
 {
@@ -25,13 +28,15 @@ class SyncWakaTime extends Command
         'operating_systems' => WakaTimeSummaryEntry::TYPE_OS,
         'categories' => WakaTimeSummaryEntry::TYPE_CATEGORY,
     ];
+
     protected $signature = 'wakatime:sync
                             {--days=7 : Number of trailing days to fetch and upsert (max ~14 on the free plan)}';
+
     protected $description = 'Fetch WakaTime daily summaries and upsert them (totals + project/language/editor/os/category breakdowns)';
 
     public function handle(WakaTimeService $wakatime): int
     {
-        $days = max(1, (int)$this->option('days'));
+        $days = max(1, (int) $this->option('days'));
         $end = now();
         $start = now()->subDays($days - 1);
 
@@ -39,7 +44,7 @@ class SyncWakaTime extends Command
 
         try {
             $summaries = $wakatime->fetchSummaries($start, $end);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $this->reportFailure($e);
         }
 
@@ -48,14 +53,14 @@ class SyncWakaTime extends Command
         foreach ($summaries as $day) {
             $date = data_get($day, 'range.date');
 
-            if (!$date) {
+            if (! $date) {
                 continue;
             }
 
             try {
                 $this->upsertDay($day, $date);
                 $count++;
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 return $this->reportFailure($e);
             }
         }
@@ -65,11 +70,11 @@ class SyncWakaTime extends Command
         return self::SUCCESS;
     }
 
-    private function reportFailure(\Throwable $e): int
+    private function reportFailure(Throwable $e): int
     {
-        Log::error('WakaTime sync failed: ' . $e->getMessage(), ['exception' => $e]);
+        Log::error('WakaTime sync failed: '.$e->getMessage(), ['exception' => $e]);
 
-        $this->error('❌ ' . $e->getMessage());
+        $this->error('❌ '.$e->getMessage());
 
         $this->notifyAdmin($e->getMessage());
 
@@ -80,20 +85,21 @@ class SyncWakaTime extends Command
     {
         $admin = User::where('email', config('app.admin_email'))->first();
 
-        if (!$admin) {
+        if (! $admin) {
             return;
         }
 
         Notification::make()
             ->title('WakaTime sync failed')
-            ->body($message . ' You may need to reconnect WakaTime in the admin panel.')
+            ->body($message.' You may need to reconnect WakaTime in the admin panel.')
             ->danger()
             ->sendToDatabase($admin);
     }
 
     /**
-     * @param array<string, mixed> $day
-     * @throws \Throwable
+     * @param  array<string, mixed>  $day
+     *
+     * @throws Throwable
      */
     private function upsertDay(array $day, string $date): void
     {
@@ -101,7 +107,7 @@ class SyncWakaTime extends Command
             $summary = WakaTimeSummary::updateOrCreate(
                 ['date' => $date],
                 [
-                    'total_seconds' => (int)data_get($day, 'grand_total.total_seconds', 0),
+                    'total_seconds' => (int) data_get($day, 'grand_total.total_seconds', 0),
                     'raw' => $day,
                 ],
             );
@@ -123,8 +129,8 @@ class SyncWakaTime extends Command
                         'waka_time_summary_id' => $summary->id,
                         'type' => $type,
                         'name' => $name,
-                        'seconds' => (int)data_get($item, 'total_seconds', 0),
-                        'percent' => (float)data_get($item, 'percent', 0),
+                        'seconds' => (int) data_get($item, 'total_seconds', 0),
+                        'percent' => (float) data_get($item, 'percent', 0),
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];
@@ -135,7 +141,7 @@ class SyncWakaTime extends Command
                 WakaTimeSummaryEntry::insert($rows);
             }
 
-            $this->line("  • {$date}: " . $summary->total_human);
+            $this->line("  • {$date}: ".$summary->total_human);
         });
     }
 }

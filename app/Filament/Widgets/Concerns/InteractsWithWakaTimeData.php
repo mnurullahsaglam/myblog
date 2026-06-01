@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Widgets\Concerns;
 
 use App\Models\WakaTimeSummary;
@@ -110,11 +112,11 @@ trait InteractsWithWakaTimeData
     protected function formatNumber(float $value): string
     {
         if ($value >= 1_000_000) {
-            return round($value / 1_000_000, 1) . 'M';
+            return round($value / 1_000_000, 1).'M';
         }
 
         if ($value >= 1_000) {
-            return round($value / 1_000, 1) . 'K';
+            return round($value / 1_000, 1).'K';
         }
 
         return (string) (int) $value;
@@ -148,7 +150,7 @@ trait InteractsWithWakaTimeData
         $palette = $this->palette();
 
         $labels = array_map(
-            fn (string $name, int $seconds): string => $name . ' · ' . $this->formatDuration($seconds),
+            fn (string $name, int $seconds): string => $name.' · '.$this->formatDuration($seconds),
             array_keys($secondsByName),
             array_values($secondsByName),
         );

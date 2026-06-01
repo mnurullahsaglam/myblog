@@ -1,16 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters\General\Resources;
 
 use App\Filament\Clusters\General;
 use App\Filament\Clusters\General\Resources\CategoryResource\Pages\ManageCategories;
 use App\Models\Category;
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Resources\Resource;
+use BackedEnum;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\TextInput;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
@@ -19,7 +22,7 @@ class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $cluster = General::class;
 
@@ -30,12 +33,12 @@ class CategoryResource extends Resource
                 TextInput::make('name')
                     ->required()
                     ->reactive()
-                    ->afterStateUpdated(fn($state, callable $set) => $set('slug', Str::slug($state))),
+                    ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
 
                 TextInput::make('slug')
                     ->disabled()
                     ->required()
-                    ->unique(Category::class, 'slug', fn($record) => $record),
+                    ->unique(Category::class, 'slug', fn ($record) => $record),
             ]);
     }
 

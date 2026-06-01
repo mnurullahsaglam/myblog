@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\Book;
@@ -14,27 +16,15 @@ class BookController extends Controller
         return view('pages.books.index', compact('books'));
     }
 
-    public function create()
-    {
-    }
+    public function create() {}
 
-    public function store(Request $request)
-    {
-    }
+    public function store(Request $request) {}
 
-    public function show(Book $book)
-    {
-    }
+    public function show(Book $book) {}
 
-    public function edit(Book $book)
-    {
-    }
+    public function edit(Book $book) {}
 
-    public function update(Request $request, Book $book)
-    {
-    }
+    public function update(Request $request, Book $book) {}
 
-    public function destroy(Book $book)
-    {
-    }
+    public function destroy(Book $book) {}
 }

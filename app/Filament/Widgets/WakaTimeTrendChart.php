@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Widgets;
 
 use App\Filament\Widgets\Concerns\InteractsWithWakaTimeData;
@@ -16,7 +18,7 @@ class WakaTimeTrendChart extends ChartWidget
 
     public function getHeading(): string
     {
-        return 'Coding time · ' . strtolower($this->rangeLabel());
+        return 'Coding time · '.strtolower($this->rangeLabel());
     }
 
     protected function getType(): string

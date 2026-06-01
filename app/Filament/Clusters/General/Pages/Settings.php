@@ -1,18 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters\General\Pages;
 
 use App\Filament\Clusters\General;
 use App\Models\Setting;
-use Filament\Schemas\Schema;
+use BackedEnum;
 use Filament\Forms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Schema;
 use Filament\Support\Exceptions\Halt;
 
 class Settings extends Page
 {
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-cog-6-tooth';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-cog-6-tooth';
 
     protected string $view = 'filament.clusters.general.pages.settings';
 
@@ -208,7 +211,7 @@ class Settings extends Page
     protected function getFieldType(string $group, string $name): string
     {
         $fileFields = [
-            'logo', 'footer_logo', 'favicon', 'og_image'
+            'logo', 'footer_logo', 'favicon', 'og_image',
         ];
 
         if (in_array($name, $fileFields)) {
@@ -231,4 +234,4 @@ class Settings extends Page
                 ->color('primary'),
         ];
     }
-} 
+}

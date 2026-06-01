@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters\Budget\Resources\IncomeResource\Pages;
 
 use App\Filament\Clusters\Budget\Resources\IncomeResource;
@@ -16,4 +18,4 @@ class ViewIncome extends ViewRecord
             Actions\EditAction::make(),
         ];
     }
-} 
+}

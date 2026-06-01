@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Enums\Currencies;
@@ -25,7 +27,7 @@ class Invoice extends Model
     protected function amountWithCurrencySymbol(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->currency->getSymbol() . number_format($this->amount, 2, ',', '.'),
+            get: fn () => $this->currency->getSymbol().number_format($this->amount, 2, ',', '.'),
         );
     }
 }

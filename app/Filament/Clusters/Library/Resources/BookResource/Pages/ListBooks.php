@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters\Library\Resources\BookResource\Pages;
 
 use App\Filament\Clusters\Library\Imports\BookImporter;

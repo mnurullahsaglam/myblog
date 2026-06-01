@@ -1,18 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters\Work\Resources;
 
 use App\Filament\Clusters\Work;
-use App\Filament\Clusters\Work\Resources;
-use App\Filament\Resources\ClientResource\Pages;
 use App\Models\Client;
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Resources\Resource;
+use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\TextInput;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -22,7 +23,7 @@ class ClientResource extends Resource
 
     protected static ?string $slug = 'clients';
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user-group';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-user-group';
 
     protected static ?string $cluster = Work::class;
 
@@ -82,9 +83,9 @@ class ClientResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Resources\ClientResource\Pages\ListClients::route('/'),
-            'create' => Resources\ClientResource\Pages\CreateClient::route('/create'),
-            'edit' => Resources\ClientResource\Pages\EditClient::route('/{record}/edit'),
+            'index' => ClientResource\Pages\ListClients::route('/'),
+            'create' => ClientResource\Pages\CreateClient::route('/create'),
+            'edit' => ClientResource\Pages\EditClient::route('/{record}/edit'),
         ];
     }
 

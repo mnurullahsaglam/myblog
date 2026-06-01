@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters\Library\Imports;
 
 use App\Models\Book;
@@ -82,10 +84,10 @@ class BookImporter extends Importer
 
     public static function getCompletedNotificationBody(Import $import): string
     {
-        $body = 'İçeri aktarım tamamladndı. ' . number_format($import->successful_rows) . ' kitap eklendi.';
+        $body = 'İçeri aktarım tamamladndı. '.number_format($import->successful_rows).' kitap eklendi.';
 
         if ($failedRowsCount = $import->getFailedRowsCount()) {
-            $body .= ' ' . number_format($failedRowsCount) . ' kitap içeri aktarılamadı.';
+            $body .= ' '.number_format($failedRowsCount).' kitap içeri aktarılamadı.';
         }
 
         return $body;

@@ -1,22 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Models\Task;
+use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class GitHubService
 {
     private string $token;
+
     private string $baseUrl = 'https://api.github.com';
 
     public function __construct()
     {
         $this->token = config('services.github.token') ?? env('GITHUB_TOKEN');
 
-        if (!$this->token) {
-            throw new \Exception('GitHub token is required. Set GITHUB_TOKEN environment variable.');
+        if (! $this->token) {
+            throw new Exception('GitHub token is required. Set GITHUB_TOKEN environment variable.');
         }
     }
 
@@ -25,7 +29,7 @@ class GitHubService
      */
     public function updateIssue(Task $task): bool
     {
-        if (!$task->repository || !$task->github_issue_number) {
+        if (! $task->repository || ! $task->github_issue_number) {
             return false;
         }
 
@@ -43,26 +47,28 @@ class GitHubService
                 ->patch($url, $data);
 
             if ($response->successful()) {
-                Log::info("GitHub issue updated successfully", [
+                Log::info('GitHub issue updated successfully', [
                     'task_id' => $task->id,
                     'issue_number' => $task->github_issue_number,
-                    'repository' => $repository->full_name
+                    'repository' => $repository->full_name,
                 ]);
+
                 return true;
             }
 
-            Log::error("Failed to update GitHub issue", [
+            Log::error('Failed to update GitHub issue', [
                 'task_id' => $task->id,
                 'response' => $response->body(),
-                'status' => $response->status()
+                'status' => $response->status(),
             ]);
 
             return false;
 
-        } catch (\Exception $e) {
-            Log::error("GitHub API error: " . $e->getMessage(), [
+        } catch (Exception $e) {
+            Log::error('GitHub API error: '.$e->getMessage(), [
                 'task_id' => $task->id,
             ]);
+
             return false;
         }
     }
@@ -96,7 +102,7 @@ class GitHubService
      */
     public function createIssue(Task $task): ?array
     {
-        if (!$task->repository) {
+        if (! $task->repository) {
             return null;
         }
 
@@ -124,27 +130,28 @@ class GitHubService
                     'github_updated_at' => $issueData['updated_at'],
                 ]);
 
-                Log::info("GitHub issue created successfully", [
+                Log::info('GitHub issue created successfully', [
                     'task_id' => $task->id,
                     'issue_number' => $issueData['number'],
-                    'repository' => $repository->full_name
+                    'repository' => $repository->full_name,
                 ]);
 
                 return $issueData;
             }
 
-            Log::error("Failed to create GitHub issue", [
+            Log::error('Failed to create GitHub issue', [
                 'task_id' => $task->id,
                 'response' => $response->body(),
-                'status' => $response->status()
+                'status' => $response->status(),
             ]);
 
             return null;
 
-        } catch (\Exception $e) {
-            Log::error("GitHub API error: " . $e->getMessage(), [
+        } catch (Exception $e) {
+            Log::error('GitHub API error: '.$e->getMessage(), [
                 'task_id' => $task->id,
             ]);
+
             return null;
         }
     }
@@ -154,7 +161,7 @@ class GitHubService
      */
     public function closeIssue(Task $task): bool
     {
-        if (!$task->repository || !$task->github_issue_number) {
+        if (! $task->repository || ! $task->github_issue_number) {
             return false;
         }
 
@@ -178,8 +185,9 @@ class GitHubService
 
             return false;
 
-        } catch (\Exception $e) {
-            Log::error("GitHub API error: " . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('GitHub API error: '.$e->getMessage());
+
             return false;
         }
     }
@@ -189,7 +197,7 @@ class GitHubService
      */
     public function reopenIssue(Task $task): bool
     {
-        if (!$task->repository || !$task->github_issue_number) {
+        if (! $task->repository || ! $task->github_issue_number) {
             return false;
         }
 
@@ -213,8 +221,9 @@ class GitHubService
 
             return false;
 
-        } catch (\Exception $e) {
-            Log::error("GitHub API error: " . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('GitHub API error: '.$e->getMessage());
+
             return false;
         }
     }
@@ -224,7 +233,7 @@ class GitHubService
      */
     public function addComment(Task $task, string $comment): bool
     {
-        if (!$task->repository || !$task->github_issue_number) {
+        if (! $task->repository || ! $task->github_issue_number) {
             return false;
         }
 
@@ -239,8 +248,9 @@ class GitHubService
 
             return $response->successful();
 
-        } catch (\Exception $e) {
-            Log::error("GitHub API error: " . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('GitHub API error: '.$e->getMessage());
+
             return false;
         }
     }
@@ -262,9 +272,10 @@ class GitHubService
 
             return null;
 
-        } catch (\Exception $e) {
-            Log::error("GitHub API error: " . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('GitHub API error: '.$e->getMessage());
+
             return null;
         }
     }
-} 
+}

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Models\Setting;
@@ -8,6 +10,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
 use RuntimeException;
+use Throwable;
 
 class WakaTimeService
 {
@@ -40,7 +43,7 @@ class WakaTimeService
      */
     public function getAuthorizationUrl(string $state): string
     {
-        return self::AUTHORIZE_URL . '?' . http_build_query([
+        return self::AUTHORIZE_URL.'?'.http_build_query([
             'client_id' => $this->appId,
             'response_type' => 'code',
             'redirect_uri' => $this->redirectUri,
@@ -127,7 +130,7 @@ class WakaTimeService
     {
         $response = Http::withToken($this->getValidAccessToken())
             ->acceptJson()
-            ->get(self::BASE_URL . '/users/current/summaries', [
+            ->get(self::BASE_URL.'/users/current/summaries', [
                 'start' => $start->toDateString(),
                 'end' => $end->toDateString(),
             ]);
@@ -163,7 +166,7 @@ class WakaTimeService
     private function storeTokens(array $payload): void
     {
         if (empty($payload['access_token'])) {
-            throw new RuntimeException('WakaTime token response did not contain an access_token: ' . json_encode($payload));
+            throw new RuntimeException('WakaTime token response did not contain an access_token: '.json_encode($payload));
         }
 
         Setting::set(self::SETTING_GROUP, 'access_token', Crypt::encryptString($payload['access_token']));
@@ -197,7 +200,7 @@ class WakaTimeService
 
         try {
             return Crypt::decryptString($value);
-        } catch (\Throwable) {
+        } catch (Throwable) {
             return '';
         }
     }

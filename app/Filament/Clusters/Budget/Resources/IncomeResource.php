@@ -1,23 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters\Budget\Resources;
 
 use App\Enums\Currencies;
 use App\Filament\Clusters\Budget;
 use App\Filament\Clusters\Budget\Resources\IncomeResource\Pages;
 use App\Models\Income;
-use Filament\Schemas\Schema;
+use BackedEnum;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
@@ -29,7 +32,7 @@ class IncomeResource extends Resource
 {
     protected static ?string $model = Income::class;
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-plus-circle';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-plus-circle';
 
     protected static ?string $cluster = Budget::class;
 
@@ -38,10 +41,10 @@ class IncomeResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn(Builder $query) => $query->with(['client', 'invoice', 'debt', 'incomeCategory']))
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['client', 'invoice', 'debt', 'incomeCategory']))
             ->columns([
                 TextColumn::make('amount')
-                    ->money(fn(Income $record) => $record->currency->value)
+                    ->money(fn (Income $record) => $record->currency->value)
                     ->sortable(),
 
                 TextColumn::make('currency')
@@ -55,13 +58,14 @@ class IncomeResource extends Resource
                 TextColumn::make('incomeCategory.name')
                     ->label('Category')
                     ->badge()
-                    ->color(fn(Income $record) => $record->incomeCategory?->color ? 'primary' : 'gray')
+                    ->color(fn (Income $record) => $record->incomeCategory?->color ? 'primary' : 'gray')
                     ->sortable(),
 
                 TextColumn::make('description')
                     ->limit(50)
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
+
                         return strlen($state) <= 50 ? null : $state;
                     }),
 
@@ -83,7 +87,7 @@ class IncomeResource extends Resource
 
                 SelectFilter::make('currency')
                     ->options(collect(Currencies::cases())
-                        ->mapWithKeys(fn($currency) => [$currency->value => $currency->getLabel()]))
+                        ->mapWithKeys(fn ($currency) => [$currency->value => $currency->getLabel()]))
                     ->multiple(),
 
                 SelectFilter::make('client_id')
@@ -103,21 +107,22 @@ class IncomeResource extends Resource
                         return $query
                             ->when(
                                 $data['from_date'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('date', '>=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('date', '>=', $date),
                             )
                             ->when(
                                 $data['to_date'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('date', '<=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('date', '<=', $date),
                             );
                     })
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
                         if ($data['from_date'] ?? null) {
-                            $indicators[] = 'From ' . Carbon::parse($data['from_date'])->toFormattedDateString();
+                            $indicators[] = 'From '.Carbon::parse($data['from_date'])->toFormattedDateString();
                         }
                         if ($data['to_date'] ?? null) {
-                            $indicators[] = 'Until ' . Carbon::parse($data['to_date'])->toFormattedDateString();
+                            $indicators[] = 'Until '.Carbon::parse($data['to_date'])->toFormattedDateString();
                         }
+
                         return $indicators;
                     }),
 
@@ -131,7 +136,9 @@ class IncomeResource extends Resource
                     ])
                     ->query(function (Builder $query, array $data) {
                         $value = $data['value'] ?? null;
-                        if (!$value) return $query;
+                        if (! $value) {
+                            return $query;
+                        }
 
                         return match ($value) {
                             'client' => $query->whereNotNull('client_id')->whereNull('invoice_id')->whereNull('debt_id'),
@@ -167,12 +174,13 @@ class IncomeResource extends Resource
                     ->prefix(function (Get $get) {
                         $currency = $get('currency');
                         $currencyInstance = $currency instanceof Currencies ? $currency : Currencies::tryFrom($currency) ?? Currencies::TRY;
+
                         return $currencyInstance->getSymbol();
                     }),
 
                 Select::make('currency')
                     ->options(collect(Currencies::cases())
-                        ->mapWithKeys(fn($currency) => [$currency->value => $currency->getLabel() . ' (' . $currency->getSymbol() . ')']))
+                        ->mapWithKeys(fn ($currency) => [$currency->value => $currency->getLabel().' ('.$currency->getSymbol().')']))
                     ->default('TRY')
                     ->required()
                     ->live(),
@@ -223,4 +231,4 @@ class IncomeResource extends Resource
             'edit' => Pages\EditIncome::route('/{record}/edit'),
         ];
     }
-} 
+}

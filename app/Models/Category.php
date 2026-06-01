@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Traits\DefaultSlugOptions;
@@ -11,7 +13,7 @@ use Spatie\Sluggable\HasSlug;
 
 class Category extends Model
 {
-    use HasFactory, HasSlug, SlugAsRouteKeyName, DefaultSlugOptions;
+    use DefaultSlugOptions, HasFactory, HasSlug, SlugAsRouteKeyName;
 
     public function categoriable(): MorphTo
     {

@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Pages;
+
+use BackedEnum;
 
 class Login extends \Filament\Auth\Pages\Login
 {
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-document-text';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-document-text';
 
     public function mount(): void
     {
@@ -13,7 +17,7 @@ class Login extends \Filament\Auth\Pages\Login
         if (app()->isLocal()) {
             $this->form->fill([
                 'email' => config('app.admin_email'),
-                'password' => 'password'
+                'password' => 'password',
             ]);
         }
     }

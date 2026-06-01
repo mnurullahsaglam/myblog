@@ -1,11 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters\Work\Resources;
 
 use App\Filament\Clusters\Work;
 use App\Filament\Clusters\Work\Resources\RepositoryResource\Pages;
 use App\Models\Repository;
-use Filament\Schemas\Schema;
+use BackedEnum;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
@@ -13,11 +20,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -28,7 +31,7 @@ class RepositoryResource extends Resource
 
     protected static ?string $slug = 'repositories';
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-code-bracket';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-code-bracket';
 
     protected static ?string $cluster = Work::class;
 
@@ -113,11 +116,11 @@ class RepositoryResource extends Resource
 
                 Placeholder::make('created_at')
                     ->label('Created Date')
-                    ->content(fn(?Repository $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                    ->content(fn (?Repository $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
                 Placeholder::make('updated_at')
                     ->label('Last Modified Date')
-                    ->content(fn(?Repository $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                    ->content(fn (?Repository $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
             ]);
     }
 
@@ -135,7 +138,7 @@ class RepositoryResource extends Resource
 
                 TextColumn::make('visibility')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'public' => 'success',
                         'private' => 'warning',
                     }),
@@ -190,4 +193,4 @@ class RepositoryResource extends Resource
             'edit' => Pages\EditRepository::route('/{record}/edit'),
         ];
     }
-} 
+}

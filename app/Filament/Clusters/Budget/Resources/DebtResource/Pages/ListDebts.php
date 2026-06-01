@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters\Budget\Resources\DebtResource\Pages;
 
 use App\Filament\Clusters\Budget\Resources\DebtResource;
@@ -24,4 +26,4 @@ class ListDebts extends ListRecords
             ExchangeRateWidget::class,
         ];
     }
-} 
+}

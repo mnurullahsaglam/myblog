@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Widgets;
 
 use App\Filament\Widgets\Concerns\InteractsWithWakaTimeData;
 use App\Models\WakaTimeSummary;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use Illuminate\Support\Carbon;
 
 class WakaTimeOverview extends BaseWidget
 {
@@ -29,11 +30,11 @@ class WakaTimeOverview extends BaseWidget
                 ->description($this->record?->date->format('l, M j, Y'))
                 ->color('success'),
             Stat::make('AI sessions', (string) (int) $this->grandTotalSum('ai_sessions'))
-                ->description($this->formatNumber($this->grandTotalSum('ai_prompt_events_total')) . ' prompts')
+                ->description($this->formatNumber($this->grandTotalSum('ai_prompt_events_total')).' prompts')
                 ->color('info'),
             Stat::make('Tokens', $this->formatNumber($this->grandTotalSum('ai_input_tokens') + $this->grandTotalSum('ai_output_tokens')))
-                ->description($this->formatNumber($this->grandTotalSum('ai_input_tokens')) . ' in · ' . $this->formatNumber($this->grandTotalSum('ai_output_tokens')) . ' out'),
-            Stat::make('AI spend', '$' . number_format($this->grandTotalSum('ai_agent_total_cost'), 2))
+                ->description($this->formatNumber($this->grandTotalSum('ai_input_tokens')).' in · '.$this->formatNumber($this->grandTotalSum('ai_output_tokens')).' out'),
+            Stat::make('AI spend', '$'.number_format($this->grandTotalSum('ai_agent_total_cost'), 2))
                 ->color('warning'),
         ];
     }
@@ -54,7 +55,7 @@ class WakaTimeOverview extends BaseWidget
                 ->chart($sparkline ?: [0])
                 ->color('success'),
             Stat::make('Daily average', $this->formatDuration((int) ($total / max(1, $divisor))))
-                ->description('over ' . strtolower($this->rangeLabel())),
+                ->description('over '.strtolower($this->rangeLabel())),
             Stat::make('Today', $this->formatDuration($today?->total_seconds ?? 0))
                 ->color('info'),
             Stat::make('Most active day', $mostActive ? $this->formatDuration($mostActive->total_seconds) : '—')

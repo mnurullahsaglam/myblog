@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters;
 
+use BackedEnum;
 use Filament\Clusters\Cluster;
 
 class Budget extends Cluster
 {
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-banknotes';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-banknotes';
 
     protected static ?string $navigationLabel = 'Budget Management';
 
@@ -15,7 +18,8 @@ class Budget extends Cluster
     public static function getNavigationBadge(): ?string
     {
         $pendingDebts = \App\Models\Debt::where('status', 'pending')->count();
-        return $pendingDebts > 0 ? (string)$pendingDebts : null;
+
+        return $pendingDebts > 0 ? (string) $pendingDebts : null;
     }
 
     public static function getNavigationBadgeColor(): ?string

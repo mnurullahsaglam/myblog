@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters\Work\Resources\ClientResource\Pages;
 
 use App\Filament\Clusters\Work\Resources\ClientResource;

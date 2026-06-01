@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Enums\Currencies;
@@ -36,16 +38,16 @@ class Expense extends Model
 
     public function getFormattedAmountAttribute(): string
     {
-        return $this->currency->getSymbol() . ' ' . number_format($this->amount, 2);
+        return $this->currency->getSymbol().' '.number_format($this->amount, 2);
     }
 
     public function getHasReceiptAttribute(): bool
     {
-        return !is_null($this->receipt_path);
+        return ! is_null($this->receipt_path);
     }
 
     public function getReceiptUrlAttribute(): ?string
     {
-        return $this->receipt_path ? asset('storage/' . $this->receipt_path) : null;
+        return $this->receipt_path ? asset('storage/'.$this->receipt_path) : null;
     }
 }

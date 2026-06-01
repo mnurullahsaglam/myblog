@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\WakaTimeSummaries\RelationManagers;
 
 use Filament\Resources\RelationManagers\RelationManager;
@@ -33,7 +35,7 @@ class EntriesRelationManager extends RelationManager
                     ->sortable(),
                 TextColumn::make('percent')
                     ->label('Share')
-                    ->formatStateUsing(fn ($state): string => number_format((float) $state, 1) . '%')
+                    ->formatStateUsing(fn ($state): string => number_format((float) $state, 1).'%')
                     ->sortable(),
             ])
             ->filters([

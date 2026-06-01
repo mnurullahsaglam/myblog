@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters\Work\Resources;
 
 use App\Enums\Currencies;
 use App\Filament\Clusters\Work;
 use App\Filament\Clusters\Work\Resources\InvoiceResource\Pages;
 use App\Models\Invoice;
-use Filament\Schemas\Schema;
+use BackedEnum;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -14,6 +16,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -22,7 +25,7 @@ class InvoiceResource extends Resource
 {
     protected static ?string $model = Invoice::class;
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-receipt-percent';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-receipt-percent';
 
     protected static ?string $cluster = Work::class;
 
@@ -61,10 +64,11 @@ class InvoiceResource extends Resource
                     ->prefix(function (Get $get) {
                         $currency = $get('currency');
                         $currencyInstance = $currency instanceof Currencies ? $currency : Currencies::tryFrom($currency) ?? Currencies::TRY;
+
                         return $currencyInstance->getSymbol();
                     })
                     ->live(true)
-                    ->afterStateUpdated(fn(Set $set, Get $get, ?int $state) => $set('total_amount', $state + $get('tax_amount'))),
+                    ->afterStateUpdated(fn (Set $set, Get $get, ?int $state) => $set('total_amount', $state + $get('tax_amount'))),
 
                 TextInput::make('tax_rate')
                     ->numeric()
@@ -88,10 +92,11 @@ class InvoiceResource extends Resource
                     ->prefix(function (Get $get) {
                         $currency = $get('currency');
                         $currencyInstance = $currency instanceof Currencies ? $currency : Currencies::tryFrom($currency) ?? Currencies::TRY;
+
                         return $currencyInstance->getSymbol();
                     })
                     ->live(true)
-                    ->afterStateUpdated(fn(Set $set, Get $get, ?int $state) => $set('total_amount', $get('amount') + $state)),
+                    ->afterStateUpdated(fn (Set $set, Get $get, ?int $state) => $set('total_amount', $get('amount') + $state)),
 
                 TextInput::make('total_amount')
                     ->numeric()
@@ -101,6 +106,7 @@ class InvoiceResource extends Resource
                     ->prefix(function (Get $get) {
                         $currency = $get('currency');
                         $currencyInstance = $currency instanceof Currencies ? $currency : Currencies::tryFrom($currency) ?? Currencies::TRY;
+
                         return $currencyInstance->getSymbol();
                     }),
 

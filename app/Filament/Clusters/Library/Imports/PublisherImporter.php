@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Clusters\Library\Imports;
 
 use App\Models\Publisher;
@@ -31,10 +33,10 @@ class PublisherImporter extends Importer
 
     public static function getCompletedNotificationBody(Import $import): string
     {
-        $body = 'İçeri aktarım tamamlandı. ' . number_format($import->successful_rows) . ' yayınevi eklendi.';
+        $body = 'İçeri aktarım tamamlandı. '.number_format($import->successful_rows).' yayınevi eklendi.';
 
         if ($failedRowsCount = $import->getFailedRowsCount()) {
-            $body .= ' ' . number_format($failedRowsCount) . ' yayınevi içeri aktarılamadı.';
+            $body .= ' '.number_format($failedRowsCount).' yayınevi içeri aktarılamadı.';
         }
 
         return $body;
