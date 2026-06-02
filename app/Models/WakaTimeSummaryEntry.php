@@ -7,6 +7,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property int $waka_time_summary_id
+ * @property string $type
+ * @property string $name
+ * @property int $seconds
+ * @property string $percent
+ * @property-read WakaTimeSummary $summary
+ */
 class WakaTimeSummaryEntry extends Model
 {
     public const TYPE_PROJECT = 'project';
@@ -35,6 +44,9 @@ class WakaTimeSummaryEntry extends Model
         ];
     }
 
+    /**
+     * @return BelongsTo<WakaTimeSummary, $this>
+     */
     public function summary(): BelongsTo
     {
         return $this->belongsTo(WakaTimeSummary::class, 'waka_time_summary_id');

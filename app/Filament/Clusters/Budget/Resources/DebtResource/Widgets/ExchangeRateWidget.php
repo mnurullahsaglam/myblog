@@ -14,7 +14,8 @@ class ExchangeRateWidget extends StatsOverviewWidget
     protected function getStats(): array
     {
         $exchangeService = app(ExchangeRateService::class);
-        $lastUpdated = Cache::get('exchange_rates_last_updated', 'Never');
+        $cachedValue = Cache::get('exchange_rates_last_updated', 'Never');
+        $lastUpdated = is_string($cachedValue) ? $cachedValue : 'Never';
 
         if ($lastUpdated !== 'Never') {
             $lastUpdated = \Carbon\Carbon::parse($lastUpdated)->diffForHumans();

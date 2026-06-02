@@ -13,8 +13,12 @@ use Spatie\Sluggable\HasSlug;
 
 class Category extends Model
 {
+    /** @use HasFactory<\Database\Factories\CategoryFactory> */
     use DefaultSlugOptions, HasFactory, HasSlug, SlugAsRouteKeyName;
 
+    /**
+     * @return MorphTo<Model, $this>
+     */
     public function categoriable(): MorphTo
     {
         return $this->morphTo();

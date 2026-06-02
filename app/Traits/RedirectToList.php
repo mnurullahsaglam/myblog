@@ -8,6 +8,8 @@ trait RedirectToList
 {
     protected function getRedirectUrl(): string
     {
-        return $this->getResource()::getUrl('index');
+        $url = $this->getResource()::getUrl('index');
+
+        return is_string($url) ? $url : '';
     }
 }

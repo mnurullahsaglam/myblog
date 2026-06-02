@@ -158,9 +158,16 @@ class BookResource extends Resource
         return ['name', 'writer.name', 'publisher.name'];
     }
 
+    /**
+     * @return array<string, string>
+     */
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         $details = [];
+
+        if (! $record instanceof Book) {
+            return $details;
+        }
 
         if ($record->writer) {
             $details['Writer'] = $record->writer->name;

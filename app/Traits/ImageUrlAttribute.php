@@ -8,10 +8,13 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 
 trait ImageUrlAttribute
 {
+    /**
+     * @return Attribute<string, never>
+     */
     public function imageUrl(): Attribute
     {
         return Attribute::make(
-            get: fn () => asset($this->image),
+            get: fn () => asset((string) $this->image),
         );
     }
 }

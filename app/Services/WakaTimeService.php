@@ -33,9 +33,9 @@ class WakaTimeService
 
     public function __construct()
     {
-        $this->appId = (string) config('services.wakatime.app_id');
-        $this->appSecret = (string) config('services.wakatime.app_secret');
-        $this->redirectUri = (string) config('services.wakatime.redirect');
+        $this->appId = self::stringConfig('services.wakatime.app_id');
+        $this->appSecret = self::stringConfig('services.wakatime.app_secret');
+        $this->redirectUri = self::stringConfig('services.wakatime.redirect');
     }
 
     /**
@@ -71,7 +71,7 @@ class WakaTimeService
             throw new RuntimeException("WakaTime token exchange failed: {$response->status()} - {$response->body()}");
         }
 
-        $this->storeTokens($response->json());
+        $this->storeTokens(self::jsonArray($response->json()));
     }
 
     /**
@@ -89,7 +89,7 @@ class WakaTimeService
             $this->refreshToken();
         }
 
-        return $this->decrypt(Setting::get(self::SETTING_GROUP, 'access_token'));
+        return $this->decrypt($this->setting('access_token'));
     }
 
     /**
@@ -97,7 +97,7 @@ class WakaTimeService
      */
     public function refreshToken(): void
     {
-        $refreshToken = $this->decrypt(Setting::get(self::SETTING_GROUP, 'refresh_token'));
+        $refreshToken = $this->decrypt($this->setting('refresh_token'));
 
         if ($refreshToken === '') {
             throw new RuntimeException('No WakaTime refresh token stored. Reconnect required.');
@@ -117,7 +117,7 @@ class WakaTimeService
             throw new RuntimeException("WakaTime token refresh failed: {$response->status()} - {$response->body()}. Reconnect required.");
         }
 
-        $this->storeTokens($response->json());
+        $this->storeTokens(self::jsonArray($response->json()));
     }
 
     /**
@@ -139,12 +139,21 @@ class WakaTimeService
             throw new RuntimeException("WakaTime summaries request failed: {$response->status()} - {$response->body()}");
         }
 
-        return $response->json('data', []);
+        $data = $response->json('data', []);
+
+        if (! is_array($data)) {
+            return [];
+        }
+
+        /** @var array<int, array<string, mixed>> $days */
+        $days = array_values(array_filter($data, 'is_array'));
+
+        return $days;
     }
 
     public function isConnected(): bool
     {
-        return $this->decrypt(Setting::get(self::SETTING_GROUP, 'refresh_token')) !== '';
+        return $this->decrypt($this->setting('refresh_token')) !== '';
     }
 
     public function disconnect(): void
@@ -165,20 +174,29 @@ class WakaTimeService
      */
     private function storeTokens(array $payload): void
     {
-        if (empty($payload['access_token'])) {
+        $accessToken = $payload['access_token'] ?? null;
+
+        if (! is_string($accessToken) || $accessToken === '') {
             throw new RuntimeException('WakaTime token response did not contain an access_token: '.json_encode($payload));
         }
 
-        Setting::set(self::SETTING_GROUP, 'access_token', Crypt::encryptString($payload['access_token']));
+        Setting::set(self::SETTING_GROUP, 'access_token', Crypt::encryptString($accessToken));
 
-        if (! empty($payload['refresh_token'])) {
-            Setting::set(self::SETTING_GROUP, 'refresh_token', Crypt::encryptString($payload['refresh_token']));
+        $refreshToken = $payload['refresh_token'] ?? null;
+
+        if (is_string($refreshToken) && $refreshToken !== '') {
+            Setting::set(self::SETTING_GROUP, 'refresh_token', Crypt::encryptString($refreshToken));
         }
 
         // WakaTime returns expires_at as an ISO-8601 timestamp; fall back to expires_in seconds.
-        $expiresAt = isset($payload['expires_at'])
-            ? Carbon::parse($payload['expires_at'])
-            : (isset($payload['expires_in']) ? now()->addSeconds((int) $payload['expires_in']) : null);
+        $expiresAtRaw = $payload['expires_at'] ?? null;
+        $expiresInRaw = $payload['expires_in'] ?? null;
+
+        $expiresAt = match (true) {
+            is_string($expiresAtRaw) || is_int($expiresAtRaw) => Carbon::parse($expiresAtRaw),
+            is_numeric($expiresInRaw) => now()->addSeconds((int) $expiresInRaw),
+            default => null,
+        };
 
         if ($expiresAt !== null) {
             Setting::set(self::SETTING_GROUP, 'expires_at', $expiresAt->toIso8601String());
@@ -187,9 +205,47 @@ class WakaTimeService
 
     private function getExpiresAt(): ?Carbon
     {
-        $value = Setting::get(self::SETTING_GROUP, 'expires_at');
+        $value = $this->setting('expires_at');
 
-        return $value ? Carbon::parse($value) : null;
+        return ($value !== null && $value !== '') ? Carbon::parse($value) : null;
+    }
+
+    /**
+     * Read a stored WakaTime setting as a string (or null when absent/non-scalar).
+     */
+    private function setting(string $name): ?string
+    {
+        $value = Setting::get(self::SETTING_GROUP, $name);
+
+        return is_string($value) ? $value : null;
+    }
+
+    private static function stringConfig(string $key): string
+    {
+        $value = config($key);
+
+        return is_string($value) ? $value : '';
+    }
+
+    /**
+     * Coerce a decoded JSON payload to a string-keyed array.
+     *
+     * @return array<string, mixed>
+     */
+    private static function jsonArray(mixed $value): array
+    {
+        if (! is_array($value)) {
+            return [];
+        }
+
+        /** @var array<string, mixed> $result */
+        $result = [];
+
+        foreach ($value as $key => $item) {
+            $result[(string) $key] = $item;
+        }
+
+        return $result;
     }
 
     private function decrypt(?string $value): string

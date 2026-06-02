@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Models\Repository;
 use App\Models\Task;
 use Exception;
 use Illuminate\Support\Facades\Http;
@@ -17,11 +18,13 @@ class GitHubService
 
     public function __construct()
     {
-        $this->token = config('services.github.token') ?? env('GITHUB_TOKEN');
+        $token = config('services.github.token') ?? config('services.github.personal_access_token');
 
-        if (! $this->token) {
+        if (! is_string($token) || $token === '') {
             throw new Exception('GitHub token is required. Set GITHUB_TOKEN environment variable.');
         }
+
+        $this->token = $token;
     }
 
     /**
@@ -34,6 +37,7 @@ class GitHubService
         }
 
         try {
+            /** @var Repository $repository */
             $repository = $task->repository;
             $url = "{$this->baseUrl}/repos/{$repository->full_name}/issues/{$task->github_issue_number}";
 
@@ -87,18 +91,24 @@ class GitHubService
 
     /**
      * Get GitHub API headers
+     *
+     * @return array<string, string>
      */
     private function getHeaders(): array
     {
+        $appName = config('app.name', 'Laravel-App');
+
         return [
             'Authorization' => "token {$this->token}",
             'Accept' => 'application/vnd.github.v3+json',
-            'User-Agent' => config('app.name', 'Laravel-App'),
+            'User-Agent' => is_string($appName) ? $appName : 'Laravel-App',
         ];
     }
 
     /**
      * Create a new GitHub issue from task
+     *
+     * @return array<string, mixed>|null
      */
     public function createIssue(Task $task): ?array
     {
@@ -107,6 +117,7 @@ class GitHubService
         }
 
         try {
+            /** @var Repository $repository */
             $repository = $task->repository;
             $url = "{$this->baseUrl}/repos/{$repository->full_name}/issues";
 
@@ -119,6 +130,7 @@ class GitHubService
                 ->post($url, $data);
 
             if ($response->successful()) {
+                /** @var array<string, mixed> $issueData */
                 $issueData = $response->json();
 
                 // Update task with GitHub issue data
@@ -166,6 +178,7 @@ class GitHubService
         }
 
         try {
+            /** @var Repository $repository */
             $repository = $task->repository;
             $url = "{$this->baseUrl}/repos/{$repository->full_name}/issues/{$task->github_issue_number}";
 
@@ -202,6 +215,7 @@ class GitHubService
         }
 
         try {
+            /** @var Repository $repository */
             $repository = $task->repository;
             $url = "{$this->baseUrl}/repos/{$repository->full_name}/issues/{$task->github_issue_number}";
 
@@ -238,6 +252,7 @@ class GitHubService
         }
 
         try {
+            /** @var Repository $repository */
             $repository = $task->repository;
             $url = "{$this->baseUrl}/repos/{$repository->full_name}/issues/{$task->github_issue_number}/comments";
 
@@ -257,6 +272,8 @@ class GitHubService
 
     /**
      * Get repository information
+     *
+     * @return array<string, mixed>|null
      */
     public function getRepository(string $fullName): ?array
     {
@@ -267,7 +284,10 @@ class GitHubService
                 ->get($url);
 
             if ($response->successful()) {
-                return $response->json();
+                /** @var array<string, mixed> $data */
+                $data = $response->json();
+
+                return $data;
             }
 
             return null;

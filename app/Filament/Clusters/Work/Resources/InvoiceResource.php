@@ -63,14 +63,9 @@ class InvoiceResource extends Resource
                     ->default(0)
                     ->minValue(0)
                     ->required()
-                    ->prefix(function (Get $get) {
-                        $currency = $get('currency');
-                        $currencyInstance = $currency instanceof Currencies ? $currency : Currencies::tryFrom($currency) ?? Currencies::TRY;
-
-                        return $currencyInstance->getSymbol();
-                    })
+                    ->prefix(fn (Get $get): string => self::resolveCurrency($get('currency'))->getSymbol())
                     ->live(true)
-                    ->afterStateUpdated(fn (Set $set, Get $get, ?int $state) => $set('total_amount', $state + $get('tax_amount'))),
+                    ->afterStateUpdated(fn (Set $set, Get $get, ?int $state) => $set('total_amount', ($state ?? 0) + self::toInt($get('tax_amount')))),
 
                 TextInput::make('tax_rate')
                     ->numeric()
@@ -79,9 +74,9 @@ class InvoiceResource extends Resource
                     ->maxValue(100)
                     ->required()
                     ->live(true)
-                    ->afterStateUpdated(function (Set $set, Get $get, ?int $state) {
-                        $amount = $get('amount');
-                        $tax_amount = ($amount * $state) / 100;
+                    ->afterStateUpdated(function (Set $set, Get $get, ?int $state): void {
+                        $amount = self::toInt($get('amount'));
+                        $tax_amount = ($amount * ($state ?? 0)) / 100;
                         $set('tax_amount', $tax_amount);
                         $set('total_amount', $amount + $tax_amount);
                     }),
@@ -91,26 +86,16 @@ class InvoiceResource extends Resource
                     ->default(0)
                     ->minValue(0)
                     ->required()
-                    ->prefix(function (Get $get) {
-                        $currency = $get('currency');
-                        $currencyInstance = $currency instanceof Currencies ? $currency : Currencies::tryFrom($currency) ?? Currencies::TRY;
-
-                        return $currencyInstance->getSymbol();
-                    })
+                    ->prefix(fn (Get $get): string => self::resolveCurrency($get('currency'))->getSymbol())
                     ->live(true)
-                    ->afterStateUpdated(fn (Set $set, Get $get, ?int $state) => $set('total_amount', $get('amount') + $state)),
+                    ->afterStateUpdated(fn (Set $set, Get $get, ?int $state) => $set('total_amount', self::toInt($get('amount')) + ($state ?? 0))),
 
                 TextInput::make('total_amount')
                     ->numeric()
                     ->default(0)
                     ->minValue(0)
                     ->required()
-                    ->prefix(function (Get $get) {
-                        $currency = $get('currency');
-                        $currencyInstance = $currency instanceof Currencies ? $currency : Currencies::tryFrom($currency) ?? Currencies::TRY;
-
-                        return $currencyInstance->getSymbol();
-                    }),
+                    ->prefix(fn (Get $get): string => self::resolveCurrency($get('currency'))->getSymbol()),
 
                 FileUpload::make('invoice')
                     ->acceptedFileTypes(['application/zip', 'application/x-zip-compressed'])
@@ -119,6 +104,24 @@ class InvoiceResource extends Resource
                     ->directory('invoices')
                     ->required(),
             ]);
+    }
+
+    private static function resolveCurrency(mixed $currency): Currencies
+    {
+        if ($currency instanceof Currencies) {
+            return $currency;
+        }
+
+        if (is_int($currency) || is_string($currency)) {
+            return Currencies::tryFrom($currency) ?? Currencies::TRY;
+        }
+
+        return Currencies::TRY;
+    }
+
+    private static function toInt(mixed $value): int
+    {
+        return is_numeric($value) ? (int) $value : 0;
     }
 
     public static function table(Table $table): Table

@@ -30,7 +30,11 @@ trait InteractsWithWakaTimeData
             return null;
         }
 
-        return (int) ($range ?: $this->defaultTrailingDays);
+        if (is_int($range) || is_string($range)) {
+            return (int) ($range ?: $this->defaultTrailingDays);
+        }
+
+        return $this->defaultTrailingDays;
     }
 
     protected function rangeLabel(): string
@@ -69,6 +73,7 @@ trait InteractsWithWakaTimeData
      */
     protected function breakdownSeconds(string $type, int $limit = 8): array
     {
+        /** @var array<string, int> $totals */
         $totals = [];
 
         foreach ($this->summaries() as $summary) {
@@ -84,7 +89,7 @@ trait InteractsWithWakaTimeData
         }
 
         $top = array_slice($totals, 0, $limit, true);
-        $top['Other'] = array_sum(array_slice($totals, $limit, null, true));
+        $top['Other'] = (int) array_sum(array_slice($totals, $limit, null, true));
 
         return $top;
     }
@@ -92,12 +97,16 @@ trait InteractsWithWakaTimeData
     /** Sum a numeric field from each day's grand_total payload. */
     protected function grandTotalSum(string $key): float
     {
-        return (float) $this->summaries()->sum(fn (WakaTimeSummary $s): float => (float) data_get($s->raw, "grand_total.{$key}", 0));
+        return (float) $this->summaries()->sum(function (WakaTimeSummary $s) use ($key): float {
+            $value = data_get($s->raw, "grand_total.{$key}", 0);
+
+            return is_numeric($value) ? (float) $value : 0.0;
+        });
     }
 
     protected function totalSeconds(): int
     {
-        return (int) $this->summaries()->sum('total_seconds');
+        return (int) $this->summaries()->sum(fn (WakaTimeSummary $s): int => $s->total_seconds);
     }
 
     protected function formatDuration(int|float $seconds): string

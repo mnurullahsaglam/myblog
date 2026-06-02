@@ -10,6 +10,21 @@ use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property string $creditor_name
+ * @property string $creditor_type
+ * @property numeric-string $amount
+ * @property Currencies $currency
+ * @property \Illuminate\Support\Carbon|null $due_date
+ * @property string $status
+ * @property string|null $description
+ * @property \Illuminate\Support\Carbon $date
+ * @property-read bool $is_pending
+ * @property-read bool $is_overdue
+ * @property-read int|null $days_until_due
+ * @property-read string $formatted_amount
+ */
 #[ObservedBy([DebtObserver::class])]
 class Debt extends Model
 {
@@ -31,11 +46,17 @@ class Debt extends Model
         'date' => 'date',
     ];
 
+    /**
+     * @return HasMany<Income, $this>
+     */
     public function incomes(): HasMany
     {
         return $this->hasMany(Income::class);
     }
 
+    /**
+     * @return HasMany<Expense, $this>
+     */
     public function expenses(): HasMany
     {
         return $this->hasMany(Expense::class);
@@ -43,7 +64,7 @@ class Debt extends Model
 
     public function getFormattedAmountAttribute(): string
     {
-        return $this->currency->getSymbol().' '.number_format($this->amount, 2);
+        return $this->currency->getSymbol().' '.number_format((float) $this->amount, 2);
     }
 
     public function getIsPendingAttribute(): bool
@@ -60,8 +81,7 @@ class Debt extends Model
     {
         return match ($this->status) {
             'pending' => $this->isOverdue ? 'danger' : 'warning',
-            'paid' => 'success',
-            default => 'gray',
+            default => 'success',
         };
     }
 

@@ -13,5 +13,6 @@ use Spatie\Sluggable\HasSlug;
 
 class Post extends Model
 {
+    /** @use HasFactory<\Database\Factories\PostFactory> */
     use CategoriableRelation, DefaultSlugOptions, HasFactory, HasSlug, SlugAsRouteKeyName;
 }

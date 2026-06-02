@@ -7,11 +7,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * @property string $group
+ * @property string $name
+ * @property string|null $value
+ * @property string $type
+ */
 class Setting extends Model
 {
     public $timestamps = false;
 
-    public static function get(string $group, string $name, $default = null)
+    public static function get(string $group, string $name, mixed $default = null): mixed
     {
         $cacheKey = "setting_{$group}_{$name}";
 
@@ -25,7 +31,7 @@ class Setting extends Model
     /**
      * Set a setting value
      */
-    public static function set(string $group, string $name, $value, string $type = 'text')
+    public static function set(string $group, string $name, mixed $value, string $type = 'text'): self
     {
         $setting = static::updateOrCreate(
             ['group' => $group, 'name' => $name],
@@ -41,7 +47,10 @@ class Setting extends Model
     /**
      * Get all settings for a group
      */
-    public static function getGroup(string $group)
+    /**
+     * @return \Illuminate\Support\Collection<array-key, mixed>
+     */
+    public static function getGroup(string $group): \Illuminate\Support\Collection
     {
         return static::where('group', $group)->pluck('value', 'name');
     }
@@ -49,13 +58,13 @@ class Setting extends Model
     /**
      * Clear cache when model is saved or deleted
      */
-    protected static function booted()
+    protected static function booted(): void
     {
-        static::saved(function ($setting) {
+        static::saved(function (Setting $setting): void {
             Cache::forget("setting_{$setting->group}_{$setting->name}");
         });
 
-        static::deleted(function ($setting) {
+        static::deleted(function (Setting $setting): void {
             Cache::forget("setting_{$setting->group}_{$setting->name}");
         });
     }

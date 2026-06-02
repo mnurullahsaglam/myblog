@@ -31,15 +31,16 @@ class WakaTimeOAuthController extends Controller
      */
     public function callback(Request $request): RedirectResponse
     {
-        $panel = filament()->getDefaultPanel()->getUrl();
+        $panel = filament()->getDefaultPanel()->getUrl() ?? '/';
 
         if ($request->filled('error')) {
             return $this->back($panel, false, 'WakaTime authorization was denied: '.$request->string('error'));
         }
 
         $expectedState = $request->session()->pull('wakatime_oauth_state');
+        $expectedState = is_string($expectedState) ? $expectedState : '';
 
-        if (! $request->filled('state') || ! $request->filled('code') || ! hash_equals((string) $expectedState, $request->string('state')->toString())) {
+        if (! $request->filled('state') || ! $request->filled('code') || ! hash_equals($expectedState, $request->string('state')->toString())) {
             return $this->back($panel, false, 'Invalid OAuth state or missing code. Please try connecting again.');
         }
 

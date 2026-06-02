@@ -7,7 +7,6 @@ namespace App\Filament\Widgets;
 use App\Filament\Widgets\Concerns\InteractsWithWakaTimeData;
 use App\Models\WakaTimeSummary;
 use Filament\Widgets\ChartWidget;
-use Illuminate\Support\Carbon;
 
 class WakaTimeWeekdayChart extends ChartWidget
 {
@@ -28,7 +27,7 @@ class WakaTimeWeekdayChart extends ChartWidget
         $totals = array_fill(1, 7, 0);
 
         $this->summaries()->each(function (WakaTimeSummary $s) use (&$totals): void {
-            $totals[Carbon::parse($s->date)->isoWeekday()] += $s->total_seconds;
+            $totals[$s->date->dayOfWeekIso] += $s->total_seconds;
         });
 
         return [

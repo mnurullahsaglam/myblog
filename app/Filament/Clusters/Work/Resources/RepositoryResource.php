@@ -141,6 +141,7 @@ class RepositoryResource extends Resource
                     ->color(fn (string $state): string => match ($state) {
                         'public' => 'success',
                         'private' => 'warning',
+                        default => 'gray',
                     }),
 
                 TextColumn::make('language')

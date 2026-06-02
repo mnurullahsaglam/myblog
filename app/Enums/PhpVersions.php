@@ -28,7 +28,7 @@ enum PhpVersions: string implements HasColor, HasLabel
         };
     }
 
-    public function getColor(): string|array|null
+    public function getColor(): string
     {
         return match ($this) {
             self::PHP_7_4, self::PHP_8_0 => 'danger',

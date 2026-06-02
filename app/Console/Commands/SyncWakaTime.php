@@ -53,7 +53,7 @@ class SyncWakaTime extends Command
         foreach ($summaries as $day) {
             $date = data_get($day, 'range.date');
 
-            if (! $date) {
+            if (! is_string($date) || $date === '') {
                 continue;
             }
 
@@ -107,7 +107,7 @@ class SyncWakaTime extends Command
             $summary = WakaTimeSummary::updateOrCreate(
                 ['date' => $date],
                 [
-                    'total_seconds' => (int) data_get($day, 'grand_total.total_seconds', 0),
+                    'total_seconds' => self::toInt(data_get($day, 'grand_total.total_seconds', 0)),
                     'raw' => $day,
                 ],
             );
@@ -118,10 +118,16 @@ class SyncWakaTime extends Command
             $rows = [];
 
             foreach (self::BREAKDOWNS as $payloadKey => $type) {
-                foreach (data_get($day, $payloadKey, []) as $item) {
+                $items = data_get($day, $payloadKey, []);
+
+                if (! is_iterable($items)) {
+                    continue;
+                }
+
+                foreach ($items as $item) {
                     $name = data_get($item, 'name');
 
-                    if ($name === null || $name === '') {
+                    if (! is_string($name) || $name === '') {
                         continue;
                     }
 
@@ -129,8 +135,8 @@ class SyncWakaTime extends Command
                         'waka_time_summary_id' => $summary->id,
                         'type' => $type,
                         'name' => $name,
-                        'seconds' => (int) data_get($item, 'total_seconds', 0),
-                        'percent' => (float) data_get($item, 'percent', 0),
+                        'seconds' => self::toInt(data_get($item, 'total_seconds', 0)),
+                        'percent' => self::toFloat(data_get($item, 'percent', 0)),
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];
@@ -143,5 +149,15 @@ class SyncWakaTime extends Command
 
             $this->line("  • {$date}: ".$summary->total_human);
         });
+    }
+
+    private static function toInt(mixed $value): int
+    {
+        return is_numeric($value) ? (int) $value : 0;
+    }
+
+    private static function toFloat(mixed $value): float
+    {
+        return is_numeric($value) ? (float) $value : 0.0;
     }
 }

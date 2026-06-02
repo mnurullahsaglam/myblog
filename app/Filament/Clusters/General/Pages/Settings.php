@@ -16,6 +16,9 @@ use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 use Filament\Support\Exceptions\Halt;
 
+/**
+ * @property-read Schema $form
+ */
 class Settings extends Page
 {
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-cog-6-tooth';
@@ -28,6 +31,9 @@ class Settings extends Page
 
     protected static ?string $navigationLabel = 'Settings';
 
+    /**
+     * @var array<string, mixed>|null
+     */
     public ?array $data = [];
 
     public function mount(): void
@@ -35,6 +41,9 @@ class Settings extends Page
         $this->form->fill($this->getSettingsData());
     }
 
+    /**
+     * @return array<string, array<string, mixed>>
+     */
     protected function getSettingsData(): array
     {
         $groups = ['site_info', 'meta', 'branding', 'social', 'contact'];
@@ -188,14 +197,15 @@ class Settings extends Page
     public function save(): void
     {
         try {
+            /** @var array<string, mixed> $data */
             $data = $this->form->getState();
 
             foreach ($data as $group => $settings) {
                 if (is_array($settings)) {
                     foreach ($settings as $name => $value) {
                         if ($value !== null) {
-                            $type = $this->getFieldType($group, $name);
-                            Setting::set($group, $name, $value, $type);
+                            $type = $this->getFieldType((string) $group, (string) $name);
+                            Setting::set((string) $group, (string) $name, $value, $type);
                         }
                     }
                 }
@@ -228,6 +238,9 @@ class Settings extends Page
         return 'text';
     }
 
+    /**
+     * @return array<int, Action>
+     */
     protected function getFormActions(): array
     {
         return [

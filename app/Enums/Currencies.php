@@ -16,7 +16,7 @@ enum Currencies: string implements HasLabel
     case GOLD = 'XAU';
     case SILVER = 'XAG';
 
-    public function getLabel(): ?string
+    public function getLabel(): string
     {
         return match ($this) {
             self::USD => 'US Dollar',

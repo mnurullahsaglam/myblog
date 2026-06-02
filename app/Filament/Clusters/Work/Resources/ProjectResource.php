@@ -103,12 +103,16 @@ class ProjectResource extends Resource
         return ['name', 'client.name'];
     }
 
+    /**
+     * @return array<string, string>
+     */
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         $details = [];
 
-        if ($record->client) {
-            $details['Client'] = $record->client->name;
+        if ($record instanceof Project && $record->client) {
+            $name = $record->client->getAttribute('name');
+            $details['Client'] = is_scalar($name) ? (string) $name : '';
         }
 
         return $details;

@@ -47,7 +47,7 @@ class TasksBoardBoardPage extends BoardPage
                     ->label('View Details')
                     ->icon('heroicon-o-eye')
                     ->action(function (array $arguments) {
-                        $this->selectedTask = Task::find($arguments['record']);
+                        $this->selectedTask = $this->findTask($arguments);
                         $this->showTaskModal = true;
                     }),
 
@@ -76,14 +76,18 @@ class TasksBoardBoardPage extends BoardPage
                             ->preload(),
                     ])
                     ->fillForm(function (array $arguments): array {
-                        $task = Task::find($arguments['record']);
+                        $task = $this->findTask($arguments);
 
                         return $task ? $task->toArray() : [];
                     })
                     ->action(function (array $arguments, array $data) {
-                        $task = Task::find($arguments['record']);
+                        $task = $this->findTask($arguments);
                         if ($task) {
-                            $task->update($data);
+                            $attributes = [];
+                            foreach ($data as $key => $value) {
+                                $attributes[(string) $key] = $value;
+                            }
+                            $task->update($attributes);
 
                             Notification::make()
                                 ->title('Task updated successfully')
@@ -96,10 +100,10 @@ class TasksBoardBoardPage extends BoardPage
                     Action::make('syncToGitHub')
                         ->label('Sync to GitHub')
                         ->icon('heroicon-o-arrow-path')
-                        ->visible(fn (array $arguments) => Task::find($arguments['record'])?->is_github_issue)
+                        ->visible(fn (array $arguments) => $this->findTask($arguments)?->is_github_issue)
                         ->requiresConfirmation()
                         ->action(function (array $arguments) {
-                            $task = Task::find($arguments['record']);
+                            $task = $this->findTask($arguments);
                             if ($task && $task->is_github_issue) {
                                 try {
                                     $githubService = app(GitHubService::class);
@@ -122,13 +126,13 @@ class TasksBoardBoardPage extends BoardPage
                         ->label('Create GitHub Issue')
                         ->icon('heroicon-o-plus')
                         ->visible(function (array $arguments) {
-                            $task = Task::find($arguments['record']);
+                            $task = $this->findTask($arguments);
 
                             return $task && $task->repository && ! $task->is_github_issue;
                         })
                         ->requiresConfirmation()
                         ->action(function (array $arguments) {
-                            $task = Task::find($arguments['record']);
+                            $task = $this->findTask($arguments);
                             if ($task && $task->repository && ! $task->is_github_issue) {
                                 try {
                                     $githubService = app(GitHubService::class);
@@ -150,7 +154,7 @@ class TasksBoardBoardPage extends BoardPage
                     Action::make('addComment')
                         ->label('Add GitHub Comment')
                         ->icon('heroicon-o-chat-bubble-left')
-                        ->visible(fn (array $arguments) => Task::find($arguments['record'])?->is_github_issue)
+                        ->visible(fn (array $arguments) => $this->findTask($arguments)?->is_github_issue)
                         ->form([
                             Textarea::make('comment')
                                 ->label('Comment')
@@ -158,11 +162,12 @@ class TasksBoardBoardPage extends BoardPage
                                 ->rows(3),
                         ])
                         ->action(function (array $arguments, array $data) {
-                            $task = Task::find($arguments['record']);
+                            $task = $this->findTask($arguments);
+                            $comment = is_scalar($data['comment'] ?? null) ? (string) $data['comment'] : '';
                             if ($task && $task->is_github_issue) {
                                 try {
                                     $githubService = app(GitHubService::class);
-                                    $success = $githubService->addComment($task, $data['comment']);
+                                    $success = $githubService->addComment($task, $comment);
 
                                     Notification::make()
                                         ->title($success ? 'Comment added to GitHub issue' : 'Failed to add comment')
@@ -180,14 +185,28 @@ class TasksBoardBoardPage extends BoardPage
                     Action::make('viewOnGitHub')
                         ->label('View on GitHub')
                         ->icon('heroicon-o-arrow-top-right-on-square')
-                        ->visible(fn (array $arguments) => Task::find($arguments['record'])?->github_issue_url)
-                        ->url(fn (array $arguments) => Task::find($arguments['record'])?->github_issue_url)
+                        ->visible(fn (array $arguments) => $this->findTask($arguments)?->github_issue_url)
+                        ->url(fn (array $arguments) => $this->findTask($arguments)?->github_issue_url)
                         ->openUrlInNewTab(),
                 ])
                     ->label('GitHub Actions')
                     ->icon('heroicon-o-code-bracket')
                     ->color('gray'),
             ]);
+    }
+
+    /**
+     * @param  array<array-key, mixed>  $arguments
+     */
+    protected function findTask(array $arguments): ?Task
+    {
+        $record = $arguments['record'] ?? null;
+
+        if (! is_int($record) && ! is_string($record)) {
+            return null;
+        }
+
+        return Task::find($record);
     }
 
     public function closeTaskModal(): void

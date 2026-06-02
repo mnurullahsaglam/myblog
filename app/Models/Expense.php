@@ -8,6 +8,21 @@ use App\Enums\Currencies;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property int|null $expense_category_id
+ * @property int|null $debt_id
+ * @property numeric-string $amount
+ * @property Currencies $currency
+ * @property string $description
+ * @property string|null $receipt_path
+ * @property \Illuminate\Support\Carbon $date
+ * @property-read ExpenseCategory|null $expenseCategory
+ * @property-read Debt|null $debt
+ * @property-read string $formatted_amount
+ * @property-read bool $has_receipt
+ * @property-read string|null $receipt_url
+ */
 class Expense extends Model
 {
     protected $fillable = [
@@ -26,11 +41,17 @@ class Expense extends Model
         'date' => 'date',
     ];
 
+    /**
+     * @return BelongsTo<ExpenseCategory, $this>
+     */
     public function expenseCategory(): BelongsTo
     {
         return $this->belongsTo(ExpenseCategory::class);
     }
 
+    /**
+     * @return BelongsTo<Debt, $this>
+     */
     public function debt(): BelongsTo
     {
         return $this->belongsTo(Debt::class);
@@ -38,7 +59,7 @@ class Expense extends Model
 
     public function getFormattedAmountAttribute(): string
     {
-        return $this->currency->getSymbol().' '.number_format($this->amount, 2);
+        return $this->currency->getSymbol().' '.number_format((float) $this->amount, 2);
     }
 
     public function getHasReceiptAttribute(): bool

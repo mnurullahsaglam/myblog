@@ -21,7 +21,7 @@ class BookImporter extends Importer
             ImportColumn::make('writer')
                 ->label('Yazar')
                 ->requiredMapping()
-                ->relationship(resolveUsing: function (string $state): ?Writer {
+                ->relationship(resolveUsing: function (string $state): Writer {
                     return Writer::firstOrCreate([
                         'name' => $state,
                     ]);
@@ -32,7 +32,7 @@ class BookImporter extends Importer
             ImportColumn::make('publisher')
                 ->label('Yayınevi')
                 ->requiredMapping()
-                ->relationship(resolveUsing: function (string $state): ?Publisher {
+                ->relationship(resolveUsing: function (string $state): Publisher {
                     return Publisher::firstOrCreate([
                         'name' => $state,
                     ]);

@@ -65,16 +65,19 @@ class IncomeOverview extends BaseWidget
         ];
     }
 
+    /**
+     * @param  class-string<Income|Expense>  $model
+     */
     private function calculateMonthlyTotal(string $model, ExchangeRateService $exchangeService, string $baseCurrency): float
     {
         $records = $model::whereMonth('date', now()->month)
             ->whereYear('date', now()->year)
             ->get();
 
-        $total = 0;
+        $total = 0.0;
         foreach ($records as $record) {
             $convertedAmount = $exchangeService->convert(
-                $record->amount,
+                (float) $record->amount,
                 $record->currency->value,
                 $baseCurrency
             );
@@ -88,10 +91,10 @@ class IncomeOverview extends BaseWidget
     {
         $debts = Debt::where('status', 'pending')->get();
 
-        $total = 0;
+        $total = 0.0;
         foreach ($debts as $debt) {
             $convertedAmount = $exchangeService->convert(
-                $debt->amount,
+                (float) $debt->amount,
                 $debt->currency->value,
                 $baseCurrency
             );

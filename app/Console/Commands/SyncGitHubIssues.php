@@ -8,6 +8,7 @@ use App\Models\Repository;
 use App\Models\Task;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Http;
 
 class SyncGitHubIssues extends Command
@@ -23,9 +24,10 @@ class SyncGitHubIssues extends Command
 
     public function handle(): int
     {
-        $this->githubToken = $this->option('token') ?? config('services.github.personal_access_token');
+        $token = $this->option('token') ?? config('services.github.personal_access_token');
+        $this->githubToken = is_string($token) ? $token : '';
 
-        if (! $this->githubToken) {
+        if ($this->githubToken === '') {
             $this->error('GitHub token is required. Set GITHUB_TOKEN environment variable or use --token option.');
 
             return self::FAILURE;
@@ -56,17 +58,22 @@ class SyncGitHubIssues extends Command
         return self::SUCCESS;
     }
 
-    private function selectRepositories()
+    /**
+     * @return Collection<int, Repository>
+     */
+    private function selectRepositories(): Collection
     {
+        /** @var Collection<int, Repository> $repositories */
         $repositories = Repository::where('is_active', true)->get();
 
         if ($repositories->isEmpty()) {
             $this->error('No active repositories found.');
 
-            return collect();
+            return $repositories;
         }
 
-        $choices = $repositories->mapWithKeys(function ($repo) {
+        /** @var array<int, string> $choices */
+        $choices = $repositories->mapWithKeys(function (Repository $repo): array {
             return [$repo->id => "$repo->name ($repo->owner)"];
         })->toArray();
 
@@ -77,6 +84,10 @@ class SyncGitHubIssues extends Command
             null,
             true
         );
+
+        $selectedIds = is_array($selectedIds) ? $selectedIds : [$selectedIds];
+
+        $selectedIds = array_values(array_filter($selectedIds, 'is_string'));
 
         return $repositories->whereIn('id', array_keys(array_flip($selectedIds)));
     }
@@ -112,9 +123,13 @@ class SyncGitHubIssues extends Command
         }
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     private function fetchGitHubIssues(Repository $repository): array
     {
         $url = "https://api.github.com/repos/{$repository->full_name}/issues";
+        $appName = config('app.name', 'Laravel-App');
         $allIssues = [];
         $page = 1;
 
@@ -122,7 +137,7 @@ class SyncGitHubIssues extends Command
             $response = Http::withHeaders([
                 'Authorization' => "token {$this->githubToken}",
                 'Accept' => 'application/vnd.github.v3+json',
-                'User-Agent' => config('app.name', 'Laravel-App'),
+                'User-Agent' => is_string($appName) ? $appName : 'Laravel-App',
             ])->get($url, [
                 'state' => 'all',
                 'per_page' => 100,
@@ -135,10 +150,11 @@ class SyncGitHubIssues extends Command
                 throw new Exception("GitHub API error: {$response->status()} - {$response->body()}");
             }
 
+            /** @var array<int, array<string, mixed>> $issues */
             $issues = $response->json();
 
             // Filter out pull requests (GitHub API includes PRs in issues endpoint)
-            $issuesOnly = array_filter($issues, function ($issue) {
+            $issuesOnly = array_filter($issues, function (array $issue): bool {
                 return ! isset($issue['pull_request']);
             });
 
@@ -150,22 +166,29 @@ class SyncGitHubIssues extends Command
         return $allIssues;
     }
 
+    /**
+     * @param  array<string, mixed>  $issueData
+     */
     private function createOrUpdateTask(Repository $repository, array $issueData): bool
     {
         $existingTask = Task::where('github_issue_number', $issueData['number'])
             ->where('repository_id', $repository->id)
             ->first();
 
+        $state = is_string($issueData['state']) ? $issueData['state'] : '';
+        $assignee = $issueData['assignee'] ?? null;
+        $assigneeLogin = is_array($assignee) && isset($assignee['login']) ? $assignee['login'] : null;
+
         $taskData = [
             'repository_id' => $repository->id,
             'title' => $issueData['title'],
             'description' => $issueData['body'] ?? '',
-            'status' => $this->mapGitHubStateToStatus($issueData['state']),
+            'status' => $this->mapGitHubStateToStatus($state),
             'github_issue_number' => $issueData['number'],
             'github_issue_url' => $issueData['html_url'],
-            'github_issue_state' => $issueData['state'],
+            'github_issue_state' => $state,
             'github_issue_labels' => $issueData['labels'] ?? [],
-            'github_assignee' => $issueData['assignee']['login'] ?? null,
+            'github_assignee' => $assigneeLogin,
             'github_created_at' => $issueData['created_at'],
             'github_updated_at' => $issueData['updated_at'],
             'github_closed_at' => $issueData['closed_at'],

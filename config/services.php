@@ -48,4 +48,12 @@ return [
         // Register every environment's value as a Redirect URI in your WakaTime app.
         'redirect' => env('WAKATIME_REDIRECT_URI', rtrim((string) env('APP_URL'), '/').'/wakatime/callback'),
     ],
+
+    'open_exchange_rates' => [
+        'api_key' => env('OPEN_EXCHANGE_RATES_API_KEY'),
+    ],
+
+    'metals' => [
+        'api_key' => env('METALS_API_KEY', ''),
+    ],
 ];

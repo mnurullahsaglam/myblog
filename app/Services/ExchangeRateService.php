@@ -20,12 +20,17 @@ class ExchangeRateService
 
     public function __construct()
     {
-        $this->openExchangeApiKey = env('OPEN_EXCHANGE_RATES_API_KEY');
-        $this->metalsApiKey = env('METALS_API_KEY', ''); // Optional for now
+        $openExchangeApiKey = config('services.open_exchange_rates.api_key');
+        $this->openExchangeApiKey = is_string($openExchangeApiKey) ? $openExchangeApiKey : '';
+
+        $metalsApiKey = config('services.metals.api_key');
+        $this->metalsApiKey = is_string($metalsApiKey) ? $metalsApiKey : ''; // Optional for now
     }
 
     /**
      * Get converted amount for display in tables
+     *
+     * @return array<string, float|string>
      */
     public function getConvertedAmount(float $amount, string $fromCurrency, ?string $displayCurrency = null): array
     {
@@ -96,6 +101,8 @@ class ExchangeRateService
 
     /**
      * Get all exchange rates with caching
+     *
+     * @return array<string, float>
      */
     public function getAllRates(): array
     {
@@ -106,6 +113,8 @@ class ExchangeRateService
 
     /**
      * Fetch rates from external APIs
+     *
+     * @return array<string, float>
      */
     private function fetchRatesFromApi(): array
     {
@@ -143,6 +152,8 @@ class ExchangeRateService
 
     /**
      * Fetch currency rates from OpenExchangeRates
+     *
+     * @return array<string, float>
      */
     private function fetchCurrencyRates(): array
     {
@@ -154,7 +165,12 @@ class ExchangeRateService
         ]);
 
         if ($response->successful()) {
-            return $response->json('rates', []);
+            $rates = $response->json('rates', []);
+
+            /** @var array<string, float> $rates */
+            $rates = is_array($rates) ? $rates : [];
+
+            return $rates;
         }
 
         throw new Exception('OpenExchangeRates API failed: '.$response->body());
@@ -162,6 +178,8 @@ class ExchangeRateService
 
     /**
      * Fetch metal rates (placeholder for future implementation)
+     *
+     * @return array<string, float>
      */
     private function fetchMetalRates(): array
     {
@@ -175,6 +193,8 @@ class ExchangeRateService
 
     /**
      * Get fallback rates when API fails
+     *
+     * @return array<string, float>
      */
     private function getFallbackRates(): array
     {
@@ -190,18 +210,21 @@ class ExchangeRateService
 
     /**
      * Get popular currencies for dropdowns
+     *
+     * @return array<string, string>
      */
     public function getPopularCurrencies(): array
     {
         $popular = ['TRY', 'USD', 'EUR', 'GBP', 'XAU', 'XAG'];
 
-        return collect($popular)
-            ->mapWithKeys(function ($code) {
-                $currency = Currencies::tryFrom($code);
+        $result = [];
 
-                return [$code => $currency?->getLabel().' ('.$currency?->getSymbol().')'];
-            })
-            ->toArray();
+        foreach ($popular as $code) {
+            $currency = Currencies::tryFrom($code);
+            $result[$code] = $currency->getLabel().' ('.$currency->getSymbol().')';
+        }
+
+        return $result;
     }
 
     /**
@@ -235,17 +258,5 @@ class ExchangeRateService
     public function setBaseCurrency(string $currency): void
     {
         $this->baseCurrency = $currency;
-    }
-
-    /**
-     * Map status to GitHub state using match operator
-     */
-    private function mapStatusToGitHubState(string $status): string
-    {
-        return match ($status) {
-            'todo', 'in_progress' => 'open',
-            'completed' => 'closed',
-            default => 'open',
-        };
     }
 }

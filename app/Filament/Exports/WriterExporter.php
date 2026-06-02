@@ -31,7 +31,7 @@ class WriterExporter extends Exporter
                 ->label('Ölüm Yeri'),
             ExportColumn::make('is_finished')
                 ->label('Durum')
-                ->formatStateUsing(fn (Writer $record) => $record ? 'Tamamlandı' : 'Tamamlanmadı'),
+                ->formatStateUsing(fn ($state): string => $state ? 'Tamamlandı' : 'Tamamlanmadı'),
             ExportColumn::make('books_count')->counts('books')
                 ->label('Kitap Sayısı'),
         ];

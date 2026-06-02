@@ -38,6 +38,6 @@ class BooksOverview extends BaseWidget
 
     private function getPageCount(): int
     {
-        return Book::sum('page_count');
+        return (int) Book::sum('page_count');
     }
 }

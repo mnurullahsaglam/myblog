@@ -15,7 +15,7 @@ enum LaravelVersions: string implements HasColor, HasLabel
     case LARAVEL_11 = '11.x';
     case LARAVEL_12 = '12.x';
 
-    public function getLabel(): ?string
+    public function getLabel(): string
     {
         return match ($this) {
             self::LARAVEL_8 => 'Laravel 8',
@@ -26,7 +26,7 @@ enum LaravelVersions: string implements HasColor, HasLabel
         };
     }
 
-    public function getColor(): string|array|null
+    public function getColor(): string
     {
         return match ($this) {
             self::LARAVEL_8, self::LARAVEL_9, self::LARAVEL_10 => 'danger',

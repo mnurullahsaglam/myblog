@@ -11,13 +11,14 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class WakaTimeSummariesTable
 {
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn ($query) => $query->with('entries'))
+            ->modifyQueryUsing(fn (Builder $query): Builder => $query->with('entries'))
             ->defaultSort('date', 'desc')
             ->columns([
                 TextColumn::make('date')
@@ -26,7 +27,7 @@ class WakaTimeSummariesTable
                     ->weight('bold'),
                 TextColumn::make('total_human')
                     ->label('Total')
-                    ->sortable(query: fn ($query, string $direction) => $query->orderBy('total_seconds', $direction))
+                    ->sortable(query: fn (Builder $query, string $direction): Builder => $query->orderBy('total_seconds', $direction))
                     ->badge()
                     ->color('success'),
                 TextColumn::make('top_project')
@@ -50,9 +51,11 @@ class WakaTimeSummariesTable
 
     private static function topName(WakaTimeSummary $record, string $type): ?string
     {
-        return $record->entries
+        $entry = $record->entries
             ->where('type', $type)
             ->sortByDesc('seconds')
-            ->value('name');
+            ->first();
+
+        return $entry?->name;
     }
 }

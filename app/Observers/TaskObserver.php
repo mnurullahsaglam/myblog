@@ -58,9 +58,9 @@ class TaskObserver
             $maxOrder = Task::where('status', $task->status)
                 ->when($task->project_id, fn ($q) => $q->where('project_id', $task->project_id))
                 ->when($task->repository_id, fn ($q) => $q->where('repository_id', $task->repository_id))
-                ->max('sort_order') ?? 0;
+                ->max('sort_order');
 
-            $task->sort_order = $maxOrder + 1;
+            $task->sort_order = (is_numeric($maxOrder) ? (int) $maxOrder : 0) + 1;
         }
     }
 

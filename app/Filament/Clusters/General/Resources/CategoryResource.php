@@ -33,7 +33,7 @@ class CategoryResource extends Resource
                 TextInput::make('name')
                     ->required()
                     ->reactive()
-                    ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
+                    ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug(is_string($state) ? $state : ''))),
 
                 TextInput::make('slug')
                     ->disabled()

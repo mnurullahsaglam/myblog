@@ -66,6 +66,10 @@ class IncomeResource extends Resource
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
 
+                        if (! is_string($state)) {
+                            return null;
+                        }
+
                         return strlen($state) <= 50 ? null : $state;
                     }),
 
@@ -104,22 +108,25 @@ class IncomeResource extends Resource
                             ->label('To Date'),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
+                        $fromDate = is_string($data['from_date'] ?? null) ? $data['from_date'] : null;
+                        $toDate = is_string($data['to_date'] ?? null) ? $data['to_date'] : null;
+
                         return $query
                             ->when(
-                                $data['from_date'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('date', '>=', $date),
+                                $fromDate,
+                                fn (Builder $query, string $date): Builder => $query->whereDate('date', '>=', $date),
                             )
                             ->when(
-                                $data['to_date'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('date', '<=', $date),
+                                $toDate,
+                                fn (Builder $query, string $date): Builder => $query->whereDate('date', '<=', $date),
                             );
                     })
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
-                        if ($data['from_date'] ?? null) {
+                        if (is_string($data['from_date'] ?? null) && $data['from_date'] !== '') {
                             $indicators[] = 'From '.Carbon::parse($data['from_date'])->toFormattedDateString();
                         }
-                        if ($data['to_date'] ?? null) {
+                        if (is_string($data['to_date'] ?? null) && $data['to_date'] !== '') {
                             $indicators[] = 'Until '.Carbon::parse($data['to_date'])->toFormattedDateString();
                         }
 
@@ -173,7 +180,9 @@ class IncomeResource extends Resource
                     ->step(0.01)
                     ->prefix(function (Get $get) {
                         $currency = $get('currency');
-                        $currencyInstance = $currency instanceof Currencies ? $currency : Currencies::tryFrom($currency) ?? Currencies::TRY;
+                        $currencyInstance = $currency instanceof Currencies
+                            ? $currency
+                            : (is_string($currency) ? Currencies::tryFrom($currency) : null) ?? Currencies::TRY;
 
                         return $currencyInstance->getSymbol();
                     }),

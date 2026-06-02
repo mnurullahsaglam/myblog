@@ -56,7 +56,7 @@ class WakaTimeOverview extends BaseWidget
                 ->color('success'),
             Stat::make('Daily average', $this->formatDuration((int) ($total / max(1, $divisor))))
                 ->description('over '.strtolower($this->rangeLabel())),
-            Stat::make('Today', $this->formatDuration($today?->total_seconds ?? 0))
+            Stat::make('Today', $this->formatDuration($today->total_seconds ?? 0))
                 ->color('info'),
             Stat::make('Most active day', $mostActive ? $this->formatDuration($mostActive->total_seconds) : '—')
                 ->description($mostActive?->date->format('D, M jS') ?? '—')

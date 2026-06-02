@@ -12,6 +12,7 @@ use App\Filament\Widgets\WakaTimeLanguagesChart;
 use App\Filament\Widgets\WakaTimeOperatingSystemsChart;
 use App\Filament\Widgets\WakaTimeOverview;
 use App\Filament\Widgets\WakaTimeProjectsChart;
+use App\Models\WakaTimeSummary;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewWakaTimeSummary extends ViewRecord
@@ -20,7 +21,11 @@ class ViewWakaTimeSummary extends ViewRecord
 
     public function getTitle(): string
     {
-        return $this->record->date->format('l, F j, Y');
+        $record = $this->getRecord();
+
+        return $record instanceof WakaTimeSummary
+            ? $record->date->format('l, F j, Y')
+            : '';
     }
 
     protected function getHeaderActions(): array

@@ -11,10 +11,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Sluggable\HasSlug;
 
+/**
+ * @property string $name
+ */
 class Writer extends Model
 {
+    /** @use HasFactory<\Database\Factories\WriterFactory> */
     use DefaultSlugOptions, HasFactory, HasSlug, SlugAsRouteKeyName;
 
+    /**
+     * @return HasMany<Book, $this>
+     */
     public function books(): HasMany
     {
         return $this->hasMany(Book::class);
