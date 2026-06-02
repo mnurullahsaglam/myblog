@@ -7,9 +7,12 @@ namespace App\Filament\Clusters\General\Pages;
 use App\Filament\Clusters\General;
 use App\Models\Setting;
 use BackedEnum;
+use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 use Filament\Support\Exceptions\Halt;
 
@@ -51,9 +54,9 @@ class Settings extends Page
     {
         return $form
             ->schema([
-                Forms\Components\Tabs::make('settings_tabs')
+                Tabs::make('settings_tabs')
                     ->tabs([
-                        Forms\Components\Tabs\Tab::make('Site Information')
+                        Tab::make('Site Information')
                             ->schema([
                                 Forms\Components\TextInput::make('site_info.site_name')
                                     ->label('Site Name')
@@ -73,7 +76,7 @@ class Settings extends Page
                                     ->maxLength(255),
                             ]),
 
-                        Forms\Components\Tabs\Tab::make('Meta Tags')
+                        Tab::make('Meta Tags')
                             ->schema([
                                 Forms\Components\Textarea::make('meta.meta_title')
                                     ->label('Meta Title')
@@ -100,7 +103,7 @@ class Settings extends Page
                                     ->visibility('public'),
                             ]),
 
-                        Forms\Components\Tabs\Tab::make('Logos & Branding')
+                        Tab::make('Logos & Branding')
                             ->schema([
                                 Forms\Components\FileUpload::make('branding.logo')
                                     ->label('Main Logo')
@@ -129,7 +132,7 @@ class Settings extends Page
                                     ->hex(),
                             ]),
 
-                        Forms\Components\Tabs\Tab::make('Social Media')
+                        Tab::make('Social Media')
                             ->schema([
                                 Forms\Components\TextInput::make('social.facebook_url')
                                     ->label('Facebook URL')
@@ -157,7 +160,7 @@ class Settings extends Page
                                     ->maxLength(255),
                             ]),
 
-                        Forms\Components\Tabs\Tab::make('Contact Information')
+                        Tab::make('Contact Information')
                             ->schema([
                                 Forms\Components\TextInput::make('contact.phone')
                                     ->label('Phone Number')
@@ -228,7 +231,7 @@ class Settings extends Page
     protected function getFormActions(): array
     {
         return [
-            Forms\Components\Actions\Action::make('save')
+            Action::make('save')
                 ->label('Save Settings')
                 ->submit('save')
                 ->color('primary'),
