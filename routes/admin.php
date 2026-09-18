@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\Work\ClientController;
 use App\Http\Controllers\Admin\Work\InvoiceController;
 use App\Http\Controllers\Admin\Work\ProjectController;
 use App\Http\Controllers\Admin\Work\RepositoryController;
+use App\Http\Controllers\Admin\Work\TaskBoardController;
 use App\Http\Controllers\Admin\Work\WakaTimeSummaryController;
 use Illuminate\Support\Facades\Route;
 
@@ -53,6 +54,13 @@ Route::middleware(['auth', 'can:access-admin'])
 
         Route::delete('invoices/bulk', [InvoiceController::class, 'bulkDestroy'])->name('invoices.bulk-destroy');
         Route::resource('invoices', InvoiceController::class)->except(['show']);
+
+        Route::get('tasks/board', [TaskBoardController::class, 'index'])->name('tasks.board');
+        Route::post('tasks', [TaskBoardController::class, 'store'])->name('tasks.store');
+        Route::patch('tasks/{task}/move', [TaskBoardController::class, 'move'])->name('tasks.move');
+        Route::post('tasks/{task}/sync-github', [TaskBoardController::class, 'syncToGitHub'])->name('tasks.sync-github');
+        Route::put('tasks/{task}', [TaskBoardController::class, 'update'])->name('tasks.update');
+        Route::delete('tasks/{task}', [TaskBoardController::class, 'destroy'])->name('tasks.destroy');
 
         // Read only: synced from the WakaTime API, never authored by hand.
         Route::get('waka-time-summaries', [WakaTimeSummaryController::class, 'index'])->name('waka-time-summaries.index');

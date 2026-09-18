@@ -26,6 +26,7 @@ final class Navigation
                 ['label' => 'Debts', 'route' => 'admin.debts.index', 'icon' => 'pi pi-exclamation-triangle'],
             ]],
             ['label' => 'Work', 'icon' => 'pi pi-briefcase', 'items' => [
+                ['label' => 'Task board', 'route' => 'admin.tasks.board', 'icon' => 'pi pi-th-large'],
                 ['label' => 'Clients', 'route' => 'admin.clients.index', 'icon' => 'pi pi-users'],
                 ['label' => 'Projects', 'route' => 'admin.projects.index', 'icon' => 'pi pi-folder-open'],
                 ['label' => 'Repositories', 'route' => 'admin.repositories.index', 'icon' => 'pi pi-code'],
