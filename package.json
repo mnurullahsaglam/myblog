@@ -14,5 +14,16 @@
     "postcss": "^8.4.47",
     "tailwindcss": "^4.2.2",
     "vite": "^6.0"
+  },
+  "dependencies": {
+    "@inertiajs/vue3": "^3.7.1",
+    "@primeuix/themes": "^3.0.1",
+    "@vitejs/plugin-vue": "^6.0.9",
+    "chart.js": "^4.5.1",
+    "primeicons": "^8.0.1",
+    "primevue": "^4.5.5",
+    "tailwindcss-primeui": "^0.6.1",
+    "vue": "^3.5.43",
+    "vuedraggable": "^4.1.0"
   }
 }
