@@ -104,9 +104,10 @@ abstract class AdminResourceController extends Controller
 
         return Inertia::render($this->pagePath().'/Index', [
             'schema' => $table->schema(),
-            // A closure, so a partial reload asking only for rows recomputes
+            // Closures, so a partial reload asking only for rows recomputes
             // nothing else.
             'rows' => fn (): mixed => $table->rows($request),
+            'tiles' => fn (): array => $table->tiles($request),
         ]);
     }
 

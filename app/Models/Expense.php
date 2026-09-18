@@ -43,6 +43,8 @@ class Expense extends Model
         'amount' => 'decimal:2',
         'currency' => Currencies::class,
         'date' => 'date',
+        'is_recurring' => 'boolean',
+        'is_tax_deductible' => 'boolean',
     ];
 
     /**

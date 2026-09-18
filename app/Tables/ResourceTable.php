@@ -77,6 +77,32 @@ abstract class ResourceTable
     }
 
     /**
+     * Summary tiles shown above the table, computed over the filtered set.
+     *
+     * @return array<int, array{label: string, value: string, caption?: string|null, icon?: string|null}>
+     */
+    public function tiles(Request $request): array
+    {
+        return [];
+    }
+
+    /**
+     * The query with search and filters applied but no sort or pagination, for
+     * summarising exactly what the table is showing.
+     *
+     * @return Builder<covariant Model>
+     */
+    protected function filteredQuery(Request $request): Builder
+    {
+        $query = $this->query();
+
+        $this->applySearch($query, $request);
+        $this->applyFilters($query, $request);
+
+        return $query;
+    }
+
+    /**
      * @return array{columns: array<int, array<string, mixed>>, filters: array<int, array<string, mixed>>, defaultSort: string, searchable: bool, perPage: int}
      */
     public function schema(): array

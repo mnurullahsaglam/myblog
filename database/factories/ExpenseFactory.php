@@ -27,9 +27,21 @@ class ExpenseFactory extends Factory
             'amount' => fake()->randomFloat(2, 10, 5000),
             'currency' => fake()->randomElement(Currencies::cases())->value,
             'description' => fake()->sentence(),
+            'is_recurring' => false,
+            'is_tax_deductible' => false,
             'receipt_path' => null,
             'date' => fake()->dateTimeBetween('-1 year')->format('Y-m-d'),
         ];
+    }
+
+    public function recurring(): static
+    {
+        return $this->state(fn (array $attributes): array => ['is_recurring' => true]);
+    }
+
+    public function taxDeductible(): static
+    {
+        return $this->state(fn (array $attributes): array => ['is_tax_deductible' => true]);
     }
 
     public function withReceipt(): static

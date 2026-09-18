@@ -20,7 +20,10 @@ final class Navigation
             ['label' => 'Blog', 'icon' => 'pi pi-pencil', 'items' => [
                 ['label' => 'Posts', 'route' => 'admin.posts.index', 'icon' => 'pi pi-file-edit'],
             ]],
-            ['label' => 'Budget', 'icon' => 'pi pi-wallet', 'items' => []],
+            ['label' => 'Budget', 'icon' => 'pi pi-wallet', 'items' => [
+                ['label' => 'Incomes', 'route' => 'admin.incomes.index', 'icon' => 'pi pi-plus-circle'],
+                ['label' => 'Expenses', 'route' => 'admin.expenses.index', 'icon' => 'pi pi-minus-circle'],
+            ]],
             ['label' => 'Work', 'icon' => 'pi pi-briefcase', 'items' => [
                 ['label' => 'Clients', 'route' => 'admin.clients.index', 'icon' => 'pi pi-users'],
                 ['label' => 'Projects', 'route' => 'admin.projects.index', 'icon' => 'pi pi-folder-open'],

@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Admin\Blog\PostController;
+use App\Http\Controllers\Admin\Budget\ExpenseController;
+use App\Http\Controllers\Admin\Budget\IncomeController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\General\CategoryController;
 use App\Http\Controllers\Admin\Library\BookController;
@@ -45,4 +47,10 @@ Route::middleware(['auth', 'can:access-admin'])
 
         Route::delete('repositories/bulk', [RepositoryController::class, 'bulkDestroy'])->name('repositories.bulk-destroy');
         Route::resource('repositories', RepositoryController::class);
+
+        Route::delete('incomes/bulk', [IncomeController::class, 'bulkDestroy'])->name('incomes.bulk-destroy');
+        Route::resource('incomes', IncomeController::class);
+
+        Route::delete('expenses/bulk', [ExpenseController::class, 'bulkDestroy'])->name('expenses.bulk-destroy');
+        Route::resource('expenses', ExpenseController::class)->except(['show']);
     });
