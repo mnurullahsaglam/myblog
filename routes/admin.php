@@ -7,11 +7,13 @@ use App\Http\Controllers\Admin\Budget\DebtController;
 use App\Http\Controllers\Admin\Budget\ExpenseController;
 use App\Http\Controllers\Admin\Budget\IncomeController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ExportController;
 use App\Http\Controllers\Admin\General\CategoryController;
 use App\Http\Controllers\Admin\Library\BookController;
 use App\Http\Controllers\Admin\Library\PublisherController;
 use App\Http\Controllers\Admin\Library\WriterController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\SearchController;
 use App\Http\Controllers\Admin\Work\ClientController;
 use App\Http\Controllers\Admin\Work\InvoiceController;
 use App\Http\Controllers\Admin\Work\ProjectController;
@@ -26,6 +28,13 @@ Route::middleware(['auth', 'can:access-admin'])
     ->group(function (): void {
         Route::get('/', DashboardController::class)->name('dashboard');
         Route::get('profile', ProfileController::class)->name('profile');
+        Route::get('search', SearchController::class)->name('search');
+
+        // Declared before the parameterised route so it is not swallowed by it.
+        Route::get('exports/download', [ExportController::class, 'download'])
+            ->middleware('signed')
+            ->name('exports.download');
+        Route::post('exports/{resource}', [ExportController::class, 'store'])->name('exports.store');
 
         // Bulk routes come first so "posts/bulk" is not captured by "posts/{post}".
         Route::delete('posts/bulk', [PostController::class, 'bulkDestroy'])->name('posts.bulk-destroy');

@@ -7,6 +7,7 @@ import Menu from 'primevue/menu'
 import Toast from 'primevue/toast'
 import { useToast } from 'primevue/usetoast'
 import Mark from '@/Components/Brand/Mark.vue'
+import Spotlight from '@/Components/Spotlight.vue'
 
 defineProps({
     title: { type: String, required: true },
@@ -22,6 +23,7 @@ const env = computed(() => page.props.env ?? { name: 'production', isProduction:
 
 const clusterMenus = ref({})
 const userMenu = ref()
+const spotlight = ref()
 
 function setClusterMenu(label, el) {
     if (el) {
@@ -109,6 +111,16 @@ watch(
                 <div class="ml-auto flex items-center gap-1">
                     <slot name="topbar" />
 
+                    <button
+                        type="button"
+                        class="flex items-center gap-2 rounded border border-surface-200 px-2.5 py-1.5 text-surface-500 transition-colors hover:border-surface-300 hover:text-surface-700 dark:border-[#272B35] dark:hover:border-[#9096A2] dark:hover:text-surface-200"
+                        @click="spotlight.open()"
+                    >
+                        <i class="pi pi-search" style="font-size: 0.75rem" />
+                        <span class="hidden text-[13px] sm:inline">Search</span>
+                        <kbd class="hidden font-mono text-[10px] sm:inline">⌘K</kbd>
+                    </button>
+
                     <Button
                         v-if="user"
                         :label="user.name"
@@ -162,6 +174,7 @@ watch(
             </div>
         </footer>
 
+        <Spotlight ref="spotlight" />
         <Toast position="bottom-right" />
         <ConfirmDialog />
     </div>
