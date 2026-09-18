@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SearchController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\Work\ClientController;
+use App\Http\Controllers\Admin\Work\CodingDashboardController;
 use App\Http\Controllers\Admin\Work\InvoiceController;
 use App\Http\Controllers\Admin\Work\ProjectController;
 use App\Http\Controllers\Admin\Work\RepositoryController;
@@ -72,6 +73,8 @@ Route::middleware(['auth', 'can:access-admin'])
 
         Route::delete('invoices/bulk', [InvoiceController::class, 'bulkDestroy'])->name('invoices.bulk-destroy');
         Route::resource('invoices', InvoiceController::class)->except(['show']);
+
+        Route::get('coding-dashboard', CodingDashboardController::class)->name('coding-dashboard');
 
         Route::get('tasks/board', [TaskBoardController::class, 'index'])->name('tasks.board');
         Route::post('tasks', [TaskBoardController::class, 'store'])->name('tasks.store');

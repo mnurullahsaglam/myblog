@@ -49,6 +49,16 @@ abstract class AdminResourceController extends Controller
     abstract protected function requestClass(): string;
 
     /**
+     * Tiles contributed by the controller, merged ahead of the table's own.
+     *
+     * @return array<int, array{label: string, value: string, caption: string|null, icon: string|null}>
+     */
+    protected function indexTiles(): array
+    {
+        return [];
+    }
+
+    /**
      * Upload fields mapped to their storage directory.
      *
      * @return array<string, string>
@@ -107,7 +117,7 @@ abstract class AdminResourceController extends Controller
             // Closures, so a partial reload asking only for rows recomputes
             // nothing else.
             'rows' => fn (): mixed => $table->rows($request),
-            'tiles' => fn (): array => $table->tiles($request),
+            'tiles' => fn (): array => [...$this->indexTiles(), ...$table->tiles($request)],
         ]);
     }
 
