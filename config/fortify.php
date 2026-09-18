@@ -75,7 +75,7 @@ return [
     |
     */
 
-    'home' => '/home',
+    'home' => '/app',
 
     /*
     |--------------------------------------------------------------------------
@@ -164,9 +164,8 @@ return [
     */
 
     'features' => [
-        Features::registration(),
-        Features::resetPasswords(),
-        // Features::emailVerification(),
+        // Registration and password reset are deliberately off: this is a
+        // single-user panel and the only account is provisioned by hand.
         Features::updateProfileInformation(),
         Features::updatePasswords(),
         Features::twoFactorAuthentication([

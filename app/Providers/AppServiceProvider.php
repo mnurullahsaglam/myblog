@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Models\User;
+use App\Support\Theme\AccentRamps;
+use App\Support\Theme\Appearance;
+use Illuminate\Auth\Middleware\RedirectIfAuthenticated;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 
@@ -31,6 +35,16 @@ class AppServiceProvider extends ServiceProvider
 
         Vite::useAggressivePrefetching();
 
+        RedirectIfAuthenticated::redirectUsing(fn (): string => route('admin.dashboard'));
+
         Gate::define('access-admin', fn (User $user): bool => $user->isAdmin());
+
+        // Feeds the root template so the accent and scheme paint before Vue boots.
+        View::composer('app', function (\Illuminate\View\View $view): void {
+            $view->with([
+                'accentCss' => AccentRamps::cssVariables(Appearance::accent()),
+                'colorScheme' => Appearance::colorScheme(),
+            ]);
+        });
     }
 }

@@ -1,8 +1,9 @@
 <script setup>
-import { Head } from '@inertiajs/vue3'
+import AdminLayout from '@/Layouts/AdminLayout.vue'
 </script>
 
 <template>
-    <Head title="Dashboard" />
-    <p class="p-8 text-sm">Dashboard placeholder. Layout arrives in Task 13.</p>
+    <AdminLayout title="Dashboard" subtitle="Overview widgets land in Phase 5.">
+        <p class="text-sm text-surface-500 dark:text-surface-400">Nothing here yet.</p>
+    </AdminLayout>
 </template>
