@@ -6,21 +6,25 @@ namespace Database\Factories;
 
 use App\Models\Client;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Carbon;
 
+/**
+ * @extends Factory<Client>
+ */
 class ClientFactory extends Factory
 {
     protected $model = Client::class;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
+            'title' => fake()->company(),
             'email' => fake()->unique()->safeEmail(),
+            'country' => fake()->country(),
             'address' => fake()->address(),
-            'tax_no' => fake()->word(),
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
+            'tax_no' => fake()->numerify('##########'),
         ];
     }
 }

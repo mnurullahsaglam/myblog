@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -18,6 +19,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class WakaTimeSummaryEntry extends Model
 {
+    /** @use HasFactory<\Database\Factories\WakaTimeSummaryEntryFactory> */
+    use HasFactory;
+
     public const TYPE_PROJECT = 'project';
 
     public const TYPE_LANGUAGE = 'language';
