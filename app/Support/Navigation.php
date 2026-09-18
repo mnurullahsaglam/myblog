@@ -17,7 +17,9 @@ final class Navigation
     public static function clusters(): array
     {
         return [
-            ['label' => 'Blog', 'icon' => 'pi pi-pencil', 'items' => []],
+            ['label' => 'Blog', 'icon' => 'pi pi-pencil', 'items' => [
+                ['label' => 'Posts', 'route' => 'admin.posts.index', 'icon' => 'pi pi-file-edit'],
+            ]],
             ['label' => 'Budget', 'icon' => 'pi pi-wallet', 'items' => []],
             ['label' => 'Work', 'icon' => 'pi pi-briefcase', 'items' => []],
             ['label' => 'Library', 'icon' => 'pi pi-book', 'items' => []],

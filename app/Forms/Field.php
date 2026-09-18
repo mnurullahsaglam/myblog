@@ -62,9 +62,13 @@ final class Field
         return new self($key, 'markdown');
     }
 
+    /**
+     * Long-form prose. Rendered as markdown rather than a WYSIWYG: the panel is
+     * a developer tool and this avoids pulling in an editor dependency.
+     */
     public static function richtext(string $key): self
     {
-        return new self($key, 'richtext');
+        return new self($key, 'markdown');
     }
 
     public static function number(string $key): self

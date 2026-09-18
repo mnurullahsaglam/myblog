@@ -3,7 +3,6 @@ import { computed, ref } from 'vue'
 import AutoComplete from 'primevue/autocomplete'
 import Button from 'primevue/button'
 import DatePicker from 'primevue/datepicker'
-import Editor from 'primevue/editor'
 import FileUpload from 'primevue/fileupload'
 import InputNumber from 'primevue/inputnumber'
 import InputText from 'primevue/inputtext'
@@ -145,13 +144,6 @@ const labelClass =
             :disabled="field.disabled"
             :invalid="Boolean(error)"
             auto-resize
-            @update:model-value="update"
-        />
-
-        <Editor
-            v-else-if="field.type === 'richtext'"
-            :model-value="modelValue"
-            editor-style="height: 260px"
             @update:model-value="update"
         />
 
