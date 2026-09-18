@@ -4,7 +4,7 @@
 [the plan](plans/2026-09-18-filament-to-inertia-vue.md); design rules in
 [the design system](design-system.md).
 
-**Now:** Phase 4, Task 34. **Released:** `v0.1.0` (pre-release).
+**Now:** Phase 5, Task 40. **Released:** `v0.1.0` (pre-release).
 
 ---
 
@@ -58,16 +58,16 @@ All thirteen resources are on the new panel.
 - [x] 32 · Invoices *(server-computed tax and totals, private archive)*
 - [x] 33 · WakaTime summaries *(read-only, with nested entries)*
 
-## Phase 4 — The specials ⬅ current
+## Phase 4 — The specials ✅
 
-- [ ] 34 · Kanban board, replacing flowforge *(assignee dropped — single user)*
-- [ ] 35 · Cmd+K command palette
-- [ ] 36 · Global search across all thirteen resources
-- [ ] 37 · CSV exports for Books, Publishers, Writers
-- [ ] 38 · Settings page with the live accent picker
-- [ ] 39 · Notification bell
+- [x] 34 · Kanban board, replacing flowforge *(assignee dropped — single user)*
+- [x] 35 · Cmd+K command palette
+- [x] 36 · Global search across all thirteen resources
+- [x] 37 · CSV exports for Books, Publishers, Writers
+- [x] 38 · Settings page with the live accent picker
+- [x] 39 · Notification bell
 
-## Phase 5 — Dashboards
+## Phase 5 — Dashboards ⬅ current
 
 - [ ] 40 · Coding dashboard *(replace the rainbow `palette()` with the accent ramp)*
 - [ ] 41 · Overview widgets and the main dashboard
