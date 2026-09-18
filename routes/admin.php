@@ -12,8 +12,10 @@ use App\Http\Controllers\Admin\General\CategoryController;
 use App\Http\Controllers\Admin\Library\BookController;
 use App\Http\Controllers\Admin\Library\PublisherController;
 use App\Http\Controllers\Admin\Library\WriterController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SearchController;
+use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\Work\ClientController;
 use App\Http\Controllers\Admin\Work\InvoiceController;
 use App\Http\Controllers\Admin\Work\ProjectController;
@@ -29,6 +31,13 @@ Route::middleware(['auth', 'can:access-admin'])
         Route::get('/', DashboardController::class)->name('dashboard');
         Route::get('profile', ProfileController::class)->name('profile');
         Route::get('search', SearchController::class)->name('search');
+        // read-all first, so it is not captured by the parameterised route.
+        Route::patch('notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.read-all');
+        Route::patch('notifications/{notification}', [NotificationController::class, 'read'])->name('notifications.read');
+        Route::delete('notifications/{notification}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
+
+        Route::get('settings', [SettingsController::class, 'edit'])->name('settings');
+        Route::put('settings', [SettingsController::class, 'update'])->name('settings.update');
 
         // Declared before the parameterised route so it is not swallowed by it.
         Route::get('exports/download', [ExportController::class, 'download'])

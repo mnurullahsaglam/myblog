@@ -40,6 +40,7 @@ final class Navigation
             ]],
             ['label' => 'General', 'icon' => 'pi pi-cog', 'items' => [
                 ['label' => 'Categories', 'route' => 'admin.categories.index', 'icon' => 'pi pi-tags'],
+                ['label' => 'Settings', 'route' => 'admin.settings', 'icon' => 'pi pi-cog'],
             ]],
         ];
     }

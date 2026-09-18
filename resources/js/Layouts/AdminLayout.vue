@@ -7,6 +7,7 @@ import Menu from 'primevue/menu'
 import Toast from 'primevue/toast'
 import { useToast } from 'primevue/usetoast'
 import Mark from '@/Components/Brand/Mark.vue'
+import NotificationsPanel from '@/Components/NotificationsPanel.vue'
 import Spotlight from '@/Components/Spotlight.vue'
 
 defineProps({
@@ -120,6 +121,8 @@ watch(
                         <span class="hidden text-[13px] sm:inline">Search</span>
                         <kbd class="hidden font-mono text-[10px] sm:inline">⌘K</kbd>
                     </button>
+
+                    <NotificationsPanel v-if="user" />
 
                     <Button
                         v-if="user"
