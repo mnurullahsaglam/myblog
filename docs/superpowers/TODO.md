@@ -4,7 +4,7 @@
 [the plan](plans/2026-09-18-filament-to-inertia-vue.md); design rules in
 [the design system](design-system.md).
 
-**Now:** Phase 5, Task 40. **Released:** `v0.1.0` (pre-release).
+**Now:** Complete. All 45 tasks done. **Released:** `v0.1.0` (pre-release).
 
 ---
 
@@ -67,17 +67,17 @@ All thirteen resources are on the new panel.
 - [x] 38 · Settings page with the live accent picker
 - [x] 39 · Notification bell
 
-## Phase 5 — Dashboards ⬅ current
+## Phase 5 — Dashboards ✅
 
-- [ ] 40 · Coding dashboard *(replace the rainbow `palette()` with the accent ramp)*
-- [ ] 41 · Overview widgets and the main dashboard
+- [x] 40 · Coding dashboard *(accent-ramp charts, custom doughnut legends)*
+- [x] 41 · Overview widgets and the main dashboard
 
-## Phase 6 — Demolition
+## Phase 6 — Demolition ✅
 
-- [ ] 42 · Parity test — fails if any Filament feature lacks a replacement
-- [ ] 43 · Remove Filament, its four plugins, Pulse and Livewire
-- [ ] 44 · Move the panel from `/app` to `/admin`
-- [ ] 45 · Browser smoke test across every page; final verification
+- [x] 42 · Parity test — 61 checks, passed before anything was deleted
+- [x] 43 · Removed Filament, its four plugins, Pulse and Livewire
+- [x] 44 · Panel moved from `/app` to `/admin`
+- [x] 45 · Browser smoke test, 27 pages, zero JavaScript errors
 
 ---
 
@@ -85,7 +85,16 @@ All thirteen resources are on the new panel.
 
 - [ ] `herd secure myblog`, then set `APP_URL=https://myblog.test` — passkeys need
       a secure context or `navigator.credentials` is undefined
-- [ ] Register a passkey at `/app/profile` and confirm Touch ID prompts
+- [ ] Register a passkey at `/admin/profile` and confirm Touch ID prompts
+- [ ] Walk the panel yourself and tell me what looks wrong
+
+## Final state
+
+632 tests, 2,322 assertions. Larastan level 10 at zero errors. Pint clean.
+The panel serves from `/admin`; the public site is untouched.
+
+Remaining composer dependencies: inertia-laravel, fortify, framework, tinker,
+pan, laravel-sluggable, css-selector, dom-crawler, ziggy.
 
 ## Open questions
 
