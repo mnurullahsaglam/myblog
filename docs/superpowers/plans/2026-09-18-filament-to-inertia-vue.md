@@ -55,6 +55,25 @@ standalone `CategoryResource` could not create a row. They now join through a
 **`PhpVersions` and `LaravelVersions` are unused** but are being kept at the
 user's request. They carry the new `App\Support\Contracts` interfaces.
 
+**The Stitch direction is in.** `docs/superpowers/design-system.md` is the
+contract and `docs/superpowers/design/` holds the four screens. Consequences:
+
+- **Task 40** replaces `AggregatesWakaTimeData::palette()`, whose rainbow colours
+  predate the design. Charts use the accent ramp plus neutrals; doughnuts get a
+  centre aggregate and a custom legend listing hours and percent; weekend bars
+  use `hairline`. Four KPI tiles sit above the charts and the range selector is a
+  segmented control, not a dropdown.
+- **Task 21 (Posts form)** is richer than planned: the slug renders as a
+  read-only mono bar with a lock and a copy button, a meta row shows word count,
+  read time and last modified, and the markdown editor gets Write/Preview/Split.
+- **Task 19 (table)** gains a KPI tile row above the toolbar, and the active
+  filter chips already planned match the design directly.
+- **Task 13 (layout)** draws the prompt-glyph mark as inline SVG.
+
+Tiles and indicators only ever show data that exists. The Stitch screens invent
+features this app does not have - import QIF, audit queues, sprint velocity, PR
+status - and those are not built.
+
 **Larastan needs `--memory-limit=1G`**; the 128M default crashes it. Every
 `vendor/bin/phpstan analyse` below should be run with that flag.
 

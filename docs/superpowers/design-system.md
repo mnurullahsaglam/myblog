@@ -137,6 +137,41 @@ mono-meta `ink-faint`.
 radius, elevated fill, hairline border, `ink-muted` text. Status pills: 6px dot
 plus mono 11px label in the status colour.
 
+## Charts
+
+Charts are drawn from the **accent ramp plus neutrals**, never a rainbow palette.
+The existing `palette()` in `AggregatesWakaTimeData` returns violet/blue/green/
+amber/red/cyan and predates this direction — it is replaced when the dashboard
+is ported.
+
+Series order, brightest first, so the dominant slice reads as the accent:
+
+```
+primary.400  #C9BE6E   dominant series
+primary.600  #96893F
+primary.800  #5A522A
+ink-muted    #9096A2   secondary / comparison series
+ink-faint    #5A606E
+hairline     #272B35   "Other" bucket, weekend bars, inactive
+```
+
+- **Line and area** — 2px accent stroke, flat fill at low opacity, no gradient.
+  A dashed `ink-faint` baseline where a target exists. Peak annotated with a
+  small accent dot and a mono label.
+- **Doughnut** — centre holds the aggregate in mono-metric plus a label-caps
+  caption. Legend sits to the right as a list: swatch, name, mono hours, mono
+  percent right-aligned. Not Chart.js's default legend.
+- **Bar** — accent fill for in-scope bars, `hairline` for out-of-scope ones
+  (weekends, "Other"). Value printed above each bar in mono.
+- Axis labels and gridlines in `ink-faint`; gridlines 1px, horizontal only.
+- Every duration is formatted `142h 38m`, never a decimal.
+
+## Branding
+
+The mark is a terminal prompt glyph: a rounded square in `surface` with a khaki
+chevron. It is drawn as inline SVG in the layout, not shipped as an image.
+Wordmark alongside it in mono, uppercase, `ink`.
+
 ## States
 
 - **Empty table** — centred, 48px vertical padding, `ink-muted`, one sentence.
