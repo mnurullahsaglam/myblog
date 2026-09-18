@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Admin\Blog\PostController;
+use App\Http\Controllers\Admin\Budget\DebtController;
 use App\Http\Controllers\Admin\Budget\ExpenseController;
 use App\Http\Controllers\Admin\Budget\IncomeController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -53,4 +54,8 @@ Route::middleware(['auth', 'can:access-admin'])
 
         Route::delete('expenses/bulk', [ExpenseController::class, 'bulkDestroy'])->name('expenses.bulk-destroy');
         Route::resource('expenses', ExpenseController::class)->except(['show']);
+
+        Route::delete('debts/bulk', [DebtController::class, 'bulkDestroy'])->name('debts.bulk-destroy');
+        Route::post('debts/{debt}/pay', [DebtController::class, 'pay'])->name('debts.pay');
+        Route::resource('debts', DebtController::class)->except(['show']);
     });

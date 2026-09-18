@@ -23,6 +23,7 @@ final class Navigation
             ['label' => 'Budget', 'icon' => 'pi pi-wallet', 'items' => [
                 ['label' => 'Incomes', 'route' => 'admin.incomes.index', 'icon' => 'pi pi-plus-circle'],
                 ['label' => 'Expenses', 'route' => 'admin.expenses.index', 'icon' => 'pi pi-minus-circle'],
+                ['label' => 'Debts', 'route' => 'admin.debts.index', 'icon' => 'pi pi-exclamation-triangle'],
             ]],
             ['label' => 'Work', 'icon' => 'pi pi-briefcase', 'items' => [
                 ['label' => 'Clients', 'route' => 'admin.clients.index', 'icon' => 'pi pi-users'],
