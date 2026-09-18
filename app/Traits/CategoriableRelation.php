@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\Traits;
 
 use App\Models\Category;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 trait CategoriableRelation
 {
     /**
-     * @return MorphMany<Category, $this>
+     * @return MorphToMany<Category, $this>
      */
-    public function categoriable(): MorphMany
+    public function categories(): MorphToMany
     {
-        return $this->morphMany(Category::class, 'categoriable');
+        return $this->morphToMany(Category::class, 'categoriable');
     }
 }

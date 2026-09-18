@@ -8,7 +8,7 @@ use App\Traits\DefaultSlugOptions;
 use App\Traits\SlugAsRouteKeyName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Spatie\Sluggable\HasSlug;
 
 class Category extends Model
@@ -17,10 +17,18 @@ class Category extends Model
     use DefaultSlugOptions, HasFactory, HasSlug, SlugAsRouteKeyName;
 
     /**
-     * @return MorphTo<Model, $this>
+     * @return MorphToMany<Post, $this>
      */
-    public function categoriable(): MorphTo
+    public function posts(): MorphToMany
     {
-        return $this->morphTo();
+        return $this->morphedByMany(Post::class, 'categoriable');
+    }
+
+    /**
+     * @return MorphToMany<Book, $this>
+     */
+    public function books(): MorphToMany
+    {
+        return $this->morphedByMany(Book::class, 'categoriable');
     }
 }
