@@ -4,7 +4,7 @@
 [the plan](plans/2026-09-18-filament-to-inertia-vue.md); design rules in
 [the design system](design-system.md).
 
-**Now:** Phase 3, Task 22. **Released:** `v0.1.0` (pre-release).
+**Now:** Phase 4, Task 34. **Released:** `v0.1.0` (pre-release).
 
 ---
 
@@ -42,21 +42,23 @@ definition, a FormRequest and a five-line controller.
 - [x] 20 · `ResourceForm` contract, incl. the many-to-many field categories need
 - [x] 21 · Prove the engine end to end on **Posts**
 
-## Phase 3 — Bulk port ⬅ current
+## Phase 3 — Bulk port ✅
 
-Easiest first, so the engine hardens before it meets the hard tables.
+All thirteen resources are on the new panel.
 
 - [x] 22a · `AdminResourceController` *(landed with Posts)*
-- [ ] 22 · **Categories** (now a real standalone resource)
-- [ ] 23 · Publishers · [ ] 24 · Writers · [ ] 25 · Books
-- [ ] 26 · Clients · [ ] 27 · Projects
-- [ ] 28 · Repositories *(+ `commits_count` column)*
-- [ ] 29 · Incomes · [ ] 30 · Expenses *(+ `is_recurring`, `is_tax_deductible`)*
-- [ ] 31 · **Debts** — hardest table: currency conversion driven by a filter,
-      computed due-date status, pay-debt action with partial payments
-- [ ] 32 · Invoices · [ ] 33 · WakaTime summaries (read-only)
+- [x] 22 · Categories *(standalone, with post and book counts)*
+- [x] 23 · Publishers · [x] 24 · Writers · [x] 25 · Books
+- [x] 26 · Clients *(model gained the relations it was missing)*
+- [x] 27 · Projects
+- [x] 28 · Repositories *(+ `commits_count`)*
+- [x] 29 · Incomes *(source filter split into three flags)*
+- [x] 30 · Expenses *(+ `is_recurring`, `is_tax_deductible`, + KPI tiles)*
+- [x] 31 · Debts *(currency conversion, due status, pay-debt with partials)*
+- [x] 32 · Invoices *(server-computed tax and totals, private archive)*
+- [x] 33 · WakaTime summaries *(read-only, with nested entries)*
 
-## Phase 4 — The specials
+## Phase 4 — The specials ⬅ current
 
 - [ ] 34 · Kanban board, replacing flowforge *(assignee dropped — single user)*
 - [ ] 35 · Cmd+K command palette
