@@ -4,7 +4,7 @@
 [the plan](plans/2026-09-18-filament-to-inertia-vue.md); design rules in
 [the design system](design-system.md).
 
-**Now:** Phase 2, Task 16. **Released:** `v0.1.0` (pre-release).
+**Now:** Phase 3, Task 22. **Released:** `v0.1.0` (pre-release).
 
 ---
 
@@ -30,23 +30,24 @@
 - [x] 14 · Fortify login, two-factor challenge, password confirmation
 - [x] 15 · Profile: password change, two-factor toggle, passkey management
 
-## Phase 2 — The engine ⬅ current
+## Phase 2 — The engine ✅
 
-The risk-carrying block. If the contract is wrong it surfaces here, on the
-smallest resource, not on the thirteenth.
+The risk-carrying block, now closed. A resource is a table definition, a form
+definition, a FormRequest and a five-line controller.
 
-- [ ] 16 · `Column` value object — text, money, date, badge, image, boolean, count
-- [ ] 17 · `Filter` value object — relationship, enum, select, dateRange, boolean, custom, displayOnly
-- [ ] 18 · `ResourceTable` base — schema, rows, sort, search, filter, paginate
-- [ ] 19 · `ResourceTable.vue` + `TableCell` + `FilterBar` + KPI tile row
-- [ ] 20 · `ResourceForm` contract, incl. the many-to-many field categories need
-- [ ] 21 · Prove the engine end to end on **Posts**
+- [x] 16 · `Column` value object — text, money, date, badge, image, boolean, count
+- [x] 17 · `Filter` value object — relationship, enum, select, dateRange, boolean, custom, displayOnly
+- [x] 18 · `ResourceTable` base — schema, rows, sort, search, filter, paginate
+- [x] 19 · `ResourceTable.vue` + `TableCell` + `FilterBar` + `StatTile`
+- [x] 20 · `ResourceForm` contract, incl. the many-to-many field categories need
+- [x] 21 · Prove the engine end to end on **Posts**
 
-## Phase 3 — Bulk port
+## Phase 3 — Bulk port ⬅ current
 
 Easiest first, so the engine hardens before it meets the hard tables.
 
-- [ ] 22 · `AdminResourceController` + **Categories** (now a real standalone resource)
+- [x] 22a · `AdminResourceController` *(landed with Posts)*
+- [ ] 22 · **Categories** (now a real standalone resource)
 - [ ] 23 · Publishers · [ ] 24 · Writers · [ ] 25 · Books
 - [ ] 26 · Clients · [ ] 27 · Projects
 - [ ] 28 · Repositories *(+ `commits_count` column)*
