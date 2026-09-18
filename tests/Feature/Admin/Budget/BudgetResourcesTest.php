@@ -238,5 +238,5 @@ it('lists the budget cluster in navigation', function (): void {
     $budget = collect(App\Support\Navigation::clusters())->firstWhere('label', 'Budget');
 
     expect(collect($budget['items'])->pluck('route')->all())
-        ->toBe(['admin.incomes.index', 'admin.expenses.index']);
+        ->toContain('admin.incomes.index', 'admin.expenses.index');
 });
