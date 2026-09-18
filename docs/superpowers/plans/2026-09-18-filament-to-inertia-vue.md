@@ -74,6 +74,34 @@ Tiles and indicators only ever show data that exists. The Stitch screens invent
 features this app does not have - import QIF, audit queues, sprint velocity, PR
 status - and those are not built.
 
+**Scope decided from the Stitch screens** (2026-09-18). Everything derivable
+from existing data is built: expense outflow and daily-mean tiles, receipt
+indicator, filter chips, post breadcrumb and unsaved-changes pill, read-only
+slug bar with copy, word count and read time, post tags via the new shared
+categories, markdown toolbar with Write/Preview/Split, strikethrough completed
+tasks, card labels and issue numbers, and the coding tiles for total time, daily
+average, percent change, top language and active repositories.
+
+Two additions were approved and add scope:
+
+- **Expenses gain `is_recurring` and `is_tax_deductible`** booleans, giving the
+  All / Recurring / Tax deductible tabs plus filters. Migration, two form
+  toggles, two filters, table indicators. Lands with Task 30.
+- **Repositories gain `commits_count`**, synced from GitHub, to fill the commits
+  tile. Migration, a `GitHubService` call and a sync command change. Lands with
+  Task 28, with the dashboard tile in Task 40.
+
+**Assignee is dropped** from the kanban: single-user app, so no avatar and no
+"assigned to me" view. `github_assignee` stays in the database untouched.
+
+**Not built**, because they would need columns or integrations that do not
+exist and would otherwise mean fabricated numbers on screen: Import QIF, audit
+queue, VAT and tax recoverable, account numbers, a separate vendor field,
+expense clearing status, ledger checksum, sprint velocity, cycle time, target
+release and milestones, PR and deploy status on cards, per-card checklists and
+comment counts, AST telemetry accuracy, and daemon ping and host readouts. A
+daily coding goal was offered and declined.
+
 **Larastan needs `--memory-limit=1G`**; the 128M default crashes it. Every
 `vendor/bin/phpstan analyse` below should be run with that flag.
 
