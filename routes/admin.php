@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Admin\Blog\PostController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\General\CategoryController;
+use App\Http\Controllers\Admin\Library\BookController;
+use App\Http\Controllers\Admin\Library\PublisherController;
+use App\Http\Controllers\Admin\Library\WriterController;
 use App\Http\Controllers\Admin\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,4 +21,16 @@ Route::middleware(['auth', 'can:access-admin'])
         // Bulk routes come first so "posts/bulk" is not captured by "posts/{post}".
         Route::delete('posts/bulk', [PostController::class, 'bulkDestroy'])->name('posts.bulk-destroy');
         Route::resource('posts', PostController::class)->except(['show']);
+
+        Route::delete('categories/bulk', [CategoryController::class, 'bulkDestroy'])->name('categories.bulk-destroy');
+        Route::resource('categories', CategoryController::class)->except(['show']);
+
+        Route::delete('publishers/bulk', [PublisherController::class, 'bulkDestroy'])->name('publishers.bulk-destroy');
+        Route::resource('publishers', PublisherController::class)->except(['show']);
+
+        Route::delete('writers/bulk', [WriterController::class, 'bulkDestroy'])->name('writers.bulk-destroy');
+        Route::resource('writers', WriterController::class)->except(['show']);
+
+        Route::delete('books/bulk', [BookController::class, 'bulkDestroy'])->name('books.bulk-destroy');
+        Route::resource('books', BookController::class)->except(['show']);
     });

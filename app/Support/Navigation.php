@@ -22,8 +22,14 @@ final class Navigation
             ]],
             ['label' => 'Budget', 'icon' => 'pi pi-wallet', 'items' => []],
             ['label' => 'Work', 'icon' => 'pi pi-briefcase', 'items' => []],
-            ['label' => 'Library', 'icon' => 'pi pi-book', 'items' => []],
-            ['label' => 'General', 'icon' => 'pi pi-cog', 'items' => []],
+            ['label' => 'Library', 'icon' => 'pi pi-book', 'items' => [
+                ['label' => 'Books', 'route' => 'admin.books.index', 'icon' => 'pi pi-book'],
+                ['label' => 'Writers', 'route' => 'admin.writers.index', 'icon' => 'pi pi-user'],
+                ['label' => 'Publishers', 'route' => 'admin.publishers.index', 'icon' => 'pi pi-building'],
+            ]],
+            ['label' => 'General', 'icon' => 'pi pi-cog', 'items' => [
+                ['label' => 'Categories', 'route' => 'admin.categories.index', 'icon' => 'pi pi-tags'],
+            ]],
         ];
     }
 }

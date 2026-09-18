@@ -211,3 +211,20 @@ it('resolves a computed state closure', function (): void {
 
     expect($resolved['display'])->toBe('HELLO');
 });
+
+it('renders a bare number without separators', function (): void {
+    $writer = App\Models\Writer::factory()->create(['birth_year' => 1929]);
+
+    expect(Column::number('birth_year')->resolve($writer))
+        ->toMatchArray(['display' => '1929', 'raw' => 1929]);
+});
+
+it('right-aligns a bare number', function (): void {
+    expect(Column::number('birth_year')->schema()['align'])->toBe('right');
+});
+
+it('falls back to the default for a missing number', function (): void {
+    $writer = App\Models\Writer::factory()->create(['death_year' => null]);
+
+    expect(Column::number('death_year')->default('—')->resolve($writer)['display'])->toBe('—');
+});

@@ -94,9 +94,16 @@ final class Column
         return new self($key, 'boolean');
     }
 
+    /** A quantity, rendered with thousands separators. */
     public static function count(string $key): self
     {
         return new self($key, 'count');
+    }
+
+    /** A bare number such as a year or an edition, with no separators. */
+    public static function number(string $key): self
+    {
+        return new self($key, 'number');
     }
 
     public function label(string $label): self
@@ -227,6 +234,7 @@ final class Column
             'image' => $this->resolveImage($raw),
             'boolean' => $this->resolveBoolean($raw),
             'count' => $this->resolveCount($raw),
+            'number' => $this->resolveNumber($raw),
             default => $this->resolveText($record, $raw),
         };
     }
@@ -364,6 +372,20 @@ final class Column
         return $this->payload(number_format($value), $value);
     }
 
+    /**
+     * @return array{display: string, raw: mixed, variant: string|null, tooltip: string|null, meta: array<string, mixed>}
+     */
+    private function resolveNumber(mixed $raw): array
+    {
+        if ($raw === null || $raw === '') {
+            return $this->payload($this->default ?? '', null);
+        }
+
+        $value = is_numeric($raw) ? (int) $raw : 0;
+
+        return $this->payload((string) $value, $value);
+    }
+
     private function resolveVariant(Model $record, mixed $raw): ?string
     {
         if ($this->color instanceof Closure) {
@@ -430,6 +452,6 @@ final class Column
 
     private function defaultAlign(): string
     {
-        return in_array($this->type, ['money', 'count'], true) ? 'right' : 'left';
+        return in_array($this->type, ['money', 'count', 'number'], true) ? 'right' : 'left';
     }
 }

@@ -55,7 +55,7 @@ function severity(variant) {
     />
 
     <span
-        v-else-if="['money', 'date', 'datetime', 'count'].includes(type)"
+        v-else-if="['money', 'date', 'datetime', 'count', 'number'].includes(type)"
         class="font-mono text-[13px] tabular-nums"
     >{{ cell.display }}</span>
 
