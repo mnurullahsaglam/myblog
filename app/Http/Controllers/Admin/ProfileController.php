@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Laravel\Passkeys\Passkey;
 
 class ProfileController extends Controller
 {
@@ -22,6 +23,17 @@ class ProfileController extends Controller
             'twoFactorPending' => $user !== null
                 && $user->two_factor_secret !== null
                 && $user->two_factor_confirmed_at === null,
+
+            'passkeys' => $user === null ? [] : $user->passkeys()
+                ->latest()
+                ->get()
+                ->map(fn (Passkey $passkey): array => [
+                    'id' => $passkey->id,
+                    'name' => $passkey->name,
+                    'createdAt' => $passkey->created_at?->diffForHumans(),
+                    'lastUsedAt' => $passkey->last_used_at?->diffForHumans(),
+                ])
+                ->all(),
         ]);
     }
 }

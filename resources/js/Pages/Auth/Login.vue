@@ -6,6 +6,7 @@ import InputText from 'primevue/inputtext'
 import Message from 'primevue/message'
 import Password from 'primevue/password'
 import Mark from '@/Components/Brand/Mark.vue'
+import { usePasskeys } from '@/composables/usePasskeys'
 
 defineProps({
     status: { type: String, default: null },
@@ -17,10 +18,16 @@ const form = useForm({
     remember: false,
 })
 
+const passkeys = usePasskeys()
+
 function submit() {
     form.post(route('login'), {
         onFinish: () => form.reset('password'),
     })
+}
+
+function signInWithPasskey() {
+    passkeys.login(form.remember)
 }
 </script>
 
@@ -83,6 +90,27 @@ function submit() {
 
                 <Button type="submit" label="Sign in" :loading="form.processing" class="mt-1" />
             </form>
+
+            <div class="my-5 flex items-center gap-3">
+                <span class="h-px flex-1 bg-surface-200 dark:bg-[#272B35]" />
+                <span class="font-mono text-[11px] uppercase tracking-[0.06em] text-surface-500">or</span>
+                <span class="h-px flex-1 bg-surface-200 dark:bg-[#272B35]" />
+            </div>
+
+            <Button
+                type="button"
+                label="Sign in with a passkey"
+                icon="pi pi-lock"
+                severity="secondary"
+                outlined
+                fluid
+                :loading="passkeys.busy.value"
+                @click="signInWithPasskey"
+            />
+
+            <small v-if="passkeys.error.value" class="mt-2 block text-[#D95757]">
+                {{ passkeys.error.value }}
+            </small>
         </div>
     </div>
 </template>
