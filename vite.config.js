@@ -9,8 +9,6 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
-                // Removed in Phase 6 with the rest of Filament.
-                'resources/css/filament/admin/theme.css',
             ],
             refresh: true,
         }),

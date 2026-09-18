@@ -31,7 +31,7 @@ class WakaTimeOAuthController extends Controller
      */
     public function callback(Request $request): RedirectResponse
     {
-        $panel = filament()->getDefaultPanel()->getUrl() ?? '/';
+        $panel = route('admin.coding-dashboard');
 
         if ($request->filled('error')) {
             return $this->back($panel, false, 'WakaTime authorization was denied: '.$request->string('error'));
