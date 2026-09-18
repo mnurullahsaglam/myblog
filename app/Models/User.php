@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Filament\Models\Contracts\FilamentUser;
-use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable implements FilamentUser, MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -21,11 +19,16 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'remember_token',
     ];
 
-    public function canAccessPanel(Panel $panel): bool
+    public function isAdmin(): bool
     {
-        return $this->email === config('app.admin_email');
+        $adminEmail = config('app.admin_email');
+
+        return is_string($adminEmail) && $adminEmail !== '' && $this->email === $adminEmail;
     }
 
+    /**
+     * @return array<string, string>
+     */
     protected function casts(): array
     {
         return [
