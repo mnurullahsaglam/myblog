@@ -11,9 +11,9 @@ import 'primeicons/primeicons.css'
 createInertiaApp({
     title: (title) => (title ? `${title} — Admin` : 'Admin'),
     resolve: (name) => {
-        const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
+        const pages = import.meta.glob('./pages/**/*.vue', { eager: true })
 
-        return pages[`./Pages/${name}.vue`]
+        return pages[`./pages/${name}.vue`]
     },
     setup({ el, App, props, plugin }) {
         createApp({ render: () => h(App, props) })
