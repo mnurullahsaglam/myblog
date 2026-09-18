@@ -13,8 +13,10 @@ use App\Http\Controllers\Admin\Library\PublisherController;
 use App\Http\Controllers\Admin\Library\WriterController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\Work\ClientController;
+use App\Http\Controllers\Admin\Work\InvoiceController;
 use App\Http\Controllers\Admin\Work\ProjectController;
 use App\Http\Controllers\Admin\Work\RepositoryController;
+use App\Http\Controllers\Admin\Work\WakaTimeSummaryController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'can:access-admin'])
@@ -48,6 +50,13 @@ Route::middleware(['auth', 'can:access-admin'])
 
         Route::delete('repositories/bulk', [RepositoryController::class, 'bulkDestroy'])->name('repositories.bulk-destroy');
         Route::resource('repositories', RepositoryController::class);
+
+        Route::delete('invoices/bulk', [InvoiceController::class, 'bulkDestroy'])->name('invoices.bulk-destroy');
+        Route::resource('invoices', InvoiceController::class)->except(['show']);
+
+        // Read only: synced from the WakaTime API, never authored by hand.
+        Route::get('waka-time-summaries', [WakaTimeSummaryController::class, 'index'])->name('waka-time-summaries.index');
+        Route::get('waka-time-summaries/{wakaTimeSummary}', [WakaTimeSummaryController::class, 'show'])->name('waka-time-summaries.show');
 
         Route::delete('incomes/bulk', [IncomeController::class, 'bulkDestroy'])->name('incomes.bulk-destroy');
         Route::resource('incomes', IncomeController::class);

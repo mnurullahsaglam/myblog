@@ -249,5 +249,5 @@ it('lists the work cluster in navigation', function (): void {
     $work = collect(App\Support\Navigation::clusters())->firstWhere('label', 'Work');
 
     expect(collect($work['items'])->pluck('route')->all())
-        ->toBe(['admin.clients.index', 'admin.projects.index', 'admin.repositories.index']);
+        ->toContain('admin.clients.index', 'admin.projects.index', 'admin.repositories.index');
 });

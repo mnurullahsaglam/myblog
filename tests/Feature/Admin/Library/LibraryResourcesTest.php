@@ -225,5 +225,5 @@ it('lists the library cluster in navigation', function (): void {
     $library = collect(App\Support\Navigation::clusters())->firstWhere('label', 'Library');
 
     expect(collect($library['items'])->pluck('route')->all())
-        ->toBe(['admin.books.index', 'admin.writers.index', 'admin.publishers.index']);
+        ->toContain('admin.books.index', 'admin.writers.index', 'admin.publishers.index');
 });

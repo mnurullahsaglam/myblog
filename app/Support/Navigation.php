@@ -29,6 +29,8 @@ final class Navigation
                 ['label' => 'Clients', 'route' => 'admin.clients.index', 'icon' => 'pi pi-users'],
                 ['label' => 'Projects', 'route' => 'admin.projects.index', 'icon' => 'pi pi-folder-open'],
                 ['label' => 'Repositories', 'route' => 'admin.repositories.index', 'icon' => 'pi pi-code'],
+                ['label' => 'Invoices', 'route' => 'admin.invoices.index', 'icon' => 'pi pi-receipt'],
+                ['label' => 'Daily summaries', 'route' => 'admin.waka-time-summaries.index', 'icon' => 'pi pi-clock'],
             ]],
             ['label' => 'Library', 'icon' => 'pi pi-book', 'items' => [
                 ['label' => 'Books', 'route' => 'admin.books.index', 'icon' => 'pi pi-book'],
