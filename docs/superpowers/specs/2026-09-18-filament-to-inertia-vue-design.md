@@ -418,6 +418,21 @@ Default color scheme is `system`, following the OS.
 **Shipping accents:** khaki (default), amber, orange, rose, emerald, sky, indigo, violet,
 zinc. Each verified for contrast in both schemes.
 
+## Schema changes taken during the rebuild
+
+The spec originally assumed migrations were untouched. Two changes proved
+necessary and were made with the user's approval:
+
+- **`invoices.client_id` was constrained to `projects`**, so an invoice could
+  never reference a real client. A corrective migration repoints it at
+  `clients`. There were no invoices or clients.
+- **Categories became a shared taxonomy.** They were polymorphic children, one
+  row per parent, which meant no reusable category list and a standalone
+  Categories page that could not create a row. A `categoriables` pivot replaces
+  the morph columns, so one category is shared across any number of posts and
+  books. This adds a many-to-many field type to the form contract and a
+  multi-select to the Post and Book forms.
+
 ## Build sequence
 
 ### Phase 0 — Safety net

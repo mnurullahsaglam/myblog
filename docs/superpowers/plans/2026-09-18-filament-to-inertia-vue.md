@@ -24,6 +24,40 @@
 - Accent default is khaki. Khaki fills take dark text (`#2A2613`), never white.
 - Do not change dependencies beyond those listed in Task 9 and Task 43 without asking.
 
+## Amendments made during execution
+
+Recorded here as they are discovered, so the tasks below stay accurate.
+
+**Phase 0 fixed five pre-existing bugs** that blocked progress, all in code that
+survives the rewrite: `invoices.client_id` was constrained to the `projects`
+table; `Post` derived its slug from a `name` column it does not have, yielding
+`-1`, `-2`; `ClientFactory` wrote `name` instead of `title` and omitted the
+required `country`; `CategoryFactory` never set the NOT NULL morph columns; and
+the `viewPulse` gate hardcoded an email while `canAccessPanel` read config.
+
+**Categories became a shared taxonomy** (decided 2026-09-18). They were
+polymorphic children, one row per parent, so no shared list existed and the
+standalone `CategoryResource` could not create a row. They now join through a
+`categoriables` pivot. Consequences for the tasks below:
+
+- **Task 20** must add a many-to-many field type. `Field::morphToMany(string $key,
+  string $relation, string $labelColumn)` with type `multiselect`, resolving
+  options the same way `relationship` does and holding an array of ids.
+  `ResourceForm::values()` returns the related ids for it, and
+  `AdminResourceController` must `sync()` those relations after create and update
+  rather than passing them to `create()`/`update()` as attributes.
+- **Task 21 (Posts)** and **Task 25 (Books)** add
+  `Field::morphToMany('categories', 'categories', 'name')` to their forms.
+- **Task 22 (Categories)** becomes a real standalone resource: `name` plus a
+  generated `slug`, with counts of attached posts and books. No morph columns.
+- **Task 36** global search over Categories stays as planned.
+
+**`PhpVersions` and `LaravelVersions` are unused** but are being kept at the
+user's request. They carry the new `App\Support\Contracts` interfaces.
+
+**Larastan needs `--memory-limit=1G`**; the 128M default crashes it. Every
+`vendor/bin/phpstan analyse` below should be run with that flag.
+
 ## Phase Map
 
 | Phase | Tasks | Deliverable |
