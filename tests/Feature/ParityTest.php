@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use App\Models\User;
-use App\Support\Navigation;
 use App\Services\ExchangeRateService;
 use App\Services\GitHubService;
+use App\Support\Navigation;
 use Illuminate\Support\Facades\Route;
 
 /**
