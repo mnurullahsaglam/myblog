@@ -158,7 +158,7 @@ it('deletes only your own passkey', function (): void {
 });
 
 it('sends a passkey login to the panel', function (): void {
-    expect(config('passkeys.redirect'))->toBe('/app');
+    expect(config('passkeys.redirect'))->toBe('/admin');
 });
 
 it('binds passkeys to the application origin', function (): void {

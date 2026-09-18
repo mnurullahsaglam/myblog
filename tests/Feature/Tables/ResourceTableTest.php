@@ -54,7 +54,7 @@ final class FixtureExpenseTable extends ResourceTable
 
 function tableRequest(array $query = []): Request
 {
-    return Request::create('/app/expenses', 'GET', $query);
+    return Request::create('/admin/expenses', 'GET', $query);
 }
 
 it('emits a schema describing columns and filters', function (): void {

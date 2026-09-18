@@ -74,7 +74,7 @@ it('notifies with a signed download link when the export finishes', function ():
 });
 
 it('refuses an unsigned download', function (): void {
-    $this->get('/app/exports/download?path=exports/anything.csv')->assertForbidden();
+    $this->get('/admin/exports/download?path=exports/anything.csv')->assertForbidden();
 });
 
 it('serves a signed download', function (): void {

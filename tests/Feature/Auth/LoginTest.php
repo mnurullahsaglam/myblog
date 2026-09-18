@@ -25,7 +25,7 @@ it('logs the admin in with valid credentials', function (): void {
     $this->post('/login', [
         'email' => 'admin@example.test',
         'password' => 'correct-horse-battery',
-    ])->assertRedirect('/app');
+    ])->assertRedirect('/admin');
 
     $this->assertAuthenticatedAs($admin);
 });
@@ -79,5 +79,5 @@ it('does not expose a password reset route', function (): void {
 it('sends an authenticated visitor to the panel', function (): void {
     $admin = User::factory()->create(['email' => 'admin@example.test']);
 
-    $this->actingAs($admin)->get('/login')->assertRedirect('/app');
+    $this->actingAs($admin)->get('/login')->assertRedirect('/admin');
 });

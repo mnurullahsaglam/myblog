@@ -209,8 +209,8 @@ it('rejects a writer that does not exist', function (): void {
 });
 
 it('does not clash with the public books routes', function (): void {
-    expect(route('admin.books.index'))->toContain('/app/books');
-    expect(route('books.index'))->not->toContain('/app/');
+    expect(route('admin.books.index'))->toContain('/admin/books');
+    expect(route('books.index'))->not->toContain('/admin/');
 });
 
 it('keeps the public book pages working', function (): void {

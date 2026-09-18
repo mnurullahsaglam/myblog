@@ -26,7 +26,7 @@ use App\Http\Controllers\Admin\Work\WakaTimeSummaryController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'can:access-admin'])
-    ->prefix('app')
+    ->prefix('admin')
     ->name('admin.')
     ->group(function (): void {
         Route::get('/', DashboardController::class)->name('dashboard');
