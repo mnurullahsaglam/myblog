@@ -105,3 +105,26 @@ it('swallows github failures so the save still succeeds', function (): void {
 
     expect($task->fresh()->title)->toBe('Still saved');
 });
+
+it('creates a task even when no github token is configured', function (): void {
+    // The real service, not the mock: its constructor used to throw without a
+    // token, which made every Task insert fail before the observer could help.
+    app()->forgetInstance(GitHubService::class);
+    config(['services.github.token' => null, 'services.github.personal_access_token' => null]);
+
+    $task = Task::factory()->create(['repository_id' => null]);
+
+    expect($task->exists)->toBeTrue();
+});
+
+it('swallows a missing github token when syncing a linked task', function (): void {
+    app()->forgetInstance(GitHubService::class);
+    config(['services.github.token' => null, 'services.github.personal_access_token' => null]);
+
+    $repository = Repository::factory()->create();
+    $task = Task::factory()->githubIssue()->create(['repository_id' => $repository->id]);
+
+    $task->update(['title' => 'Renamed without a token']);
+
+    expect($task->fresh()->title)->toBe('Renamed without a token');
+});
