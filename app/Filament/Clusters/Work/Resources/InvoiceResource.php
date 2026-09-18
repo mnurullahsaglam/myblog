@@ -53,7 +53,8 @@ class InvoiceResource extends Resource
                     ->required(),
 
                 Select::make('currency')
-                    ->options(Currencies::class)
+                    ->options(collect(Currencies::cases())
+                        ->mapWithKeys(fn (Currencies $currency) => [$currency->value => $currency->getLabel()]))
                     ->default(Currencies::TRY)
                     ->required()
                     ->live(),
