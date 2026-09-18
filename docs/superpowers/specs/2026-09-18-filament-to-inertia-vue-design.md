@@ -330,7 +330,7 @@ reference, not a layout to match pixel-for-pixel. The form and board screens tra
 more faithfully.
 
 The chosen direction is then converted into `resources/js/theme/preset.js` (a PrimeVue
-`definePreset` over Aura) plus `docs/design-system.md` pinning down type scale, spacing
+`definePreset` over Aura) plus `docs/superpowers/design-system.md` pinning down type scale, spacing
 rhythm, table row density, badge color semantics per enum, empty states and loading states.
 The preset is the only design artifact that enters the repo.
 
