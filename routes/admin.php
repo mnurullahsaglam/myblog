@@ -9,6 +9,9 @@ use App\Http\Controllers\Admin\Library\BookController;
 use App\Http\Controllers\Admin\Library\PublisherController;
 use App\Http\Controllers\Admin\Library\WriterController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\Work\ClientController;
+use App\Http\Controllers\Admin\Work\ProjectController;
+use App\Http\Controllers\Admin\Work\RepositoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'can:access-admin'])
@@ -33,4 +36,13 @@ Route::middleware(['auth', 'can:access-admin'])
 
         Route::delete('books/bulk', [BookController::class, 'bulkDestroy'])->name('books.bulk-destroy');
         Route::resource('books', BookController::class)->except(['show']);
+
+        Route::delete('clients/bulk', [ClientController::class, 'bulkDestroy'])->name('clients.bulk-destroy');
+        Route::resource('clients', ClientController::class)->except(['show']);
+
+        Route::delete('projects/bulk', [ProjectController::class, 'bulkDestroy'])->name('projects.bulk-destroy');
+        Route::resource('projects', ProjectController::class)->except(['show']);
+
+        Route::delete('repositories/bulk', [RepositoryController::class, 'bulkDestroy'])->name('repositories.bulk-destroy');
+        Route::resource('repositories', RepositoryController::class);
     });

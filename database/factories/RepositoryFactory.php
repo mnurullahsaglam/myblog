@@ -37,6 +37,7 @@ class RepositoryFactory extends Factory
             'stars_count' => fake()->numberBetween(0, 500),
             'forks_count' => fake()->numberBetween(0, 100),
             'issues_count' => fake()->numberBetween(0, 50),
+            'commits_count' => fake()->numberBetween(0, 2000),
             'is_active' => true,
             'github_created_at' => fake()->dateTimeBetween('-3 years'),
             'github_updated_at' => fake()->dateTimeBetween('-1 month'),

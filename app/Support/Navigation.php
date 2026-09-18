@@ -21,7 +21,11 @@ final class Navigation
                 ['label' => 'Posts', 'route' => 'admin.posts.index', 'icon' => 'pi pi-file-edit'],
             ]],
             ['label' => 'Budget', 'icon' => 'pi pi-wallet', 'items' => []],
-            ['label' => 'Work', 'icon' => 'pi pi-briefcase', 'items' => []],
+            ['label' => 'Work', 'icon' => 'pi pi-briefcase', 'items' => [
+                ['label' => 'Clients', 'route' => 'admin.clients.index', 'icon' => 'pi pi-users'],
+                ['label' => 'Projects', 'route' => 'admin.projects.index', 'icon' => 'pi pi-folder-open'],
+                ['label' => 'Repositories', 'route' => 'admin.repositories.index', 'icon' => 'pi pi-code'],
+            ]],
             ['label' => 'Library', 'icon' => 'pi pi-book', 'items' => [
                 ['label' => 'Books', 'route' => 'admin.books.index', 'icon' => 'pi pi-book'],
                 ['label' => 'Writers', 'route' => 'admin.writers.index', 'icon' => 'pi pi-user'],

@@ -82,7 +82,9 @@ final class Field
     }
 
     /**
-     * @param  array<string, string>  $options
+     * Numeric-looking keys are coerced to ints by PHP, so accept either.
+     *
+     * @param  array<array-key, string>  $options
      */
     public static function select(string $key, array $options): self
     {
@@ -371,7 +373,7 @@ final class Field
     }
 
     /**
-     * @param  array<string, string>  $options
+     * @param  array<array-key, string>  $options
      * @return array<int, array{value: mixed, label: string}>
      */
     private static function mapOptions(array $options): array
@@ -379,7 +381,7 @@ final class Field
         $mapped = [];
 
         foreach ($options as $value => $label) {
-            $mapped[] = ['value' => $value, 'label' => $label];
+            $mapped[] = ['value' => (string) $value, 'label' => $label];
         }
 
         return $mapped;
