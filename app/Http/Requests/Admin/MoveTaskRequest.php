@@ -10,7 +10,7 @@ use Illuminate\Validation\Rule;
 class MoveTaskRequest extends FormRequest
 {
     /** @var array<int, string> */
-    public const STATUSES = ['todo', 'in_progress', 'completed'];
+    public const array STATUSES = ['todo', 'in_progress', 'completed'];
 
     public function authorize(): bool
     {

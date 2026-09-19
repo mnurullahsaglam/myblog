@@ -24,7 +24,7 @@ class WakaTimeService
     private const string SETTING_GROUP = 'wakatime';
 
     /** Scope required to read summaries (incl. project/language/editor/os/category breakdowns). */
-    public const SCOPE = 'read_summaries';
+    public const string SCOPE = 'read_summaries';
 
     private readonly string $appId;
 

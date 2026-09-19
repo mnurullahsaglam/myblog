@@ -7,6 +7,7 @@ namespace App\Observers;
 use App\Models\Task;
 use App\Services\GitHubService;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Log;
 
 class TaskObserver
@@ -24,7 +25,7 @@ class TaskObserver
 
         $relevantFields = ['title', 'description', 'status'];
         $hasRelevantChanges = collect($relevantFields)
-            ->contains(fn ($field) => $task->wasChanged($field));
+            ->contains(fn (string $field): bool => $task->wasChanged($field));
 
         if (! $hasRelevantChanges) {
             return;
@@ -47,8 +48,8 @@ class TaskObserver
     {
         if (is_null($task->sort_order)) {
             $maxOrder = Task::where('status', $task->status)
-                ->when($task->project_id, fn ($q) => $q->where('project_id', $task->project_id))
-                ->when($task->repository_id, fn ($q) => $q->where('repository_id', $task->repository_id))
+                ->when($task->project_id, fn (Builder $q) => $q->where('project_id', $task->project_id))
+                ->when($task->repository_id, fn (Builder $q) => $q->where('repository_id', $task->repository_id))
                 ->max('sort_order');
 
             $task->sort_order = (is_numeric($maxOrder) ? (int) $maxOrder : 0) + 1;

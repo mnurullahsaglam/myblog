@@ -16,6 +16,7 @@ use App\Models\Project;
 use App\Models\Repository;
 use App\Models\Task;
 use App\Support\AdminNotifier;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -48,10 +49,10 @@ class TaskBoardController extends Controller
     {
         $tasks = Task::query()
             ->with(['repository', 'project'])
-            ->when($request->integer('project'), fn ($query, int $id) => $query->where('project_id', $id))
+            ->when($request->integer('project'), fn (Builder $query, int $id) => $query->where('project_id', $id))
             ->when(
                 $request->string('search')->trim()->toString(),
-                fn ($query, string $term) => $query->where(function ($builder) use ($term): void {
+                fn (Builder $query, string $term) => $query->where(function (Builder $builder) use ($term): void {
                     $builder->where('title', 'like', '%'.$term.'%')
                         ->orWhere('description', 'like', '%'.$term.'%');
                 })

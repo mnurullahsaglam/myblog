@@ -24,15 +24,15 @@ class WakaTimeSummaryEntry extends Model
     /** @use HasFactory<WakaTimeSummaryEntryFactory> */
     use HasFactory;
 
-    public const TYPE_PROJECT = 'project';
+    public const string TYPE_PROJECT = 'project';
 
-    public const TYPE_LANGUAGE = 'language';
+    public const string TYPE_LANGUAGE = 'language';
 
-    public const TYPE_EDITOR = 'editor';
+    public const string TYPE_EDITOR = 'editor';
 
-    public const TYPE_OS = 'os';
+    public const string TYPE_OS = 'os';
 
-    public const TYPE_CATEGORY = 'category';
+    public const string TYPE_CATEGORY = 'category';
 
     #[Override]
     protected $fillable = [

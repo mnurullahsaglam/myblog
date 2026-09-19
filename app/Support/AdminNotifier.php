@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Log;
  */
 class AdminNotifier
 {
-    public const SESSION_KEY = 'flash.notification';
+    public const string SESSION_KEY = 'flash.notification';
 
     public function __construct(private readonly bool $forceLog = false) {}
 

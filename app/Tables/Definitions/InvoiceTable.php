@@ -9,6 +9,7 @@ use App\Models\Invoice;
 use App\Tables\Column;
 use App\Tables\Filter;
 use App\Tables\ResourceTable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Override;
@@ -57,7 +58,7 @@ final class InvoiceTable extends ResourceTable
         $symbol = $dominant === null ? '' : (Currencies::tryFrom($dominant)?->getSymbol() ?? $dominant.' ');
 
         $count = (clone $query)->count();
-        $taxTotal = (float) (clone $query)->when($dominant, fn ($builder) => $builder->where('currency', $dominant))->sum('tax_amount');
+        $taxTotal = (float) (clone $query)->when($dominant, fn (Builder $builder) => $builder->where('currency', $dominant))->sum('tax_amount');
 
         return [
             [

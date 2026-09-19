@@ -9,6 +9,15 @@ use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
+/**
+ * The token is deliberately not read from the environment: CI copies
+ * .env.example, which leaves GITHUB_TOKEN empty, and GitHubService refuses to
+ * build a request without one.
+ */
+beforeEach(function (): void {
+    config(['services.github.token' => 'test-token']);
+});
+
 it('refuses a task that is not linked to a GitHub issue', function (): void {
     $task = Task::factory()->create(['github_issue_number' => null]);
 

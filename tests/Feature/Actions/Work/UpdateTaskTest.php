@@ -7,6 +7,15 @@ use App\Models\Repository;
 use App\Models\Task;
 use Illuminate\Support\Facades\Http;
 
+/**
+ * The token is deliberately not read from the environment: CI copies
+ * .env.example, which leaves GITHUB_TOKEN empty, and GitHubService refuses to
+ * build a request without one.
+ */
+beforeEach(function (): void {
+    config(['services.github.token' => 'test-token']);
+});
+
 it('applies the attributes', function (): void {
     $task = Task::factory()->create(['title' => 'Before']);
 

@@ -85,7 +85,7 @@ class Task extends Model
 
         return collect($this->github_issue_labels)
             ->pluck('name')
-            ->map(fn ($name): string => is_scalar($name) ? (string) $name : '')
+            ->map(fn (mixed $name): string => is_scalar($name) ? (string) $name : '')
             ->join(', ');
     }
 }
