@@ -23,17 +23,34 @@ it('leaves other records alone', function (): void {
     expect(Post::whereKey($survivor->getKey())->exists())->toBeTrue();
 });
 
-/**
- * Known gap, pinned rather than asserted as desirable: nothing detaches the
- * categoriables pivot when a post is deleted, so its rows outlive the record.
- * The pivot table has no cascade and no model hook does it. Extracting this
- * action did not introduce the behaviour and does not change it.
- */
-it('leaves the category pivot rows behind, which is the current behaviour', function (): void {
+it('detaches the category pivot rows along with the record', function (): void {
     $post = Post::factory()->create();
     $post->categories()->sync(Category::factory()->count(2)->create()->modelKeys());
 
     resolve(DeleteRecord::class)->handle($post);
 
-    expect(DB::table('categoriables')->where('categoriable_id', $post->getKey())->count())->toBe(2);
+    expect(DB::table('categoriables')->where('categoriable_id', $post->getKey())->count())->toBe(0);
+});
+
+it('leaves another record\'s pivot rows alone', function (): void {
+    $doomed = Post::factory()->create();
+    $survivor = Post::factory()->create();
+    $categories = Category::factory()->count(2)->create();
+
+    $doomed->categories()->sync($categories->modelKeys());
+    $survivor->categories()->sync($categories->modelKeys());
+
+    resolve(DeleteRecord::class)->handle($doomed);
+
+    expect($survivor->categories()->count())->toBe(2);
+});
+
+it('does not delete the categories themselves', function (): void {
+    $post = Post::factory()->create();
+    $categories = Category::factory()->count(2)->create();
+    $post->categories()->sync($categories->modelKeys());
+
+    resolve(DeleteRecord::class)->handle($post);
+
+    expect(Category::whereKey($categories->modelKeys())->count())->toBe(2);
 });

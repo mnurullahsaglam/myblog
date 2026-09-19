@@ -83,3 +83,23 @@ it('exists standalone with no attachments', function (): void {
         ->and($category->posts)->toBeEmpty()
         ->and($category->books)->toBeEmpty();
 });
+
+it('does not delete the records it was attached to', function (): void {
+    $category = Category::factory()->create();
+    $post = Post::factory()->create();
+
+    $category->posts()->attach($post);
+    $category->delete();
+
+    expect(Post::whereKey($post->getKey())->exists())->toBeTrue();
+});
+
+it('detaches a book when the book is deleted', function (): void {
+    $book = Book::factory()->create();
+    $book->categories()->sync(Category::factory()->count(2)->create()->modelKeys());
+
+    $book->delete();
+
+    expect(DB::table('categoriables')->where('categoriable_id', $book->getKey())
+        ->where('categoriable_type', Book::class)->count())->toBe(0);
+});

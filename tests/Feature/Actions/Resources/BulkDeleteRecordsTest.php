@@ -38,3 +38,16 @@ it('is idempotent when the same id appears twice', function (): void {
     expect($deleted)->toBe(1)
         ->and(Post::count())->toBe(0);
 });
+
+it('leaves no pivot rows behind when deleting in bulk', function (): void {
+    $posts = Post::factory()->count(3)->create();
+    $categories = App\Models\Category::factory()->count(2)->create();
+
+    foreach ($posts as $post) {
+        $post->categories()->sync($categories->modelKeys());
+    }
+
+    resolve(BulkDeleteRecords::class)->handle(Post::class, $posts->modelKeys());
+
+    expect(DB::table('categoriables')->whereIn('categoriable_id', $posts->modelKeys())->count())->toBe(0);
+});
