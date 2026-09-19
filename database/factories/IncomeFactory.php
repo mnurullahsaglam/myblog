@@ -23,13 +23,15 @@ class IncomeFactory extends Factory
      */
     public function definition(): array
     {
+        $currencies = Currencies::cases();
+
         return [
             'client_id' => null,
             'income_category_id' => IncomeCategory::factory(),
             'invoice_id' => null,
             'debt_id' => null,
             'amount' => fake()->randomFloat(2, 100, 50000),
-            'currency' => Currencies::cases()[array_rand(Currencies::cases())]->value,
+            'currency' => $currencies[random_int(0, count($currencies) - 1)]->value,
             'description' => fake()->sentence(),
             'date' => fake()->dateTimeBetween('-1 year')->format('Y-m-d'),
         ];

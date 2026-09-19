@@ -23,11 +23,13 @@ class ExpenseFactory extends Factory
      */
     public function definition(): array
     {
+        $currencies = Currencies::cases();
+
         return [
             'expense_category_id' => ExpenseCategory::factory(),
             'debt_id' => null,
             'amount' => fake()->randomFloat(2, 10, 5000),
-            'currency' => Currencies::cases()[array_rand(Currencies::cases())]->value,
+            'currency' => $currencies[random_int(0, count($currencies) - 1)]->value,
             'description' => fake()->sentence(),
             'is_recurring' => false,
             'is_tax_deductible' => false,

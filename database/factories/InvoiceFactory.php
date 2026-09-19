@@ -23,9 +23,11 @@ class InvoiceFactory extends Factory
      */
     public function definition(): array
     {
+        $currencies = Currencies::cases();
+
         $amount = fake()->numberBetween(1000, 100000);
         $rates = [0, 10, 18, 20];
-        $taxRate = $rates[array_rand($rates)];
+        $taxRate = $rates[random_int(0, count($rates) - 1)];
         $taxAmount = (int) round($amount * $taxRate / 100);
 
         return [
@@ -36,7 +38,7 @@ class InvoiceFactory extends Factory
             'tax_amount' => $taxAmount,
             'amount' => $amount,
             'total_amount' => $amount + $taxAmount,
-            'currency' => Currencies::cases()[array_rand(Currencies::cases())]->value,
+            'currency' => $currencies[random_int(0, count($currencies) - 1)]->value,
             'invoice' => 'invoices/'.fake()->uuid().'.zip',
             'invoice_pdf' => null,
         ];

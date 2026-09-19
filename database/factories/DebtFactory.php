@@ -22,11 +22,13 @@ class DebtFactory extends Factory
      */
     public function definition(): array
     {
+        $currencies = Currencies::cases();
+
         return [
             'creditor_name' => fake()->name(),
             'creditor_type' => fake()->randomElement(['person', 'institute']),
             'amount' => fake()->randomFloat(2, 100, 20000),
-            'currency' => Currencies::cases()[array_rand(Currencies::cases())]->value,
+            'currency' => $currencies[random_int(0, count($currencies) - 1)]->value,
             'status' => 'pending',
             'date' => fake()->dateTimeBetween('-6 months')->format('Y-m-d'),
             'due_date' => fake()->dateTimeBetween('now', '+6 months')->format('Y-m-d'),
