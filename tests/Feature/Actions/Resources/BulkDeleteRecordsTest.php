@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Actions\Resources\BulkDeleteRecords;
+use App\Models\Category;
 use App\Models\Post;
 
 it('deletes every listed record and reports the count', function (): void {
@@ -41,7 +42,7 @@ it('is idempotent when the same id appears twice', function (): void {
 
 it('leaves no pivot rows behind when deleting in bulk', function (): void {
     $posts = Post::factory()->count(3)->create();
-    $categories = App\Models\Category::factory()->count(2)->create();
+    $categories = Category::factory()->count(2)->create();
 
     foreach ($posts as $post) {
         $post->categories()->sync($categories->modelKeys());

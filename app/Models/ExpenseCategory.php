@@ -16,7 +16,7 @@ use Override;
  * @property string|null $description
  * @property string|null $color
  */
-class ExpenseCategory extends Model
+final class ExpenseCategory extends Model
 {
     /** @use HasFactory<ExpenseCategoryFactory> */
     use HasFactory;

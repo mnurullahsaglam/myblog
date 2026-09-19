@@ -8,7 +8,7 @@ use App\Models\Debt;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
-class PayDebtRequest extends FormRequest
+final class PayDebtRequest extends FormRequest
 {
     public function authorize(): bool
     {

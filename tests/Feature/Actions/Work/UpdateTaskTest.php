@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 
 /**
  * The token is deliberately not read from the environment: CI copies
- * .env.example, which leaves GITHUB_TOKEN empty, and GitHubService refuses to
+ * .env.example, which leaves GITHUB_TOKEN empty, and SyncsGitHubIssues refuses to
  * build a request without one.
  */
 beforeEach(function (): void {

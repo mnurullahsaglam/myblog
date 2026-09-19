@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Http;
 use RuntimeException;
 use Throwable;
 
-class WakaTimeService
+final readonly class WakaTimeService
 {
     private const string BASE_URL = 'https://api.wakatime.com/api/v1';
 
@@ -26,11 +26,11 @@ class WakaTimeService
     /** Scope required to read summaries (incl. project/language/editor/os/category breakdowns). */
     public const string SCOPE = 'read_summaries';
 
-    private readonly string $appId;
+    private string $appId;
 
-    private readonly string $appSecret;
+    private string $appSecret;
 
-    private readonly string $redirectUri;
+    private string $redirectUri;
 
     public function __construct()
     {

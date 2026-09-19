@@ -5,6 +5,32 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- `App\Contracts\{ConvertsCurrency,SyncsGitHubIssues,NotifiesAdmin}`, narrow
+  interfaces over the three collaborators tests substitute. Consumers bind to
+  these, which let the concrete services become final.
+- An architecture rule requiring every class to be final, naming the five base
+  classes that are abstract instead. PHP forbids `abstract final`, so those are
+  asserted abstract, which carries the same guarantee.
+
+### Changed
+
+- Every class in `app/` is now final except those five base classes.
+- Rules Rector could not apply while classes were open have now run:
+  private methods on final classes, readonly classes, and empty observer
+  methods removed.
+
+### Fixed
+
+- Deleting a post or a book left its `categoriables` pivot rows behind. The
+  pivot cascades on `category_id`, but the polymorphic side cannot carry a
+  foreign key, so the taxonomy is now detached on `deleting`.
+- Bulk delete had the same gap for a second reason: a mass delete query fires
+  no model events. It now deletes row by row inside a transaction.
+
 ## [0.3.0] - 2026-09-19
 
 Tooling, static analysis and an action-class layer.
@@ -61,12 +87,6 @@ Tooling, static analysis and an action-class layer.
 - Six factories and six models were missing their Eloquent generics.
 - `AccentPicker.vue` had an unused binding and `FormField.vue` an untyped
   `modelValue` prop.
-
-### Known gaps
-
-- Deleting a post leaves its `categoriables` pivot rows behind. The pivot table
-  has no cascade and no model hook removes them. Pinned by a test so the
-  behaviour is visible rather than silent.
 
 ## [0.2.0] - 2026-09-19
 

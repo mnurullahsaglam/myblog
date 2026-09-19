@@ -8,7 +8,7 @@ use App\Models\Post;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class PostRequest extends FormRequest
+final class PostRequest extends FormRequest
 {
     public function authorize(): bool
     {

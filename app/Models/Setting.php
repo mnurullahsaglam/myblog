@@ -17,7 +17,7 @@ use Override;
  * @property string|null $value
  * @property string $type
  */
-class Setting extends Model
+final class Setting extends Model
 {
     /** @use HasFactory<SettingFactory> */
     use HasFactory;
@@ -41,7 +41,7 @@ class Setting extends Model
      */
     public static function set(string $group, string $name, mixed $value, string $type = 'text'): self
     {
-        $setting = static::updateOrCreate(
+        $setting = self::updateOrCreate(
             ['group' => $group, 'name' => $name],
             ['value' => $value, 'type' => $type]
         );
@@ -59,7 +59,7 @@ class Setting extends Model
      */
     public static function getGroup(string $group): Collection
     {
-        return static::where('group', $group)->pluck('value', 'name');
+        return self::where('group', $group)->pluck('value', 'name');
     }
 
     /**
@@ -67,11 +67,11 @@ class Setting extends Model
      */
     protected static function booted(): void
     {
-        static::saved(function (Setting $setting): void {
+        self::saved(function (Setting $setting): void {
             Cache::forget("setting_{$setting->group}_{$setting->name}");
         });
 
-        static::deleted(function (Setting $setting): void {
+        self::deleted(function (Setting $setting): void {
             Cache::forget("setting_{$setting->group}_{$setting->name}");
         });
     }

@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
+use App\Contracts\SyncsGitHubIssues;
 use App\Models\Repository;
 use App\Models\Task;
-use App\Services\GitHubService;
 
 beforeEach(function (): void {
-    $this->github = Mockery::mock(GitHubService::class);
+    $this->github = Mockery::mock(SyncsGitHubIssues::class);
     $this->github->shouldIgnoreMissing();
 
-    app()->instance(GitHubService::class, $this->github);
+    app()->instance(SyncsGitHubIssues::class, $this->github);
 });
 
 it('assigns the next sort order within a status', function (): void {
@@ -108,7 +108,7 @@ it('swallows github failures so the save still succeeds', function (): void {
 });
 
 it('creates a task even when no github token is configured', function (): void {
-    app()->forgetInstance(GitHubService::class);
+    app()->forgetInstance(SyncsGitHubIssues::class);
     config(['services.github.token' => null, 'services.github.personal_access_token' => null]);
 
     $task = Task::factory()->create(['repository_id' => null]);
@@ -117,7 +117,7 @@ it('creates a task even when no github token is configured', function (): void {
 });
 
 it('swallows a missing github token when syncing a linked task', function (): void {
-    app()->forgetInstance(GitHubService::class);
+    app()->forgetInstance(SyncsGitHubIssues::class);
     config(['services.github.token' => null, 'services.github.personal_access_token' => null]);
 
     $repository = Repository::factory()->create();

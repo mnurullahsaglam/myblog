@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Contracts\ConvertsCurrency;
+use App\Contracts\SyncsGitHubIssues;
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\Client;
@@ -17,23 +19,21 @@ use App\Models\User;
 use App\Models\WakaTimeSummary;
 use App\Models\WakaTimeSummaryEntry;
 use App\Models\Writer;
-use App\Services\ExchangeRateService;
-use App\Services\GitHubService;
 
 beforeEach(function (): void {
     config(['app.admin_email' => 'admin@example.test']);
     $this->admin = User::factory()->create(['email' => 'admin@example.test']);
     $this->actingAs($this->admin);
 
-    $github = Mockery::mock(GitHubService::class);
+    $github = Mockery::mock(SyncsGitHubIssues::class);
     $github->shouldIgnoreMissing();
 
-    app()->instance(GitHubService::class, $github);
+    app()->instance(SyncsGitHubIssues::class, $github);
 
-    $exchange = Mockery::mock(ExchangeRateService::class);
+    $exchange = Mockery::mock(ConvertsCurrency::class);
     $exchange->shouldReceive('convert')->andReturnUsing(fn (float $amount): float => $amount * 2);
     $exchange->shouldIgnoreMissing();
-    app()->instance(ExchangeRateService::class, $exchange);
+    app()->instance(ConvertsCurrency::class, $exchange);
 
     $writer = Writer::factory()->create();
     Book::factory()->count(3)->create(['writer_id' => $writer->id]);

@@ -7,7 +7,7 @@ namespace App\Http\Requests\Admin;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class MoveTaskRequest extends FormRequest
+final class MoveTaskRequest extends FormRequest
 {
     /** @var array<int, string> */
     public const array STATUSES = ['todo', 'in_progress', 'completed'];

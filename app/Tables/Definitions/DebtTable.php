@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tables\Definitions;
 
+use App\Contracts\ConvertsCurrency;
 use App\Enums\Currencies;
 use App\Models\Debt;
-use App\Services\ExchangeRateService;
 use App\Tables\Column;
 use App\Tables\Filter;
 use App\Tables\ResourceTable;
@@ -63,7 +63,7 @@ final class DebtTable extends ResourceTable
         }
 
         try {
-            $converted = resolve(ExchangeRateService::class)->convert(
+            $converted = resolve(ConvertsCurrency::class)->convert(
                 (float) $record->amount,
                 $record->currency->value,
                 $target->value,

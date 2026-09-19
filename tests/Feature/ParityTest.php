@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Contracts\ConvertsCurrency;
+use App\Contracts\SyncsGitHubIssues;
 use App\Models\User;
-use App\Services\ExchangeRateService;
-use App\Services\GitHubService;
 use App\Support\Navigation;
 use Illuminate\Support\Facades\Route;
 
@@ -16,15 +16,15 @@ beforeEach(function (): void {
     config(['app.admin_email' => 'admin@example.test']);
     $this->actingAs(User::factory()->create(['email' => 'admin@example.test']));
 
-    $github = Mockery::mock(GitHubService::class);
+    $github = Mockery::mock(SyncsGitHubIssues::class);
     $github->shouldIgnoreMissing();
 
-    app()->instance(GitHubService::class, $github);
+    app()->instance(SyncsGitHubIssues::class, $github);
 
-    $exchange = Mockery::mock(ExchangeRateService::class);
+    $exchange = Mockery::mock(ConvertsCurrency::class);
     $exchange->shouldReceive('convert')->andReturnUsing(fn (float $amount): float => $amount);
     $exchange->shouldIgnoreMissing();
-    app()->instance(ExchangeRateService::class, $exchange);
+    app()->instance(ConvertsCurrency::class, $exchange);
 });
 
 it('has an index route for all thirteen resources', function (string $routeName): void {

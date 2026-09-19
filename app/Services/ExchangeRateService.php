@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Contracts\ConvertsCurrency;
 use App\Enums\Currencies;
 use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class ExchangeRateService
+final class ExchangeRateService implements ConvertsCurrency
 {
     private readonly string $openExchangeApiKey;
 

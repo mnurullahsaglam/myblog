@@ -22,7 +22,7 @@ use Override;
  * @property-read Collection<int, Task> $tasks
  * @property-read Collection<int, Repository> $repositories
  */
-class Project extends Model
+final class Project extends Model
 {
     /** @use HasFactory<ProjectFactory> */
     use HasFactory;

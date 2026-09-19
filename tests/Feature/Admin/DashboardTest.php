@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Contracts\ConvertsCurrency;
 use App\Models\Book;
 use App\Models\Client;
 use App\Models\Debt;
@@ -13,17 +14,16 @@ use App\Models\Repository;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\Writer;
-use App\Services\ExchangeRateService;
 use Inertia\Testing\AssertableInertia;
 
 beforeEach(function (): void {
     config(['app.admin_email' => 'admin@example.test']);
     $this->actingAs(User::factory()->create(['email' => 'admin@example.test']));
 
-    $exchange = Mockery::mock(ExchangeRateService::class);
+    $exchange = Mockery::mock(ConvertsCurrency::class);
     $exchange->shouldReceive('convert')->andReturnUsing(fn (float $amount): float => $amount * 2);
     $exchange->shouldIgnoreMissing();
-    app()->instance(ExchangeRateService::class, $exchange);
+    app()->instance(ConvertsCurrency::class, $exchange);
 });
 
 it('renders all three overview groups', function (): void {
@@ -89,10 +89,10 @@ it('counts outstanding and overdue debts', function (): void {
 });
 
 it('survives an exchange rate failure', function (): void {
-    $failing = Mockery::mock(ExchangeRateService::class);
+    $failing = Mockery::mock(ConvertsCurrency::class);
     $failing->shouldReceive('convert')->andThrow(new Exception('rate API down'));
     $failing->shouldIgnoreMissing();
-    app()->instance(ExchangeRateService::class, $failing);
+    app()->instance(ConvertsCurrency::class, $failing);
 
     Income::factory()->create(['amount' => 100, 'currency' => 'USD', 'date' => now()->toDateString()]);
 

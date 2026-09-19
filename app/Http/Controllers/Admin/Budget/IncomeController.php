@@ -5,21 +5,19 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Budget;
 
 use App\Forms\Definitions\IncomeForm;
-use App\Forms\ResourceForm;
 use App\Http\Controllers\Admin\AdminResourceController;
 use App\Http\Requests\Admin\IncomeRequest;
 use App\Models\Income;
 use App\Tables\Definitions\IncomeTable;
-use App\Tables\ResourceTable;
 
-class IncomeController extends AdminResourceController
+final class IncomeController extends AdminResourceController
 {
-    protected function table(): ResourceTable
+    protected function table(): IncomeTable
     {
         return new IncomeTable;
     }
 
-    protected function form(): ResourceForm
+    protected function form(): IncomeForm
     {
         return new IncomeForm;
     }

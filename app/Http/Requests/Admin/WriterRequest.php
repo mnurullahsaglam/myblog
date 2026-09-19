@@ -8,7 +8,7 @@ use App\Models\Writer;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class WriterRequest extends FormRequest
+final class WriterRequest extends FormRequest
 {
     public function authorize(): bool
     {

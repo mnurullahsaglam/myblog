@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Contracts\NotifiesAdmin;
 use App\Models\Debt;
 use App\Models\Expense;
-use App\Support\AdminNotifier;
 
 it('creates an expense when a debt is marked paid', function (): void {
     $debt = Debt::factory()->create(['status' => 'pending', 'amount' => 1500.00]);
@@ -43,11 +43,11 @@ it('does not create an expense when a debt is created already paid', function ()
 });
 
 it('notifies through the admin notifier when the expense is created', function (): void {
-    $notifier = Mockery::mock(AdminNotifier::class);
+    $notifier = Mockery::mock(NotifiesAdmin::class);
     $notifier->shouldReceive('success')
         ->once()
         ->withArgs(fn (string $title, ?string $body): bool => $title === 'Expense Created');
-    app()->instance(AdminNotifier::class, $notifier);
+    app()->instance(NotifiesAdmin::class, $notifier);
 
     Debt::factory()->create(['status' => 'pending'])->update(['status' => 'paid']);
 });

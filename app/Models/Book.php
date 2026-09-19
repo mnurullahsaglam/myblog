@@ -19,7 +19,7 @@ use Spatie\Sluggable\HasSlug;
  * @property-read Writer|null $writer
  * @property-read Publisher|null $publisher
  */
-class Book extends Model
+final class Book extends Model
 {
     use CategoriableRelation;
     use DefaultSlugOptions;

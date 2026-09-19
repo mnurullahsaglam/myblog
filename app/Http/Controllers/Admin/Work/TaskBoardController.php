@@ -9,13 +9,13 @@ use App\Actions\Work\DeleteTask;
 use App\Actions\Work\MoveTask;
 use App\Actions\Work\SyncTaskToGitHub;
 use App\Actions\Work\UpdateTask;
+use App\Contracts\NotifiesAdmin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\MoveTaskRequest;
 use App\Http\Requests\Admin\TaskRequest;
 use App\Models\Project;
 use App\Models\Repository;
 use App\Models\Task;
-use App\Support\AdminNotifier;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -25,7 +25,7 @@ use Inertia\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Throwable;
 
-class TaskBoardController extends Controller
+final class TaskBoardController extends Controller
 {
     /**
      * @var array<int, array{key: string, label: string, color: string}>
@@ -37,7 +37,7 @@ class TaskBoardController extends Controller
     ];
 
     public function __construct(
-        private readonly AdminNotifier $notifier,
+        private readonly NotifiesAdmin $notifier,
         private readonly CreateTask $createTask,
         private readonly UpdateTask $updateTask,
         private readonly DeleteTask $deleteTask,

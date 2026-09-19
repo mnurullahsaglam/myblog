@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Log;
 use Override;
 use Throwable;
 
-class SyncWakaTime extends Command
+final class SyncWakaTime extends Command
 {
     /**
      * Maps the WakaTime summary payload keys to our entry "type" values.

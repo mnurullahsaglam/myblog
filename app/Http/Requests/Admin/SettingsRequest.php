@@ -9,7 +9,7 @@ use App\Support\Theme\Appearance;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class SettingsRequest extends FormRequest
+final class SettingsRequest extends FormRequest
 {
     public function authorize(): bool
     {

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
+use App\Contracts\SyncsGitHubIssues;
 use App\Models\Project;
 use App\Models\Repository;
 use App\Models\Task;
 use App\Models\User;
-use App\Services\GitHubService;
 use App\Support\Navigation;
 use Inertia\Testing\AssertableInertia;
 
@@ -14,10 +14,10 @@ beforeEach(function (): void {
     config(['app.admin_email' => 'admin@example.test']);
     $this->actingAs(User::factory()->create(['email' => 'admin@example.test']));
 
-    $this->github = Mockery::mock(GitHubService::class);
+    $this->github = Mockery::mock(SyncsGitHubIssues::class);
     $this->github->shouldIgnoreMissing();
 
-    app()->instance(GitHubService::class, $this->github);
+    app()->instance(SyncsGitHubIssues::class, $this->github);
 });
 
 it('renders three columns in order', function (): void {

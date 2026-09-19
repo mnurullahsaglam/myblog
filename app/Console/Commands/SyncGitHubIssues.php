@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Http;
 use Override;
 
-class SyncGitHubIssues extends Command
+final class SyncGitHubIssues extends Command
 {
     #[Override]
     protected $signature = 'github:sync-issues 

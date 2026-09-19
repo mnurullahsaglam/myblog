@@ -8,9 +8,9 @@ use App\Actions\Resources\BulkDeleteRecords;
 use App\Actions\Resources\DeleteRecord;
 use App\Actions\Resources\StoreRecord;
 use App\Actions\Resources\UpdateRecord;
+use App\Contracts\NotifiesAdmin;
 use App\Forms\ResourceForm;
 use App\Http\Controllers\Controller;
-use App\Support\AdminNotifier;
 use App\Tables\ResourceTable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
@@ -30,7 +30,7 @@ use Inertia\Response;
 abstract class AdminResourceController extends Controller
 {
     public function __construct(
-        protected readonly AdminNotifier $notifier,
+        protected readonly NotifiesAdmin $notifier,
         protected readonly StoreRecord $storeRecord,
         protected readonly UpdateRecord $updateRecord,
         protected readonly DeleteRecord $deleteRecord,

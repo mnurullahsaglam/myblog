@@ -8,7 +8,7 @@ use App\Models\Category;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class CategoryRequest extends FormRequest
+final class CategoryRequest extends FormRequest
 {
     public function authorize(): bool
     {

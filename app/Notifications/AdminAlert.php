@@ -10,7 +10,7 @@ use Illuminate\Notifications\Notification;
 /**
  * A persisted alert for the admin, surfaced by the notification bell.
  */
-class AdminAlert extends Notification
+final class AdminAlert extends Notification
 {
     use Queueable;
 

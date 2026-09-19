@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Spatie\Sluggable\HasSlug;
 
-class Category extends Model
+final class Category extends Model
 {
     use DefaultSlugOptions;
 

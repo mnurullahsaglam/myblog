@@ -5,21 +5,19 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Library;
 
 use App\Forms\Definitions\WriterForm;
-use App\Forms\ResourceForm;
 use App\Http\Controllers\Admin\AdminResourceController;
 use App\Http\Requests\Admin\WriterRequest;
 use App\Models\Writer;
 use App\Tables\Definitions\WriterTable;
-use App\Tables\ResourceTable;
 
-class WriterController extends AdminResourceController
+final class WriterController extends AdminResourceController
 {
-    protected function table(): ResourceTable
+    protected function table(): WriterTable
     {
         return new WriterTable;
     }
 
-    protected function form(): ResourceForm
+    protected function form(): WriterForm
     {
         return new WriterForm;
     }

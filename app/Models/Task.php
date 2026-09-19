@@ -35,7 +35,7 @@ use Override;
  * @property-read Repository|null $repository
  */
 #[ObservedBy([TaskObserver::class])]
-class Task extends Model
+final class Task extends Model
 {
     /** @use HasFactory<Factory<self>> */
     use HasFactory;

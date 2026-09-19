@@ -5,21 +5,19 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Work;
 
 use App\Forms\Definitions\ProjectForm;
-use App\Forms\ResourceForm;
 use App\Http\Controllers\Admin\AdminResourceController;
 use App\Http\Requests\Admin\ProjectRequest;
 use App\Models\Project;
 use App\Tables\Definitions\ProjectTable;
-use App\Tables\ResourceTable;
 
-class ProjectController extends AdminResourceController
+final class ProjectController extends AdminResourceController
 {
-    protected function table(): ResourceTable
+    protected function table(): ProjectTable
     {
         return new ProjectTable;
     }
 
-    protected function form(): ResourceForm
+    protected function form(): ProjectForm
     {
         return new ProjectForm;
     }

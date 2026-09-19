@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read Collection<int, Invoice> $invoices
  * @property-read Collection<int, Income> $incomes
  */
-class Client extends Model
+final class Client extends Model
 {
     /** @use HasFactory<ClientFactory> */
     use HasFactory;

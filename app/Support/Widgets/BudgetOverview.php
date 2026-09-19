@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Support\Widgets;
 
+use App\Contracts\ConvertsCurrency;
 use App\Models\Debt;
 use App\Models\Expense;
 use App\Models\Income;
-use App\Services\ExchangeRateService;
 use BackedEnum;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -97,7 +97,7 @@ final class BudgetOverview
     private static function convert(float $amount, string $from): float
     {
         try {
-            return resolve(ExchangeRateService::class)->convert($amount, $from, self::BASE_CURRENCY);
+            return resolve(ConvertsCurrency::class)->convert($amount, $from, self::BASE_CURRENCY);
         } catch (Throwable) {
             return 0.0;
         }

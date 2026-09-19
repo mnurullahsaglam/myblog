@@ -5,22 +5,20 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Work;
 
 use App\Forms\Definitions\InvoiceForm;
-use App\Forms\ResourceForm;
 use App\Http\Controllers\Admin\AdminResourceController;
 use App\Http\Requests\Admin\InvoiceRequest;
 use App\Models\Invoice;
 use App\Tables\Definitions\InvoiceTable;
-use App\Tables\ResourceTable;
 use Illuminate\Http\UploadedFile;
 
-class InvoiceController extends AdminResourceController
+final class InvoiceController extends AdminResourceController
 {
-    protected function table(): ResourceTable
+    protected function table(): InvoiceTable
     {
         return new InvoiceTable;
     }
 
-    protected function form(): ResourceForm
+    protected function form(): InvoiceForm
     {
         return new InvoiceForm;
     }

@@ -32,7 +32,7 @@ it('detaches the category pivot rows along with the record', function (): void {
     expect(DB::table('categoriables')->where('categoriable_id', $post->getKey())->count())->toBe(0);
 });
 
-it('leaves another record\'s pivot rows alone', function (): void {
+it("leaves another record's pivot rows alone", function (): void {
     $doomed = Post::factory()->create();
     $survivor = Post::factory()->create();
     $categories = Category::factory()->count(2)->create();

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Support;
 
+use App\Contracts\NotifiesAdmin;
 use Illuminate\Session\Store;
 use Illuminate\Support\Facades\Log;
 
@@ -16,11 +17,9 @@ use Illuminate\Support\Facades\Log;
  * falls back to the log. Persisted alerts that must survive the request use
  * {@see \App\Notifications\AdminAlert} instead.
  */
-class AdminNotifier
+final readonly class AdminNotifier implements NotifiesAdmin
 {
-    public const string SESSION_KEY = 'flash.notification';
-
-    public function __construct(private readonly bool $forceLog = false) {}
+    public function __construct(private bool $forceLog = false) {}
 
     public function success(string $title, ?string $body = null): void
     {

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Actions\Work;
 
+use App\Contracts\SyncsGitHubIssues;
 use App\Models\Task;
-use App\Services\GitHubService;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
  */
 final readonly class SyncTaskToGitHub
 {
-    public function __construct(private GitHubService $github) {}
+    public function __construct(private SyncsGitHubIssues $github) {}
 
     public function handle(Task $task): bool
     {

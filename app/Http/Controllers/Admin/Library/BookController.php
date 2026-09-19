@@ -5,22 +5,20 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Library;
 
 use App\Forms\Definitions\BookForm;
-use App\Forms\ResourceForm;
 use App\Http\Controllers\Admin\AdminResourceController;
 use App\Http\Requests\Admin\BookRequest;
 use App\Models\Book;
 use App\Support\Widgets\LibraryOverview;
 use App\Tables\Definitions\BookTable;
-use App\Tables\ResourceTable;
 
-class BookController extends AdminResourceController
+final class BookController extends AdminResourceController
 {
-    protected function table(): ResourceTable
+    protected function table(): BookTable
     {
         return new BookTable;
     }
 
-    protected function form(): ResourceForm
+    protected function form(): BookForm
     {
         return new BookForm;
     }

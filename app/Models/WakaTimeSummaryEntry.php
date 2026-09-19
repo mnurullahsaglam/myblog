@@ -19,7 +19,7 @@ use Override;
  * @property string $percent
  * @property-read WakaTimeSummary $summary
  */
-class WakaTimeSummaryEntry extends Model
+final class WakaTimeSummaryEntry extends Model
 {
     /** @use HasFactory<WakaTimeSummaryEntryFactory> */
     use HasFactory;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use App\Support\AdminNotifier;
+use App\Contracts\NotifiesAdmin;
 use App\Support\Navigation;
 use App\Support\Theme\Appearance;
 use Illuminate\Http\Request;
@@ -12,7 +12,7 @@ use Illuminate\Notifications\DatabaseNotification;
 use Inertia\Middleware;
 use Override;
 
-class HandleInertiaRequests extends Middleware
+final class HandleInertiaRequests extends Middleware
 {
     #[Override]
     protected $rootView = 'app';
@@ -45,7 +45,7 @@ class HandleInertiaRequests extends Middleware
             'appearance' => Appearance::toArray(...),
 
             'flash' => [
-                'notification' => fn (): mixed => $request->session()->get(AdminNotifier::SESSION_KEY),
+                'notification' => fn (): mixed => $request->session()->get(NotifiesAdmin::SESSION_KEY),
             ],
 
             'notifications' => fn (): array => $user === null

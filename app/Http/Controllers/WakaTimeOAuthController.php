@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Contracts\NotifiesAdmin;
 use App\Services\WakaTimeService;
-use App\Support\AdminNotifier;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Throwable;
 
-class WakaTimeOAuthController extends Controller
+final class WakaTimeOAuthController extends Controller
 {
     public function __construct(private readonly WakaTimeService $wakatime) {}
 
@@ -57,7 +57,7 @@ class WakaTimeOAuthController extends Controller
 
     private function back(string $url, bool $success, string $message): RedirectResponse
     {
-        $notifier = resolve(AdminNotifier::class);
+        $notifier = resolve(NotifiesAdmin::class);
         $title = $success ? 'WakaTime connected' : 'WakaTime connection failed';
 
         $success

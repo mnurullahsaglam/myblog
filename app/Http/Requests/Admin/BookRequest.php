@@ -8,7 +8,7 @@ use App\Models\Book;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class BookRequest extends FormRequest
+final class BookRequest extends FormRequest
 {
     public function authorize(): bool
     {

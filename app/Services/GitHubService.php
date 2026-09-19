@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Contracts\SyncsGitHubIssues;
 use App\Models\Repository;
 use App\Models\Task;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class GitHubService
+final class GitHubService implements SyncsGitHubIssues
 {
     private string $baseUrl = 'https://api.github.com';
 

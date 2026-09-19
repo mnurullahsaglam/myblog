@@ -7,18 +7,16 @@ namespace App\Http\Controllers\Admin\Budget;
 use App\Actions\Budget\PayDebt;
 use App\Enums\Currencies;
 use App\Forms\Definitions\DebtForm;
-use App\Forms\ResourceForm;
 use App\Http\Controllers\Admin\AdminResourceController;
 use App\Http\Requests\Admin\DebtRequest;
 use App\Http\Requests\Admin\PayDebtRequest;
 use App\Models\Debt;
 use App\Tables\Definitions\DebtTable;
-use App\Tables\ResourceTable;
 use Illuminate\Http\RedirectResponse;
 
-class DebtController extends AdminResourceController
+final class DebtController extends AdminResourceController
 {
-    protected function table(): ResourceTable
+    protected function table(): DebtTable
     {
         return new DebtTable($this->conversionCurrency());
     }
@@ -36,7 +34,7 @@ class DebtController extends AdminResourceController
             : Currencies::TRY->value;
     }
 
-    protected function form(): ResourceForm
+    protected function form(): DebtForm
     {
         return new DebtForm;
     }

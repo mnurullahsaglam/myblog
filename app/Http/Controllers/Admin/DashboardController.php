@@ -13,7 +13,7 @@ use App\Support\Widgets\WorkOverview;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class DashboardController extends Controller
+final class DashboardController extends Controller
 {
     public function __invoke(): Response
     {

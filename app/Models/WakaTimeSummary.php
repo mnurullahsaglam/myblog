@@ -20,7 +20,7 @@ use Override;
  * @property-read string $total_human
  * @property-read Collection<int, WakaTimeSummaryEntry> $entries
  */
-class WakaTimeSummary extends Model
+final class WakaTimeSummary extends Model
 {
     /** @use HasFactory<WakaTimeSummaryFactory> */
     use HasFactory;

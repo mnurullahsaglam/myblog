@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Contracts\ConvertsCurrency;
 use App\Models\Debt;
 use App\Models\Expense;
 use App\Models\User;
-use App\Services\ExchangeRateService;
 use App\Support\Navigation;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -16,12 +16,12 @@ beforeEach(function (): void {
     $this->actingAs(User::factory()->create(['email' => 'admin@example.test']));
     Storage::fake('public');
 
-    $exchange = Mockery::mock(ExchangeRateService::class);
+    $exchange = Mockery::mock(ConvertsCurrency::class);
     $exchange->shouldReceive('convert')->andReturnUsing(
         fn (float $amount, string $from, string $to): float => $amount * 2,
     );
     $exchange->shouldIgnoreMissing();
-    app()->instance(ExchangeRateService::class, $exchange);
+    app()->instance(ConvertsCurrency::class, $exchange);
 });
 
 it('lists debts newest first', function (): void {
@@ -71,10 +71,10 @@ it('does not filter rows out when only the conversion currency changes', functio
 });
 
 it('survives an exchange rate failure', function (): void {
-    $failing = Mockery::mock(ExchangeRateService::class);
+    $failing = Mockery::mock(ConvertsCurrency::class);
     $failing->shouldReceive('convert')->andThrow(new Exception('rate API down'));
     $failing->shouldIgnoreMissing();
-    app()->instance(ExchangeRateService::class, $failing);
+    app()->instance(ConvertsCurrency::class, $failing);
 
     Debt::factory()->create(['amount' => 100.00, 'currency' => 'USD']);
 

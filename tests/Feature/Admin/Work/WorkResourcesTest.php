@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
+use App\Contracts\SyncsGitHubIssues;
 use App\Models\Client;
 use App\Models\Project;
 use App\Models\Repository;
 use App\Models\Task;
 use App\Models\User;
-use App\Services\GitHubService;
 use App\Support\Navigation;
 use Inertia\Testing\AssertableInertia;
 
@@ -15,10 +15,10 @@ beforeEach(function (): void {
     config(['app.admin_email' => 'admin@example.test']);
     $this->actingAs(User::factory()->create(['email' => 'admin@example.test']));
 
-    $github = Mockery::mock(GitHubService::class);
+    $github = Mockery::mock(SyncsGitHubIssues::class);
     $github->shouldIgnoreMissing();
 
-    app()->instance(GitHubService::class, $github);
+    app()->instance(SyncsGitHubIssues::class, $github);
 });
 
 it('lists clients with their project counts', function (): void {

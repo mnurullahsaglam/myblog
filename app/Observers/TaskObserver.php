@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Observers;
 
+use App\Contracts\SyncsGitHubIssues;
 use App\Models\Task;
-use App\Services\GitHubService;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Log;
 
-class TaskObserver
+final readonly class TaskObserver
 {
-    public function __construct(private readonly GitHubService $githubService) {}
+    public function __construct(private SyncsGitHubIssues $githubService) {}
 
     /**
      * Handle the Task "updated" event.

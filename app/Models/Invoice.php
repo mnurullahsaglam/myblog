@@ -27,7 +27,7 @@ use Illuminate\Support\Carbon;
  * @property-read string $amount_with_currency_symbol
  * @property-read Client|null $client
  */
-class Invoice extends Model
+final class Invoice extends Model
 {
     /** @use HasFactory<InvoiceFactory> */
     use HasFactory;

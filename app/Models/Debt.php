@@ -30,7 +30,7 @@ use Override;
  * @property-read string $formatted_amount
  */
 #[ObservedBy([DebtObserver::class])]
-class Debt extends Model
+final class Debt extends Model
 {
     /** @use HasFactory<DebtFactory> */
     use HasFactory;

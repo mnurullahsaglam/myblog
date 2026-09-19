@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Actions\Settings\SaveSettings;
+use App\Contracts\NotifiesAdmin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\SettingsRequest;
 use App\Models\Setting;
-use App\Support\AdminNotifier;
 use App\Support\Theme\AccentRamps;
 use App\Support\Theme\Appearance;
 use Illuminate\Http\RedirectResponse;
@@ -16,7 +16,7 @@ use Illuminate\Http\UploadedFile;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class SettingsController extends Controller
+final class SettingsController extends Controller
 {
     /**
      * @var array<int, string>
@@ -35,7 +35,7 @@ class SettingsController extends Controller
         'branding.favicon' => 'settings/branding',
     ];
 
-    public function __construct(private readonly AdminNotifier $notifier) {}
+    public function __construct(private readonly NotifiesAdmin $notifier) {}
 
     public function edit(): Response
     {

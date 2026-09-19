@@ -29,7 +29,7 @@ use Override;
  * @property-read string $formatted_amount
  * @property-read string $source
  */
-class Income extends Model
+final class Income extends Model
 {
     /** @use HasFactory<IncomeFactory> */
     use HasFactory;

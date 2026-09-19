@@ -15,7 +15,7 @@ use Spatie\Sluggable\HasSlug;
 /**
  * @property string $name
  */
-class Publisher extends Model
+final class Publisher extends Model
 {
     use DefaultSlugOptions;
 

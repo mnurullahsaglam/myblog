@@ -9,7 +9,7 @@ use App\Models\Invoice;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class InvoiceRequest extends FormRequest
+final class InvoiceRequest extends FormRequest
 {
     public function authorize(): bool
     {

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Actions\Exports\ExportResource;
+use App\Contracts\NotifiesAdmin;
 use App\Http\Controllers\Controller;
-use App\Support\AdminNotifier;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
-class ExportController extends Controller
+final class ExportController extends Controller
 {
-    public function __construct(private readonly AdminNotifier $notifier) {}
+    public function __construct(private readonly NotifiesAdmin $notifier) {}
 
     public function store(string $resource, ExportResource $exportResource): RedirectResponse
     {

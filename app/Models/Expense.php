@@ -27,7 +27,7 @@ use Override;
  * @property-read bool $has_receipt
  * @property-read string|null $receipt_url
  */
-class Expense extends Model
+final class Expense extends Model
 {
     /** @use HasFactory<ExpenseFactory> */
     use HasFactory;

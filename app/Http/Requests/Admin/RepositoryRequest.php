@@ -8,7 +8,7 @@ use App\Models\Repository;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class RepositoryRequest extends FormRequest
+final class RepositoryRequest extends FormRequest
 {
     public function authorize(): bool
     {

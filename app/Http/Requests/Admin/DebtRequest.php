@@ -8,7 +8,7 @@ use App\Enums\Currencies;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class DebtRequest extends FormRequest
+final class DebtRequest extends FormRequest
 {
     public function authorize(): bool
     {

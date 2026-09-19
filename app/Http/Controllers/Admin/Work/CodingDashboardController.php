@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class CodingDashboardController extends Controller
+final class CodingDashboardController extends Controller
 {
     public function __invoke(Request $request): Response
     {

@@ -10,7 +10,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Laravel\Passkeys\Passkey;
 
-class ProfileController extends Controller
+final class ProfileController extends Controller
 {
     public function __invoke(Request $request): Response
     {

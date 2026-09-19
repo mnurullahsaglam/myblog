@@ -5,21 +5,19 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Work;
 
 use App\Forms\Definitions\ClientForm;
-use App\Forms\ResourceForm;
 use App\Http\Controllers\Admin\AdminResourceController;
 use App\Http\Requests\Admin\ClientRequest;
 use App\Models\Client;
 use App\Tables\Definitions\ClientTable;
-use App\Tables\ResourceTable;
 
-class ClientController extends AdminResourceController
+final class ClientController extends AdminResourceController
 {
-    protected function table(): ResourceTable
+    protected function table(): ClientTable
     {
         return new ClientTable;
     }
 
-    protected function form(): ResourceForm
+    protected function form(): ClientForm
     {
         return new ClientForm;
     }

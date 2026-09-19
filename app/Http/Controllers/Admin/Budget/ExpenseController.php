@@ -5,21 +5,19 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Budget;
 
 use App\Forms\Definitions\ExpenseForm;
-use App\Forms\ResourceForm;
 use App\Http\Controllers\Admin\AdminResourceController;
 use App\Http\Requests\Admin\ExpenseRequest;
 use App\Models\Expense;
 use App\Tables\Definitions\ExpenseTable;
-use App\Tables\ResourceTable;
 
-class ExpenseController extends AdminResourceController
+final class ExpenseController extends AdminResourceController
 {
-    protected function table(): ResourceTable
+    protected function table(): ExpenseTable
     {
         return new ExpenseTable;
     }
 
-    protected function form(): ResourceForm
+    protected function form(): ExpenseForm
     {
         return new ExpenseForm;
     }
