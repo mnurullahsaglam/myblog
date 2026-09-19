@@ -8,6 +8,9 @@ use App\Models\Publisher;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 
+/**
+ * @extends Factory<Publisher>
+ */
 class PublisherFactory extends Factory
 {
     protected $model = Publisher::class;

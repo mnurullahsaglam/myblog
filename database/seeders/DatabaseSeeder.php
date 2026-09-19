@@ -39,8 +39,8 @@ class DatabaseSeeder extends Seeder
         }
 
         // Create sample repositories
-        $firstProject = Project::first();
-        $secondProject = Project::skip(1)->first();
+        $firstProject = Project::query()->firstOrFail();
+        $secondProject = Project::query()->skip(1)->firstOrFail();
 
         $repositories = [
             [

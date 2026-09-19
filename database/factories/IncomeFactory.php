@@ -27,7 +27,7 @@ class IncomeFactory extends Factory
             'invoice_id' => null,
             'debt_id' => null,
             'amount' => fake()->randomFloat(2, 100, 50000),
-            'currency' => fake()->randomElement(Currencies::cases())->value,
+            'currency' => Currencies::cases()[array_rand(Currencies::cases())]->value,
             'description' => fake()->sentence(),
             'date' => fake()->dateTimeBetween('-1 year')->format('Y-m-d'),
         ];

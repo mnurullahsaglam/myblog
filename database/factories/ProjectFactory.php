@@ -9,6 +9,9 @@ use App\Models\Project;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 
+/**
+ * @extends Factory<Project>
+ */
 class ProjectFactory extends Factory
 {
     protected $model = Project::class;

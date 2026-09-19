@@ -10,6 +10,9 @@ use App\Models\Writer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 
+/**
+ * @extends Factory<Book>
+ */
 class BookFactory extends Factory
 {
     protected $model = Book::class;

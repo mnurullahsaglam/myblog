@@ -25,7 +25,7 @@ class ExpenseFactory extends Factory
             'expense_category_id' => ExpenseCategory::factory(),
             'debt_id' => null,
             'amount' => fake()->randomFloat(2, 10, 5000),
-            'currency' => fake()->randomElement(Currencies::cases())->value,
+            'currency' => Currencies::cases()[array_rand(Currencies::cases())]->value,
             'description' => fake()->sentence(),
             'is_recurring' => false,
             'is_tax_deductible' => false,

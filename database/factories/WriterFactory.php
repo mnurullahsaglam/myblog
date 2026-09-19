@@ -8,6 +8,9 @@ use App\Models\Writer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 
+/**
+ * @extends Factory<Writer>
+ */
 class WriterFactory extends Factory
 {
     protected $model = Writer::class;

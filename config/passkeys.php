@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'relying_party_id' => parse_url(config('app.url'), PHP_URL_HOST),
+    'relying_party_id' => parse_url(config()->string('app.url'), PHP_URL_HOST),
 
     /*
     |--------------------------------------------------------------------------
