@@ -20,7 +20,7 @@ it('lists posts with a schema and rows', function (): void {
     Post::factory()->count(3)->create();
 
     $this->get(route('admin.posts.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->component('Blog/Posts/Index')
             ->has('schema.columns', 6)
             ->has('schema.filters', 2)
@@ -32,7 +32,7 @@ it('renders cells rather than raw attributes', function (): void {
     Post::factory()->create(['title' => 'Learning Rust']);
 
     $this->get(route('admin.posts.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('rows.data.0.cells.title.display', 'Learning Rust')
             ->where('rows.data.0.cells.created_at.display', fn (string $value): bool => $value !== '')
         );
@@ -43,7 +43,7 @@ it('counts attached categories', function (): void {
     $post->categories()->attach(Category::factory()->count(2)->create());
 
     $this->get(route('admin.posts.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('rows.data.0.cells.categories_count.display', '2')
         );
 });
@@ -53,10 +53,10 @@ it('searches posts by title and content', function (): void {
     Post::factory()->create(['title' => 'Something else', 'content' => 'nothing']);
 
     $this->get(route('admin.posts.index', ['search' => 'rust']))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 1));
 
     $this->get(route('admin.posts.index', ['search' => 'ownership']))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 1));
 });
 
 it('sorts posts by title', function (): void {
@@ -64,7 +64,7 @@ it('sorts posts by title', function (): void {
     Post::factory()->create(['title' => 'Apple']);
 
     $this->get(route('admin.posts.index', ['sort' => 'title']))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('rows.data.0.cells.title.display', 'Apple')
         );
 });
@@ -74,17 +74,17 @@ it('filters posts by whether they have an image', function (): void {
     Post::factory()->create(['image' => null]);
 
     $this->get(route('admin.posts.index', ['filter' => ['image' => 'yes']]))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 1));
 
     $this->get(route('admin.posts.index', ['filter' => ['image' => 'no']]))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 1));
 });
 
 it('paginates', function (): void {
     Post::factory()->count(30)->create();
 
     $this->get(route('admin.posts.index', ['perPage' => 10, 'page' => 2]))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->has('rows.data', 10)
             ->where('rows.current_page', 2)
             ->where('rows.total', 30)
@@ -95,7 +95,7 @@ it('renders the create form with category options', function (): void {
     Category::factory()->create(['name' => 'Rust']);
 
     $this->get(route('admin.posts.create'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->component('Blog/Posts/Create')
             ->has('schema.fields', 7)
             ->where('values.title', null)
@@ -174,7 +174,7 @@ it('renders the edit form filled with the record', function (): void {
     $post->categories()->attach(Category::factory()->create());
 
     $this->get(route('admin.posts.edit', $post))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->component('Blog/Posts/Edit')
             ->where('values.title', 'Learning Rust')
             ->has('values.categories', 1)

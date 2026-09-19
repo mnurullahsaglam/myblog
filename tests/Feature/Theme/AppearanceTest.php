@@ -52,7 +52,7 @@ it('shares auth, appearance, navigation and env with every inertia response', fu
 
     $this->actingAs($this->admin)
         ->get(route('admin.dashboard'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('auth.user.email', 'admin@example.test')
             ->where('appearance.accent', 'sky')
             ->where('appearance.colorScheme', 'system')
@@ -65,13 +65,13 @@ it('shares a null user for a guest', function (): void {
     Route::middleware('web')->get('/__guest-probe', fn () => inertia('Dashboard'));
 
     $this->get('/__guest-probe')
-        ->assertInertia(fn (AssertableInertia $page) => $page->where('auth.user', null));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->where('auth.user', null));
 });
 
 it('never shares the password hash', function (): void {
     $this->actingAs($this->admin)
         ->get(route('admin.dashboard'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('auth.user', fn (Collection $user): bool => $user->keys()->all() === ['id', 'name', 'email'])
         );
 });
@@ -85,7 +85,7 @@ it('shares a flashed notification', function (): void {
 
     $this->actingAs($this->admin)
         ->get('/__flash-probe')
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('flash.notification.title', 'Saved')
             ->where('flash.notification.variant', 'success')
         );

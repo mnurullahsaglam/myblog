@@ -25,7 +25,7 @@ it('lists publishers with their book counts', function (): void {
     Book::factory()->count(4)->create(['publisher_id' => $publisher->id]);
 
     $this->get(route('admin.publishers.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->component('Library/Publishers/Index')
             ->where('rows.data.0.cells.name.display', 'Ace')
             ->where('rows.data.0.cells.books_count.display', '4')
@@ -51,7 +51,7 @@ it('lists writers and renders years without separators', function (): void {
     Writer::factory()->create(['name' => 'Le Guin', 'birth_year' => 1929, 'death_year' => 2018]);
 
     $this->get(route('admin.writers.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->component('Library/Writers/Index')
             ->where('rows.data.0.cells.birth_year.display', '1929')
             ->where('rows.data.0.cells.death_year.display', '2018')
@@ -62,7 +62,7 @@ it('shows a dash for a living writer', function (): void {
     Writer::factory()->create(['death_year' => null]);
 
     $this->get(route('admin.writers.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('rows.data.0.cells.death_year.display', '—')
         );
 });
@@ -72,10 +72,10 @@ it('filters writers by living or deceased', function (): void {
     Writer::factory()->create(['death_year' => null]);
 
     $this->get(route('admin.writers.index', ['filter' => ['death_year' => 'yes']]))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 1));
 
     $this->get(route('admin.writers.index', ['filter' => ['death_year' => 'no']]))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 1));
 });
 
 it('creates a writer with a portrait', function (): void {
@@ -157,7 +157,7 @@ it('searches books by writer name', function (): void {
     Book::factory()->create(['writer_id' => $other->id]);
 
     $this->get(route('admin.books.index', ['search' => 'Le Guin']))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 1));
 });
 
 it('filters books by writer', function (): void {
@@ -166,7 +166,7 @@ it('filters books by writer', function (): void {
     Book::factory()->create();
 
     $this->get(route('admin.books.index', ['filter' => ['writer_id' => [$leGuin->id]]]))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 1));
 });
 
 it('creates a book with categories', function (): void {

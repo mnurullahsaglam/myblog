@@ -23,7 +23,7 @@ it('renders an inertia page with props', function (): void {
 
     $this->actingAs($this->admin)
         ->get('/__inertia-probe')
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->component('Dashboard')
             ->where('answer', 42)
         );
@@ -35,7 +35,7 @@ it('fails loudly when a page component file is missing', function (): void {
     $this->actingAs($this->admin)->get('/__inertia-missing')->assertOk();
 
     expect(fn () => $this->get('/__inertia-missing')
-        ->assertInertia(fn (AssertableInertia $page) => $page->component('NoSuchPage')))
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->component('NoSuchPage')))
         ->toThrow(AssertionFailedError::class);
 });
 
@@ -45,7 +45,7 @@ it('does not evaluate a closure prop excluded from a partial reload', function (
     Route::middleware('web')->get('/__inertia-partial', function () use (&$calls) {
         return inertia('Dashboard', [
             'cheap' => 'always',
-            'expensive' => function () use (&$calls) {
+            'expensive' => function () use (&$calls): string {
                 $calls++;
 
                 return 'computed';
@@ -71,7 +71,7 @@ it('does evaluate a closure prop included in a partial reload', function (): voi
 
     Route::middleware('web')->get('/__inertia-partial-included', function () use (&$calls) {
         return inertia('Dashboard', [
-            'expensive' => function () use (&$calls) {
+            'expensive' => function () use (&$calls): string {
                 $calls++;
 
                 return 'computed';
@@ -95,7 +95,7 @@ it('does evaluate a closure prop included in a partial reload', function (): voi
 it('serves the admin dashboard to the admin', function (): void {
     $this->actingAs($this->admin)
         ->get(route('admin.dashboard'))
-        ->assertInertia(fn (AssertableInertia $page) => $page->component('Dashboard'));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->component('Dashboard'));
 });
 
 it('redirects a guest away from the panel', function (): void {

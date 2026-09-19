@@ -23,7 +23,7 @@ function notifyAdmin(User $user, string $title = 'Sync finished', ?string $body 
 
 it('shares an empty state when there are none', function (): void {
     $this->get(route('admin.dashboard'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('notifications.unreadCount', 0)
             ->has('notifications.items', 0)
         );
@@ -34,7 +34,7 @@ it('shares unread notifications with their payload', function (): void {
     notifyAdmin($this->admin);
 
     $this->get(route('admin.dashboard'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('notifications.unreadCount', 2)
             ->has('notifications.items', 2)
             ->where('notifications.items.0.title', 'Sync finished')
@@ -51,7 +51,7 @@ it('counts only unread but lists read ones too', function (): void {
     DB::table('notifications')->where('id', $read)->update(['read_at' => now()]);
 
     $this->get(route('admin.dashboard'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('notifications.unreadCount', 1)
             ->has('notifications.items', 2)
         );
@@ -69,7 +69,7 @@ it('falls back gracefully for an unrecognised payload', function (): void {
     ]);
 
     $this->get(route('admin.dashboard'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('notifications.items.0.title', 'Notification')
             ->where('notifications.items.0.body', null)
             ->where('notifications.items.0.variant', 'info')
@@ -118,7 +118,7 @@ it('caps the shared list but not the count', function (): void {
     }
 
     $this->get(route('admin.dashboard'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->has('notifications.items', 15)
             ->where('notifications.unreadCount', 20)
         );

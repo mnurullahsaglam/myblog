@@ -30,7 +30,7 @@ it('lists debts newest first', function (): void {
     $newest = Debt::factory()->create(['date' => '2026-06-01']);
 
     $this->get(route('admin.debts.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->component('Budget/Debts/Index')
             ->where('rows.data.0.id', $newest->id)
         );
@@ -40,7 +40,7 @@ it('converts the amount into the selected currency', function (): void {
     Debt::factory()->create(['amount' => 100.00, 'currency' => 'USD']);
 
     $this->get(route('admin.debts.index', ['filter' => ['conversion_currency' => 'TRY']]))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('rows.data.0.cells.converted_amount.display', '₺200.00')
         );
 });
@@ -49,7 +49,7 @@ it('shows the original amount when the currencies match', function (): void {
     Debt::factory()->create(['amount' => 100.00, 'currency' => 'TRY']);
 
     $this->get(route('admin.debts.index', ['filter' => ['conversion_currency' => 'TRY']]))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('rows.data.0.cells.converted_amount.display', '₺100.00')
         );
 });
@@ -68,7 +68,7 @@ it('does not filter rows out when only the conversion currency changes', functio
     Debt::factory()->create(['currency' => 'TRY']);
 
     $this->get(route('admin.debts.index', ['filter' => ['conversion_currency' => 'EUR']]))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 2));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 2));
 });
 
 it('survives an exchange rate failure', function (): void {
@@ -81,7 +81,7 @@ it('survives an exchange rate failure', function (): void {
 
     $this->get(route('admin.debts.index', ['filter' => ['conversion_currency' => 'TRY']]))
         ->assertOk()
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('rows.data.0.cells.converted_amount.display', '—')
         );
 });
@@ -90,7 +90,7 @@ it('colours the due status', function (): void {
     Debt::factory()->overdue()->create();
 
     $this->get(route('admin.debts.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('rows.data.0.cells.due_date_status.variant', 'danger')
         );
 });
@@ -99,7 +99,7 @@ it('greys the due status for a settled debt', function (): void {
     Debt::factory()->paid()->create(['due_date' => now()->subMonth()->toDateString()]);
 
     $this->get(route('admin.debts.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('rows.data.0.cells.due_date_status.variant', 'gray')
         );
 });
@@ -109,7 +109,7 @@ it('filters to overdue debts', function (): void {
     Debt::factory()->create(['status' => 'pending', 'due_date' => now()->addYear()->toDateString()]);
 
     $this->get(route('admin.debts.index', ['filter' => ['overdue' => 'yes']]))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 1));
 });
 
 it('filters to debts due within seven days', function (): void {
@@ -117,7 +117,7 @@ it('filters to debts due within seven days', function (): void {
     Debt::factory()->create(['status' => 'pending', 'due_date' => now()->addDays(60)->toDateString()]);
 
     $this->get(route('admin.debts.index', ['filter' => ['due_soon' => 'yes']]))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 1));
 });
 
 it('summarises outstanding debt in tiles', function (): void {
@@ -125,7 +125,7 @@ it('summarises outstanding debt in tiles', function (): void {
     Debt::factory()->paid()->create(['amount' => 9999.00, 'currency' => 'TRY']);
 
     $this->get(route('admin.debts.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->has('tiles', 4)
             ->where('tiles.0.label', 'Outstanding')
             ->where('tiles.0.value', '₺100.00')
@@ -138,7 +138,7 @@ it('counts overdue and imminent debts in tiles', function (): void {
     Debt::factory()->create(['status' => 'pending', 'currency' => 'TRY', 'due_date' => now()->addDays(2)->toDateString()]);
 
     $this->get(route('admin.debts.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('tiles.2.value', '1')
             ->where('tiles.3.value', '1')
         );

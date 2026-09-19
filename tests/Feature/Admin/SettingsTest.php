@@ -17,7 +17,7 @@ beforeEach(function (): void {
 
 it('renders the settings page with appearance defaults', function (): void {
     $this->get(route('admin.settings'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->component('Settings')
             ->where('settings.appearance.accent', 'khaki')
             ->where('settings.appearance.color_scheme', 'system')
@@ -41,7 +41,7 @@ it('loads stored settings into the form', function (): void {
     Setting::set('social', 'github_url', 'https://github.com/example');
 
     $this->get(route('admin.settings'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('settings.site_info.site_name', 'My Blog')
             ->where('settings.social.github_url', 'https://github.com/example')
         );
@@ -76,7 +76,7 @@ it('shares the new appearance with inertia after saving', function (): void {
     ]);
 
     $this->get(route('admin.dashboard'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('appearance.accent', 'sky')
             ->where('appearance.colorScheme', 'light')
         );
@@ -111,14 +111,14 @@ it('round-trips keywords through json', function (): void {
     ])->assertSessionHasNoErrors();
 
     $this->get(route('admin.settings'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('settings.meta.meta_keywords', ['rust', 'laravel', 'vue'])
         );
 });
 
 it('gives an empty keyword list when none is stored', function (): void {
     $this->get(route('admin.settings'))
-        ->assertInertia(fn (AssertableInertia $page) => $page->where('settings.meta.meta_keywords', []));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->where('settings.meta.meta_keywords', []));
 });
 
 it('stores an uploaded logo', function (): void {

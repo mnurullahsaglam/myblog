@@ -289,7 +289,7 @@ abstract class ResourceTable
             return true;
         }
 
-        return array_any($this->columns(), fn ($candidate) => $candidate->key === $column && $candidate->isSortable());
+        return array_any($this->columns(), fn (Column $candidate): bool => $candidate->key === $column && $candidate->isSortable());
     }
 
     private function resolvePerPage(Request $request): int

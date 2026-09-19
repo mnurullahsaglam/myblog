@@ -106,7 +106,7 @@ class ExchangeRateService
      */
     public function getAllRates(): array
     {
-        return Cache::remember('exchange_rates', 3600, fn () => $this->fetchRatesFromApi());
+        return Cache::remember('exchange_rates', 3600, fn (): array => $this->fetchRatesFromApi());
     }
 
     /**

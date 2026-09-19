@@ -14,7 +14,7 @@ trait ImageUrlAttribute
     protected function imageUrl(): Attribute
     {
         return Attribute::make(
-            get: fn () => asset((string) $this->image),
+            get: fn (): string => asset((string) $this->image),
         );
     }
 }

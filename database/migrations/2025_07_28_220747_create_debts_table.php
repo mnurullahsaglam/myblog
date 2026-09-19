@@ -11,7 +11,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('debts', function (Blueprint $table) {
+        Schema::create('debts', function (Blueprint $table): void {
             $table->id();
             $table->string('creditor_name');
             $table->enum('creditor_type', ['person', 'institute'])->default('person');

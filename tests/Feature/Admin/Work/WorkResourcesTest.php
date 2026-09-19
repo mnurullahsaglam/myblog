@@ -28,7 +28,7 @@ it('lists clients with their project counts', function (): void {
     Project::factory()->count(2)->create(['client_id' => $client->id]);
 
     $this->get(route('admin.clients.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->component('Work/Clients/Index')
             ->where('rows.data.0.cells.title.display', 'Acme')
             ->where('rows.data.0.cells.projects_count.display', '2')
@@ -40,10 +40,10 @@ it('searches clients by title and email', function (): void {
     Client::factory()->create(['title' => 'Globex', 'email' => 'hi@globex.test']);
 
     $this->get(route('admin.clients.index', ['search' => 'acme']))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 1));
 
     $this->get(route('admin.clients.index', ['search' => 'globex.test']))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 1));
 });
 
 it('creates a client', function (): void {
@@ -87,7 +87,7 @@ it('formats a project due date', function (): void {
     Project::factory()->create(['due_date' => '2026-12-24']);
 
     $this->get(route('admin.projects.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('rows.data.0.cells.due_date.display', '24 Dec 2026')
         );
 });
@@ -96,7 +96,7 @@ it('shows a dash for a project with no deadline', function (): void {
     Project::factory()->create(['due_date' => null]);
 
     $this->get(route('admin.projects.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('rows.data.0.cells.due_date.display', '—')
         );
 });
@@ -106,7 +106,7 @@ it('filters projects by whether they have a deadline', function (): void {
     Project::factory()->create(['due_date' => null]);
 
     $this->get(route('admin.projects.index', ['filter' => ['due_date' => 'no']]))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 1));
 });
 
 it('creates a project with no client or deadline', function (): void {
@@ -121,7 +121,7 @@ it('lists repositories and colours visibility', function (): void {
     Repository::factory()->create(['visibility' => 'public']);
 
     $this->get(route('admin.repositories.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->component('Work/Repositories/Index')
             ->where('rows.data.0.cells.visibility.variant', 'success')
         );
@@ -130,7 +130,7 @@ it('lists repositories and colours visibility', function (): void {
     Repository::factory()->create(['visibility' => 'private']);
 
     $this->get(route('admin.repositories.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('rows.data.0.cells.visibility.variant', 'warning')
         );
 });
@@ -139,7 +139,7 @@ it('shows the commits count', function (): void {
     Repository::factory()->create(['commits_count' => 1384]);
 
     $this->get(route('admin.repositories.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('rows.data.0.cells.commits_count.display', '1,384')
         );
 });
@@ -148,7 +148,7 @@ it('renders the active flag as a boolean cell', function (): void {
     Repository::factory()->create(['is_active' => true]);
 
     $this->get(route('admin.repositories.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('rows.data.0.cells.is_active.raw', true)
         );
 });
@@ -169,14 +169,14 @@ it('filters repositories by visibility', function (): void {
     Repository::factory()->create(['visibility' => 'private']);
 
     $this->get(route('admin.repositories.index', ['filter' => ['visibility' => 'public']]))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 1));
 });
 
 it('renders the repository show page', function (): void {
     $repository = Repository::factory()->create(['name' => 'myblog']);
 
     $this->get(route('admin.repositories.show', $repository))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->component('Work/Repositories/Show')
             ->where('values.name', 'myblog')
         );

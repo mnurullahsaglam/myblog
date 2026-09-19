@@ -22,7 +22,7 @@ beforeEach(function (): void {
 
 it('renders three columns in order', function (): void {
     $this->get(route('admin.tasks.board'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->component('Work/TasksBoard')
             ->has('columns', 3)
             ->where('columns.0.key', 'todo')
@@ -36,7 +36,7 @@ it('groups tasks into their status column', function (): void {
     Task::factory()->create(['status' => 'completed']);
 
     $this->get(route('admin.tasks.board'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->has('columns.0.tasks', 2)
             ->has('columns.1.tasks', 0)
             ->has('columns.2.tasks', 1)
@@ -48,7 +48,7 @@ it('orders tasks within a column by sort order', function (): void {
     $first = Task::factory()->create(['status' => 'todo', 'sort_order' => 1, 'project_id' => null]);
 
     $this->get(route('admin.tasks.board'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('columns.0.tasks.0.id', $first->id)
             ->where('columns.0.tasks.1.id', $second->id)
         );
@@ -58,7 +58,7 @@ it('presents github metadata and labels', function (): void {
     Task::factory()->githubIssue()->create(['status' => 'todo']);
 
     $this->get(route('admin.tasks.board'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('columns.0.tasks.0.isGithubIssue', true)
             ->has('columns.0.tasks.0.labels', 1)
             ->where('columns.0.tasks.0.labels.0.name', 'bug')
@@ -74,7 +74,7 @@ it('tolerates malformed github labels', function (): void {
 
     $this->get(route('admin.tasks.board'))
         ->assertOk()
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->has('columns.0.tasks.0.labels', 1)
             ->where('columns.0.tasks.0.labels.0.name', 'ok')
         );
@@ -86,10 +86,10 @@ it('filters the board by project and by search', function (): void {
     Task::factory()->create(['status' => 'todo', 'title' => 'Something else']);
 
     $this->get(route('admin.tasks.board', ['project' => $project->id]))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('columns.0.tasks', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('columns.0.tasks', 1));
 
     $this->get(route('admin.tasks.board', ['search' => 'parser']))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('columns.0.tasks', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('columns.0.tasks', 1));
 });
 
 it('moves a task to another column at a position', function (): void {

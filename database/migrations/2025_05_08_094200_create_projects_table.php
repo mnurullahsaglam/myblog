@@ -10,7 +10,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('projects', function (Blueprint $table) {
+        Schema::create('projects', function (Blueprint $table): void {
             $table->id();
 
             $table->foreignId('client_id')->nullable();

@@ -19,7 +19,7 @@ it('lists categories sorted by name', function (): void {
     Category::factory()->create(['name' => 'Apple']);
 
     $this->get(route('admin.categories.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->component('General/Categories/Index')
             ->where('rows.data.0.cells.name.display', 'Apple')
         );
@@ -31,7 +31,7 @@ it('counts attached posts and books separately', function (): void {
     $category->books()->attach(Book::factory()->count(3)->create());
 
     $this->get(route('admin.categories.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('rows.data.0.cells.posts_count.display', '2')
             ->where('rows.data.0.cells.books_count.display', '3')
         );
@@ -42,7 +42,7 @@ it('searches categories by name', function (): void {
     Category::factory()->create(['name' => 'Elixir']);
 
     $this->get(route('admin.categories.index', ['search' => 'rust']))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 1));
 });
 
 it('creates a standalone category with no parent', function (): void {

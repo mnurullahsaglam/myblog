@@ -108,7 +108,7 @@ it('lists passkeys on the profile page', function (): void {
 
     $this->actingAs($this->admin)
         ->get(route('admin.profile'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->has('passkeys', 1)
             ->where('passkeys.0.name', 'MacBook Touch ID')
             ->where('passkeys.0.lastUsedAt', null)

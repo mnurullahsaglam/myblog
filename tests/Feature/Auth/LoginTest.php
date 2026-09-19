@@ -13,7 +13,7 @@ beforeEach(function (): void {
 
 it('renders the login page', function (): void {
     $this->get('/login')
-        ->assertInertia(fn (AssertableInertia $page) => $page->component('Auth/Login'));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->component('Auth/Login'));
 });
 
 it('logs the admin in with valid credentials', function (): void {

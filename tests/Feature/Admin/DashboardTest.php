@@ -28,7 +28,7 @@ beforeEach(function (): void {
 
 it('renders all three overview groups', function (): void {
     $this->get(route('admin.dashboard'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->component('Dashboard')
             ->has('budget', 4)
             ->has('work', 4)
@@ -144,7 +144,7 @@ it('lists recent posts and open tasks', function (): void {
     Task::factory()->create(['status' => 'completed']);
 
     $this->get(route('admin.dashboard'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->has('recentPosts', 5)
             ->has('openTasks', 3)
             ->has('recentPosts.0.title')
@@ -155,7 +155,7 @@ it('lists recent posts and open tasks', function (): void {
 it('renders cleanly with no data at all', function (): void {
     $this->get(route('admin.dashboard'))
         ->assertOk()
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->has('recentPosts', 0)
             ->has('openTasks', 0)
         );

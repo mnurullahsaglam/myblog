@@ -28,7 +28,7 @@ it('lists incomes newest first', function (): void {
     $newest = Income::factory()->create(['date' => '2026-06-01']);
 
     $this->get(route('admin.incomes.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->component('Budget/Incomes/Index')
             ->where('rows.data.0.id', $newest->id)
         );
@@ -38,7 +38,7 @@ it('formats income with the record currency symbol', function (): void {
     Income::factory()->create(['amount' => 1500.00, 'currency' => 'TRY']);
 
     $this->get(route('admin.incomes.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('rows.data.0.cells.amount.display', '₺1,500.00')
             ->where('rows.data.0.cells.currency.display', 'TRY')
         );
@@ -50,10 +50,10 @@ it('filters incomes by currency and category', function (): void {
     Income::factory()->create(['currency' => 'USD']);
 
     $this->get(route('admin.incomes.index', ['filter' => ['currency' => ['USD']]]))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 1));
 
     $this->get(route('admin.incomes.index', ['filter' => ['income_category_id' => [$salary->id]]]))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 1));
 });
 
 it('filters incomes by source flags', function (): void {
@@ -66,13 +66,13 @@ it('filters incomes by source flags', function (): void {
     Income::factory()->create(['client_id' => $client->id, 'invoice_id' => null, 'debt_id' => null]);
 
     $this->get(route('admin.incomes.index', ['filter' => ['source_invoice' => 'yes']]))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 1));
 
     $this->get(route('admin.incomes.index', ['filter' => ['source_debt' => 'yes']]))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 1));
 
     $this->get(route('admin.incomes.index', ['filter' => ['source_client' => 'yes']]))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 1));
 });
 
 it('creates an income', function (): void {
@@ -104,7 +104,7 @@ it('renders the income show page', function (): void {
     $income = Income::factory()->create();
 
     $this->get(route('admin.incomes.show', $income))
-        ->assertInertia(fn (AssertableInertia $page) => $page->component('Budget/Incomes/Show'));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->component('Budget/Incomes/Show'));
 });
 
 // ------------------------------------------------------------------ Expenses
@@ -114,7 +114,7 @@ it('lists expenses newest first with tiles', function (): void {
     $newest = Expense::factory()->create(['date' => '2026-06-01', 'amount' => 200, 'currency' => 'TRY']);
 
     $this->get(route('admin.expenses.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->component('Budget/Expenses/Index')
             ->where('rows.data.0.id', $newest->id)
             ->has('tiles', 4)
@@ -129,7 +129,7 @@ it('computes tiles over the filtered set, not everything', function (): void {
     Expense::factory()->create(['amount' => 9999, 'currency' => 'TRY']);
 
     $this->get(route('admin.expenses.index', ['filter' => ['expense_category_id' => [$category->id]]]))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('tiles.0.value', '₺100.00')
             ->where('tiles.2.value', '1')
         );
@@ -140,7 +140,7 @@ it('counts missing receipts in a tile', function (): void {
     Expense::factory()->count(2)->create(['receipt_path' => null, 'currency' => 'TRY']);
 
     $this->get(route('admin.expenses.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('tiles.3.label', 'Missing receipts')
             ->where('tiles.3.value', '2')
         );
@@ -148,7 +148,7 @@ it('counts missing receipts in a tile', function (): void {
 
 it('reports tiles safely when nothing matches', function (): void {
     $this->get(route('admin.expenses.index', ['search' => 'nothing-matches-this']))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->has('rows.data', 0)
             ->where('tiles.2.value', '0')
         );
@@ -159,7 +159,7 @@ it('notes when more than one currency is in play', function (): void {
     Expense::factory()->create(['amount' => 50, 'currency' => 'USD']);
 
     $this->get(route('admin.expenses.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('tiles.0.caption', 'plus 1 other currency')
         );
 });
@@ -168,7 +168,7 @@ it('renders recurring and deductible flags', function (): void {
     Expense::factory()->recurring()->taxDeductible()->create();
 
     $this->get(route('admin.expenses.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('rows.data.0.cells.is_recurring.raw', true)
             ->where('rows.data.0.cells.is_tax_deductible.raw', true)
         );
@@ -180,13 +180,13 @@ it('filters expenses by recurring and deductible', function (): void {
     Expense::factory()->create();
 
     $this->get(route('admin.expenses.index', ['filter' => ['is_recurring' => '1']]))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 1));
 
     $this->get(route('admin.expenses.index', ['filter' => ['is_tax_deductible' => '1']]))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 1));
 
     $this->get(route('admin.expenses.index', ['filter' => ['is_recurring' => '0']]))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 2));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 2));
 });
 
 it('filters expenses by receipt', function (): void {
@@ -194,7 +194,7 @@ it('filters expenses by receipt', function (): void {
     Expense::factory()->create(['receipt_path' => null]);
 
     $this->get(route('admin.expenses.index', ['filter' => ['receipt_path' => 'yes']]))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 1));
 });
 
 it('shows a dash when an expense is not tied to a debt', function (): void {

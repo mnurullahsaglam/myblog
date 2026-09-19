@@ -40,7 +40,7 @@ it('formats invoice totals with the invoice currency', function (): void {
     Invoice::factory()->create(['total_amount' => 12000, 'currency' => 'EUR']);
 
     $this->get(route('admin.invoices.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('rows.data.0.cells.total_amount.display', '€12,000.00')
         );
 });
@@ -50,7 +50,7 @@ it('summarises invoices in tiles', function (): void {
     Invoice::factory()->create(['currency' => 'TRY', 'amount' => 2000, 'tax_rate' => 20, 'tax_amount' => 400, 'total_amount' => 2400]);
 
     $this->get(route('admin.invoices.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->has('tiles', 4)
             ->where('tiles.0.value', '₺3,600.00')
             ->where('tiles.1.value', '₺600.00')
@@ -155,7 +155,7 @@ it('lists summaries newest first with a human duration', function (): void {
     $newest = WakaTimeSummary::factory()->create(['date' => '2026-06-01', 'total_seconds' => 5400]);
 
     $this->get(route('admin.waka-time-summaries.index'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->component('Work/WakaTimeSummaries/Index')
             ->where('rows.data.0.id', $newest->id)
             ->where('rows.data.0.cells.duration.display', '1h 30m')
@@ -167,7 +167,7 @@ it('shows a summary with its entries', function (): void {
     WakaTimeSummaryEntry::factory()->count(3)->create(['waka_time_summary_id' => $summary->id]);
 
     $this->get(route('admin.waka-time-summaries.show', $summary))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->component('Work/WakaTimeSummaries/Show')
             ->where('summary.duration', '1h 0m')
             ->where('summary.entryCount', 3)
@@ -183,7 +183,7 @@ it('only shows entries belonging to that summary', function (): void {
     WakaTimeSummaryEntry::factory()->count(5)->create(['waka_time_summary_id' => $other->id]);
 
     $this->get(route('admin.waka-time-summaries.show', $summary))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 2));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 2));
 });
 
 it('filters summary entries by type', function (): void {
@@ -201,7 +201,7 @@ it('filters summary entries by type', function (): void {
         'wakaTimeSummary' => $summary,
         'filter' => ['type' => [WakaTimeSummaryEntry::TYPE_LANGUAGE]],
     ]))
-        ->assertInertia(fn (AssertableInertia $page) => $page->has('rows.data', 1));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->has('rows.data', 1));
 });
 
 it('exposes no write routes for summaries', function (string $name): void {

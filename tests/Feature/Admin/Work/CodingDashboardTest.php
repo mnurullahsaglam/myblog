@@ -32,7 +32,7 @@ function seedDay(string $date, int $seconds, array $entries = []): WakaTimeSumma
 
 it('renders every series the dashboard needs', function (): void {
     $this->get(route('admin.coding-dashboard'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->component('Work/CodingDashboard')
             ->where('data.range', '7')
             ->has('data.tiles')
@@ -49,13 +49,13 @@ it('renders every series the dashboard needs', function (): void {
 
 it('honours the range and falls back for an unknown one', function (): void {
     $this->get(route('admin.coding-dashboard', ['range' => '30']))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('data.range', '30')
             ->where('data.rangeLabel', 'Last 30 days')
         );
 
     $this->get(route('admin.coding-dashboard', ['range' => 'forever']))
-        ->assertInertia(fn (AssertableInertia $page) => $page->where('data.range', '7'));
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->where('data.range', '7'));
 });
 
 it('aggregates a language breakdown with durations and percentages', function (): void {
@@ -65,7 +65,7 @@ it('aggregates a language breakdown with durations and percentages', function ()
     ]);
 
     $this->get(route('admin.coding-dashboard'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('data.breakdowns.language.labels.0', 'PHP')
             ->where('data.breakdowns.language.data.0', 7200)
             ->where('data.breakdowns.language.durations.0', '2h 0m')
@@ -119,7 +119,7 @@ it('marks the peak day on the trend', function (): void {
     seedDay(now()->subDay()->toDateString(), 10800);
 
     $this->get(route('admin.coding-dashboard'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('data.trend.peak.value', '3h 0m')
         );
 });
@@ -130,7 +130,7 @@ it('splits weekday and weekend averages', function (): void {
     seedDay('2026-06-06', 1800);
 
     $this->get(route('admin.coding-dashboard', ['range' => 'all']))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('data.weekday.weekdayAverage', '2h 0m')
             ->where('data.weekday.weekendAverage', '30m')
             ->where('data.weekday.weekendIndexes', [5, 6])
@@ -140,7 +140,7 @@ it('splits weekday and weekend averages', function (): void {
 it('renders empty series rather than failing when there is no data', function (): void {
     $this->get(route('admin.coding-dashboard'))
         ->assertOk()
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('data.breakdowns.language.labels', [])
             ->where('data.trend.peak', null)
             ->where('data.syncedAt', null)
@@ -179,7 +179,7 @@ it('reports when the data was last synced', function (): void {
     seedDay(now()->toDateString(), 3600);
 
     $this->get(route('admin.coding-dashboard'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->where('data.syncedAt', fn (?string $value): bool => is_string($value) && $value !== '')
         );
 });

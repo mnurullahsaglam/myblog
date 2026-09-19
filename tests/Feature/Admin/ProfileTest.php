@@ -17,7 +17,7 @@ beforeEach(function (): void {
 it('renders the profile page', function (): void {
     $this->actingAs($this->admin)
         ->get(route('admin.profile'))
-        ->assertInertia(fn (AssertableInertia $page) => $page
+        ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page
             ->component('Profile')
             ->where('twoFactorEnabled', false)
             ->where('twoFactorPending', false)
