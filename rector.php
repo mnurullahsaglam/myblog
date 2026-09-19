@@ -19,6 +19,7 @@ return RectorConfig::configure()
     ->withPreparedSets(
         deadCode: true,
         codeQuality: true,
+        codingStyle: true,
     )
     ->withSets([
         LaravelSetList::LARAVEL_CODE_QUALITY,

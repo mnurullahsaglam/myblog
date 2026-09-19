@@ -47,8 +47,8 @@ class SyncWakaTime extends Command
 
         try {
             $summaries = $wakatime->fetchSummaries($start, $end);
-        } catch (Throwable $e) {
-            return $this->reportFailure($e);
+        } catch (Throwable $throwable) {
+            return $this->reportFailure($throwable);
         }
 
         $count = 0;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Enums\Currencies;
 use App\Support\Contracts\HasLabel;
 
-it('implements the application HasLabel contract, not Filament\'s', function (): void {
+it("implements the application HasLabel contract, not Filament's", function (): void {
     expect(Currencies::TRY)->toBeInstanceOf(HasLabel::class);
 
     $reflection = new ReflectionEnum(Currencies::class);

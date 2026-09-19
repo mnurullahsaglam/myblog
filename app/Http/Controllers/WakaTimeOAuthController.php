@@ -46,10 +46,10 @@ class WakaTimeOAuthController extends Controller
 
         try {
             $this->wakatime->exchangeCodeForToken($request->string('code')->toString());
-        } catch (Throwable $e) {
-            report($e);
+        } catch (Throwable $throwable) {
+            report($throwable);
 
-            return $this->back($panel, false, 'Failed to connect WakaTime: '.$e->getMessage());
+            return $this->back($panel, false, 'Failed to connect WakaTime: '.$throwable->getMessage());
         }
 
         return $this->back($panel, true, 'WakaTime connected successfully. Your daily sync is now active.');

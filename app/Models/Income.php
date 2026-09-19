@@ -95,16 +95,20 @@ class Income extends Model
         if ($this->relationLoaded('client') && $this->client) {
             return $this->client->title;
         }
+
         if ($this->relationLoaded('invoice') && $this->invoice) {
             return 'Invoice #'.$this->invoice->id;
         }
+
         if ($this->relationLoaded('debt') && $this->debt) {
             return 'Debt from '.$this->debt->creditor_name;
         }
+
         // Fallback: try to load relationships if not already loaded
         if ($this->client_id && ! $this->relationLoaded('client')) {
             return $this->client->title ?? 'Client';
         }
+
         if ($this->invoice_id && ! $this->relationLoaded('invoice')) {
             return 'Invoice #'.$this->invoice_id;
         }

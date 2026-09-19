@@ -138,8 +138,8 @@ class ExchangeRateService
 
             Log::info('Exchange rates fetched successfully', ['rates_count' => count($rates)]);
 
-        } catch (Exception $e) {
-            Log::error('Failed to fetch exchange rates: '.$e->getMessage());
+        } catch (Exception $exception) {
+            Log::error('Failed to fetch exchange rates: '.$exception->getMessage());
 
             // Return fallback rates
             return $this->getFallbackRates();
@@ -235,8 +235,8 @@ class ExchangeRateService
             $this->getAllRates();
 
             return true;
-        } catch (Exception $e) {
-            Log::error('Failed to refresh exchange rates: '.$e->getMessage());
+        } catch (Exception $exception) {
+            Log::error('Failed to refresh exchange rates: '.$exception->getMessage());
 
             return false;
         }

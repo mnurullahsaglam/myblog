@@ -71,8 +71,8 @@ class GitHubService
 
             return false;
 
-        } catch (Exception $e) {
-            Log::error('GitHub API error: '.$e->getMessage(), [
+        } catch (Exception $exception) {
+            Log::error('GitHub API error: '.$exception->getMessage(), [
                 'task_id' => $task->id,
             ]);
 
@@ -162,8 +162,8 @@ class GitHubService
 
             return null;
 
-        } catch (Exception $e) {
-            Log::error('GitHub API error: '.$e->getMessage(), [
+        } catch (Exception $exception) {
+            Log::error('GitHub API error: '.$exception->getMessage(), [
                 'task_id' => $task->id,
             ]);
 
@@ -201,8 +201,8 @@ class GitHubService
 
             return false;
 
-        } catch (Exception $e) {
-            Log::error('GitHub API error: '.$e->getMessage());
+        } catch (Exception $exception) {
+            Log::error('GitHub API error: '.$exception->getMessage());
 
             return false;
         }
@@ -238,8 +238,8 @@ class GitHubService
 
             return false;
 
-        } catch (Exception $e) {
-            Log::error('GitHub API error: '.$e->getMessage());
+        } catch (Exception $exception) {
+            Log::error('GitHub API error: '.$exception->getMessage());
 
             return false;
         }
@@ -266,8 +266,8 @@ class GitHubService
 
             return $response->successful();
 
-        } catch (Exception $e) {
-            Log::error('GitHub API error: '.$e->getMessage());
+        } catch (Exception $exception) {
+            Log::error('GitHub API error: '.$exception->getMessage());
 
             return false;
         }
@@ -295,8 +295,8 @@ class GitHubService
 
             return null;
 
-        } catch (Exception $e) {
-            Log::error('GitHub API error: '.$e->getMessage());
+        } catch (Exception $exception) {
+            Log::error('GitHub API error: '.$exception->getMessage());
 
             return null;
         }

@@ -196,8 +196,8 @@ class TaskBoardController extends Controller
             resolve(GitHubService::class)->updateIssue($task)
                 ? $this->notifier->success('Synced to GitHub')
                 : $this->notifier->danger('GitHub rejected the update');
-        } catch (Throwable $exception) {
-            $this->notifier->danger('Could not sync to GitHub', $exception->getMessage());
+        } catch (Throwable $throwable) {
+            $this->notifier->danger('Could not sync to GitHub', $throwable->getMessage());
         }
 
         return to_route('admin.tasks.board');

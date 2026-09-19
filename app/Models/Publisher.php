@@ -6,7 +6,6 @@ namespace App\Models;
 
 use App\Traits\DefaultSlugOptions;
 use App\Traits\SlugAsRouteKeyName;
-use Database\Factories\PublisherFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -17,8 +16,10 @@ use Spatie\Sluggable\HasSlug;
  */
 class Publisher extends Model
 {
-    /** @use HasFactory<PublisherFactory> */
-    use DefaultSlugOptions, HasFactory, HasSlug, SlugAsRouteKeyName;
+    use DefaultSlugOptions;
+    use HasFactory;
+    use HasSlug;
+    use SlugAsRouteKeyName;
 
     /**
      * @return HasMany<Book, $this>

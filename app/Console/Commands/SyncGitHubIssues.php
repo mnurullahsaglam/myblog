@@ -119,8 +119,8 @@ class SyncGitHubIssues extends Command
 
             $this->info("   ✅ Synced {$syncedCount} new issues, updated {$updatedCount} existing issues");
 
-        } catch (Exception $e) {
-            $this->error("   ❌ Failed to sync {$repository->full_name}: {$e->getMessage()}");
+        } catch (Exception $exception) {
+            $this->error("   ❌ Failed to sync {$repository->full_name}: {$exception->getMessage()}");
         }
     }
 

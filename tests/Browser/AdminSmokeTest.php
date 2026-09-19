@@ -27,6 +27,7 @@ beforeEach(function (): void {
 
     $github = Mockery::mock(GitHubService::class);
     $github->shouldIgnoreMissing();
+
     app()->instance(GitHubService::class, $github);
 
     $exchange = Mockery::mock(ExchangeRateService::class);

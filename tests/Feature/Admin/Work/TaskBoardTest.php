@@ -16,6 +16,7 @@ beforeEach(function (): void {
 
     $this->github = Mockery::mock(GitHubService::class);
     $this->github->shouldIgnoreMissing();
+
     app()->instance(GitHubService::class, $this->github);
 });
 

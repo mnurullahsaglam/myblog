@@ -35,8 +35,8 @@ class TaskObserver
         // Sync to GitHub in the background
         try {
             $this->githubService->updateIssue($task);
-        } catch (Exception $e) {
-            Log::error('Failed to sync task to GitHub: '.$e->getMessage(), [
+        } catch (Exception $exception) {
+            Log::error('Failed to sync task to GitHub: '.$exception->getMessage(), [
                 'task_id' => $task->id,
                 'github_issue_number' => $task->github_issue_number,
             ]);
