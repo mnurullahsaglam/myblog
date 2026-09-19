@@ -23,9 +23,8 @@ it('gives every accent a complete eleven-stop ramp', function (string $name): vo
     $ramp = AccentRamps::all()[$name];
 
     expect(array_map(strval(...), array_keys($ramp)))
-        ->toBe(['50', '100', '200', '300', '400', '500', '600', '700', '800', '900', '950']);
-
-    expect($ramp)->each->toMatch('/^#[0-9A-F]{6}$/');
+        ->toBe(['50', '100', '200', '300', '400', '500', '600', '700', '800', '900', '950'])
+        ->and($ramp)->each->toMatch('/^#[0-9A-F]{6}$/');
 })->with(['khaki', 'amber', 'orange', 'rose', 'emerald', 'sky', 'indigo', 'violet', 'zinc']);
 
 it('knows which accents exist', function (): void {

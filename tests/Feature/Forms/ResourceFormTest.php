@@ -89,8 +89,8 @@ it('excludes placeholder fields from the value map', function (): void {
 it('renders placeholder values separately', function (): void {
     $post = Post::factory()->create();
 
-    expect((new FixturePostForm)->placeholders($post))->toHaveKey('created_at');
-    expect((new FixturePostForm)->placeholders($post)['created_at'])->toBeString()->not->toBeEmpty();
+    expect((new FixturePostForm)->placeholders($post))->toHaveKey('created_at')
+        ->and((new FixturePostForm)->placeholders($post)['created_at'])->toBeString()->not->toBeEmpty();
 });
 
 it('returns no placeholders for a new record', function (): void {

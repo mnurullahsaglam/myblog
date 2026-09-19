@@ -106,8 +106,8 @@ it('buckets everything past the limit into Other', function (): void {
     $result = wakaTimeAggregator()->publicBreakdownSeconds(WakaTimeSummaryEntry::TYPE_LANGUAGE);
 
     expect($result)->toHaveCount(9)
-        ->toHaveKey('Other');
-    expect($result['Other'])->toBe(1000);
+        ->toHaveKey('Other')
+        ->and($result['Other'])->toBe(1000);
 });
 
 it('returns an empty breakdown when there is no data', function (): void {

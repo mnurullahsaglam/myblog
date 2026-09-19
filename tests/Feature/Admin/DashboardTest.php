@@ -112,9 +112,9 @@ it('summarises work', function (): void {
             $tiles = collect($page->toArray()['props']['work'])->keyBy('label');
 
             expect($tiles['Open tasks']['value'])->toBe('2')
-                ->and($tiles['Open tasks']['caption'])->toBe('1 in progress');
-            expect($tiles['Clients']['value'])->toBe(number_format(Client::count()));
-            expect($tiles['Repositories']['value'])->toBe('1');
+                ->and($tiles['Open tasks']['caption'])->toBe('1 in progress')
+                ->and($tiles['Clients']['value'])->toBe(number_format(Client::count()))
+                ->and($tiles['Repositories']['value'])->toBe('1');
         });
 });
 

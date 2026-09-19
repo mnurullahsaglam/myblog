@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Work;
 
+use App\Actions\Work\CreateTask;
+use App\Actions\Work\DeleteTask;
+use App\Actions\Work\MoveTask;
+use App\Actions\Work\SyncTaskToGitHub;
+use App\Actions\Work\UpdateTask;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\MoveTaskRequest;
 use App\Http\Requests\Admin\TaskRequest;
 use App\Models\Project;
 use App\Models\Repository;
 use App\Models\Task;
-use App\Services\GitHubService;
 use App\Support\AdminNotifier;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -32,7 +35,14 @@ class TaskBoardController extends Controller
         ['key' => 'completed', 'label' => 'Completed', 'color' => 'success'],
     ];
 
-    public function __construct(private readonly AdminNotifier $notifier) {}
+    public function __construct(
+        private readonly AdminNotifier $notifier,
+        private readonly CreateTask $createTask,
+        private readonly UpdateTask $updateTask,
+        private readonly DeleteTask $deleteTask,
+        private readonly MoveTask $moveTask,
+        private readonly SyncTaskToGitHub $syncTaskToGitHub,
+    ) {}
 
     public function index(Request $request): Response
     {
@@ -130,36 +140,14 @@ class TaskBoardController extends Controller
         /** @var array{status: string, position: int} $data */
         $data = $request->validated();
 
-        DB::transaction(function () use ($task, $data): void {
-            $task->updateQuietly(['sort_order' => null]);
-
-            /** @var Collection<int, Task> $siblings */
-            $siblings = Task::query()
-                ->where('status', $data['status'])
-                ->whereKeyNot($task->getKey())
-                ->orderBy('sort_order')
-                ->get();
-
-            $ordered = $siblings->values();
-            $ordered->splice(min($data['position'], $ordered->count()), 0, [$task]);
-
-            foreach ($ordered as $index => $sibling) {
-                if ($sibling->is($task)) {
-                    $task->update(['status' => $data['status'], 'sort_order' => $index + 1]);
-
-                    continue;
-                }
-
-                $sibling->updateQuietly(['sort_order' => $index + 1]);
-            }
-        });
+        $this->moveTask->handle($task, $data['status'], $data['position']);
 
         return back();
     }
 
     public function update(TaskRequest $request, Task $task): RedirectResponse
     {
-        $task->update($request->validated());
+        $this->updateTask->handle($task, $request->validated());
 
         $this->notifier->success('Task updated');
 
@@ -168,7 +156,7 @@ class TaskBoardController extends Controller
 
     public function store(TaskRequest $request): RedirectResponse
     {
-        Task::create($request->validated());
+        $this->createTask->handle($request->validated());
 
         $this->notifier->success('Task created');
 
@@ -177,7 +165,7 @@ class TaskBoardController extends Controller
 
     public function destroy(Task $task): RedirectResponse
     {
-        $task->delete();
+        $this->deleteTask->handle($task);
 
         $this->notifier->success('Task deleted');
 
@@ -186,12 +174,12 @@ class TaskBoardController extends Controller
 
     public function syncToGitHub(Task $task): RedirectResponse
     {
-        throw_unless($task->is_github_issue, AccessDeniedHttpException::class, 'This task is not linked to a GitHub issue.');
-
         try {
-            resolve(GitHubService::class)->updateIssue($task)
+            $this->syncTaskToGitHub->handle($task)
                 ? $this->notifier->success('Synced to GitHub')
                 : $this->notifier->danger('GitHub rejected the update');
+        } catch (AccessDeniedHttpException $exception) {
+            throw $exception;
         } catch (Throwable $throwable) {
             $this->notifier->danger('Could not sync to GitHub', $throwable->getMessage());
         }

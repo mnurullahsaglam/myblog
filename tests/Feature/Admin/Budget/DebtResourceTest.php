@@ -196,8 +196,8 @@ it('creates one expense for the payment, not two', function (): void {
 
     $expenses = Expense::where('debt_id', $debt->id)->get();
 
-    expect($expenses)->toHaveCount(1);
-    expect((float) $expenses->first()->amount)->toBe(200.0)
+    expect($expenses)->toHaveCount(1)
+        ->and((float) $expenses->first()->amount)->toBe(200.0)
         ->and($expenses->first()->currency->value)->toBe('USD');
 });
 

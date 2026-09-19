@@ -9,7 +9,7 @@ use App\Models\Post;
 it('deletes the record', function (): void {
     $post = Post::factory()->create();
 
-    app(DeleteRecord::class)->handle($post);
+    resolve(DeleteRecord::class)->handle($post);
 
     expect(Post::whereKey($post->getKey())->exists())->toBeFalse();
 });
@@ -18,7 +18,7 @@ it('leaves other records alone', function (): void {
     $doomed = Post::factory()->create();
     $survivor = Post::factory()->create();
 
-    app(DeleteRecord::class)->handle($doomed);
+    resolve(DeleteRecord::class)->handle($doomed);
 
     expect(Post::whereKey($survivor->getKey())->exists())->toBeTrue();
 });
@@ -33,7 +33,7 @@ it('leaves the category pivot rows behind, which is the current behaviour', func
     $post = Post::factory()->create();
     $post->categories()->sync(Category::factory()->count(2)->create()->modelKeys());
 
-    app(DeleteRecord::class)->handle($post);
+    resolve(DeleteRecord::class)->handle($post);
 
     expect(DB::table('categoriables')->where('categoriable_id', $post->getKey())->count())->toBe(2);
 });

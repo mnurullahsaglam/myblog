@@ -13,6 +13,6 @@ final class BookController extends Controller
     {
         $books = Book::with('writer')->paginate(12);
 
-        return view('pages.books.index', compact('books'));
+        return view('pages.books.index', ['books' => $books]);
     }
 }

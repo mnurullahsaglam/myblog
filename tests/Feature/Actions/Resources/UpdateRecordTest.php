@@ -10,7 +10,7 @@ use Illuminate\Database\QueryException;
 it('applies the partitioned attributes to an existing record', function (): void {
     $post = Post::factory()->create(['title' => 'Before']);
 
-    $updated = app(UpdateRecord::class)->handle($post, [
+    $updated = resolve(UpdateRecord::class)->handle($post, [
         'attributes' => ['title' => 'After'],
         'relations' => [],
     ]);
@@ -25,7 +25,7 @@ it('replaces the relation set rather than appending to it', function (): void {
 
     $replacement = Category::factory()->count(3)->create();
 
-    app(UpdateRecord::class)->handle($post, [
+    resolve(UpdateRecord::class)->handle($post, [
         'attributes' => [],
         'relations' => ['categories' => $replacement->modelKeys()],
     ]);
@@ -38,7 +38,7 @@ it('detaches every relation when given an empty list', function (): void {
     $post = Post::factory()->create();
     $post->categories()->sync(Category::factory()->count(2)->create()->modelKeys());
 
-    app(UpdateRecord::class)->handle($post, [
+    resolve(UpdateRecord::class)->handle($post, [
         'attributes' => [],
         'relations' => ['categories' => []],
     ]);
@@ -51,7 +51,7 @@ it('leaves relations alone when the partition names none', function (): void {
     $categories = Category::factory()->count(2)->create();
     $post->categories()->sync($categories->modelKeys());
 
-    app(UpdateRecord::class)->handle($post, [
+    resolve(UpdateRecord::class)->handle($post, [
         'attributes' => ['title' => 'Renamed'],
         'relations' => [],
     ]);
@@ -62,10 +62,9 @@ it('leaves relations alone when the partition names none', function (): void {
 it('leaves the record untouched when the update is rejected', function (): void {
     $post = Post::factory()->create(['title' => 'Original']);
 
-    expect(fn () => app(UpdateRecord::class)->handle($post, [
+    expect(fn () => resolve(UpdateRecord::class)->handle($post, [
         'attributes' => ['title' => 'Renamed', 'content' => null],
         'relations' => [],
-    ]))->toThrow(QueryException::class);
-
-    expect($post->fresh()->title)->toBe('Original');
+    ]))->toThrow(QueryException::class)
+        ->and($post->fresh()->title)->toBe('Original');
 });
