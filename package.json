@@ -3,7 +3,11 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "dev": "vite"
+    "dev": "vite",
+    "lint": "eslint resources/js --fix",
+    "lint:check": "eslint resources/js",
+    "format": "prettier --write resources/js resources/css",
+    "format:check": "prettier --check resources/js resources/css"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.2",
