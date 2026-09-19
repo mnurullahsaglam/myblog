@@ -1,0 +1,81 @@
+# Changelog
+
+All notable changes to this project are documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.3.0] - 2026-09-19
+
+Tooling, static analysis and an action-class layer.
+
+### Added
+
+- Rector with the deadCode, codeQuality, codingStyle, typeDeclarations,
+  privatization and earlyReturn sets, plus the Laravel and Pest sets. CI runs it
+  as a dry run; a dirty result fails the build and a human applies the fix.
+- ESLint 9 flat config and Prettier for the Vue frontend, with Tailwind class
+  sorting.
+- A Husky pre-commit hook running Pint, ESLint and Prettier on staged files.
+  The slow gates stay in CI, because a hook people bypass checks nothing.
+- Architecture tests: Pest's php, security and laravel presets, plus project
+  rules covering action shape, controller boundaries, debug helpers and strict
+  types.
+- Type coverage enforced at 100%.
+- Thirteen action classes under `app/Actions`, each with its own test file.
+- Script harness on `composer.json` and `package.json`: `lint`, `lint:check`,
+  `rector`, `rector:fix`, `types:check`, `type-coverage`, `mutate`, `test`,
+  `ci:check`, `format`, `format:check`.
+- Seven application environment variables now declared in `.env.example`.
+
+### Changed
+
+- PHP 8.5 is required, in `composer.json` and in CI.
+- Upgraded to Pest 5 and PHPUnit 13, Laravel 13.32, Larastan 3.12, Boost 2.9,
+  Rector 2.6, Pint 1.32, spatie/laravel-sluggable 4 and Symfony 8 components.
+- PHPStan runs at `level: max` with bleedingEdge over `app/`, `bootstrap/`,
+  `config/`, `database/` and `routes/`, up from level 10 over `app/` alone.
+  There is no baseline and no `ignoreErrors`.
+- Write-path logic moved out of controllers into actions.
+  `AdminResourceController` and `TaskBoardController` both shrank accordingly.
+- `RunResourceExport` moved from `app/Jobs` to `App\Actions\Exports\ExportResource`;
+  it was always run inline and never dispatched.
+- Three CI workflows replaced by one with six parallel jobs sharing a composite
+  setup action.
+- Inline body comments removed throughout; every docblock kept, because the
+  array shapes in `app/Tables` and `app/Forms` are what PHPStan reads.
+- Test suite grew from 634 to 745 tests.
+
+### Fixed
+
+- Six public book routes were bound to empty controller methods and returned
+  blank 200 responses.
+- `DatabaseSeeder` dereferenced `Project::first()` without checking for null.
+- A failed relation sync during create left an orphaned record behind; create
+  and update are now transactional.
+- Bulk delete reported the number of ids submitted rather than the number of
+  rows actually deleted.
+- A failed receipt upload could store boolean `false` in `debts.receipt_path`.
+- Factories seeded currencies with `array_rand`, which is not a secure source
+  of randomness.
+- Six factories and six models were missing their Eloquent generics.
+- `AccentPicker.vue` had an unused binding and `FormField.vue` an untyped
+  `modelValue` prop.
+
+### Known gaps
+
+- Deleting a post leaves its `categoriables` pivot rows behind. The pivot table
+  has no cascade and no model hook removes them. Pinned by a test so the
+  behaviour is visible rather than silent.
+
+## [0.2.0] - 2026-09-19
+
+### Changed
+
+- Replaced the FilamentPHP admin panel with Inertia, Vue 3 and PrimeVue, in
+  styled mode with a custom khaki token preset. Removed Filament, its four
+  panel plugins, Laravel Pulse and Livewire. All thirteen resources ported.
+
+## [0.1.0] - 2026-09-18
+
+Initial tagged release of the Laravel blog and personal admin panel.
