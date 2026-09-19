@@ -21,6 +21,8 @@ return RectorConfig::configure()
         codeQuality: true,
         codingStyle: true,
         typeDeclarations: true,
+        privatization: true,
+        earlyReturn: true,
     )
     ->withSets([
         LaravelSetList::LARAVEL_CODE_QUALITY,
