@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\Resources\BulkDeleteRecords;
+use App\Actions\Resources\DeleteRecord;
+use App\Actions\Resources\StoreRecord;
+use App\Actions\Resources\UpdateRecord;
 use App\Forms\ResourceForm;
 use App\Http\Controllers\Controller;
 use App\Support\AdminNotifier;
 use App\Tables\ResourceTable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -26,7 +29,13 @@ use Inertia\Response;
  */
 abstract class AdminResourceController extends Controller
 {
-    public function __construct(protected readonly AdminNotifier $notifier) {}
+    public function __construct(
+        protected readonly AdminNotifier $notifier,
+        protected readonly StoreRecord $storeRecord,
+        protected readonly UpdateRecord $updateRecord,
+        protected readonly DeleteRecord $deleteRecord,
+        protected readonly BulkDeleteRecords $bulkDeleteRecords,
+    ) {}
 
     abstract protected function table(): ResourceTable;
 
@@ -129,10 +138,7 @@ abstract class AdminResourceController extends Controller
 
     public function store(): RedirectResponse
     {
-        $partitioned = $this->form()->partition($this->validated());
-
-        $record = $this->modelClass()::create($partitioned['attributes']);
-        $this->syncRelations($record, $partitioned['relations']);
+        $this->storeRecord->handle($this->modelClass(), $this->form()->partition($this->validated()));
 
         $this->notifier->success(Str::ucfirst($this->label()).' created');
 
@@ -167,11 +173,10 @@ abstract class AdminResourceController extends Controller
 
     public function update(Request $request): RedirectResponse
     {
-        $record = $this->resolveRecord($request);
-        $partitioned = $this->form()->partition($this->validated());
-
-        $record->update($partitioned['attributes']);
-        $this->syncRelations($record, $partitioned['relations']);
+        $this->updateRecord->handle(
+            $this->resolveRecord($request),
+            $this->form()->partition($this->validated()),
+        );
 
         $this->notifier->success(Str::ucfirst($this->label()).' updated');
 
@@ -180,7 +185,7 @@ abstract class AdminResourceController extends Controller
 
     public function destroy(Request $request): RedirectResponse
     {
-        $this->resolveRecord($request)->delete();
+        $this->deleteRecord->handle($this->resolveRecord($request));
 
         $this->notifier->success(Str::ucfirst($this->label()).' deleted');
 
@@ -198,11 +203,9 @@ abstract class AdminResourceController extends Controller
             'ids.*' => ['integer', 'exists:'.$table.',id'],
         ]);
 
-        $ids = $validated['ids'];
+        $deleted = $this->bulkDeleteRecords->handle($model, $validated['ids']);
 
-        $model::whereIn('id', $ids)->delete();
-
-        $this->notifier->success(count($ids).' '.Str::plural($this->label(), count($ids)).' deleted');
+        $this->notifier->success($deleted.' '.Str::plural($this->label(), $deleted).' deleted');
 
         return to_route($this->indexRoute());
     }
@@ -235,23 +238,5 @@ abstract class AdminResourceController extends Controller
         }
 
         return $data;
-    }
-
-    /**
-     * @param  array<string, array<int, mixed>>  $relations
-     */
-    protected function syncRelations(Model $record, array $relations): void
-    {
-        foreach ($relations as $key => $ids) {
-            if (! method_exists($record, $key)) {
-                continue;
-            }
-
-            $relation = $record->{$key}();
-
-            if ($relation instanceof BelongsToMany) {
-                $relation->sync($ids);
-            }
-        }
     }
 }
