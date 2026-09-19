@@ -6,13 +6,15 @@ namespace Database\Factories;
 
 use App\Models\Writer;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Date;
+use Override;
 
 /**
  * @extends Factory<Writer>
  */
 class WriterFactory extends Factory
 {
+    #[Override]
     protected $model = Writer::class;
 
     public function definition(): array
@@ -26,8 +28,8 @@ class WriterFactory extends Factory
             'birth_year' => fake()->randomNumber(),
             'death_year' => fake()->randomNumber(),
             'image' => fake()->word(),
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
+            'created_at' => Date::now(),
+            'updated_at' => Date::now(),
         ];
     }
 }

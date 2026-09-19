@@ -21,7 +21,7 @@ use Illuminate\Support\Str;
  */
 abstract class ResourceTable
 {
-    private const MAX_PER_PAGE = 100;
+    private const int MAX_PER_PAGE = 100;
 
     /** @var class-string<Model> */
     protected string $model;
@@ -289,13 +289,7 @@ abstract class ResourceTable
             return true;
         }
 
-        foreach ($this->columns() as $candidate) {
-            if ($candidate->key === $column && $candidate->isSortable()) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($this->columns(), fn ($candidate) => $candidate->key === $column && $candidate->isSortable());
     }
 
     private function resolvePerPage(Request $request): int

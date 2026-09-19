@@ -8,9 +8,9 @@ use App\Models\Setting;
 
 final class Appearance
 {
-    public const SCHEMES = ['light', 'dark', 'system'];
+    public const array SCHEMES = ['light', 'dark', 'system'];
 
-    public const DEFAULT_SCHEME = 'system';
+    public const string DEFAULT_SCHEME = 'system';
 
     public static function accent(): string
     {

@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\RepositoryFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
+use Override;
 
 /**
  * @property int $id
@@ -25,19 +29,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $forks_count
  * @property int $issues_count
  * @property bool $is_active
- * @property \Illuminate\Support\Carbon|null $github_created_at
- * @property \Illuminate\Support\Carbon|null $github_updated_at
- * @property \Illuminate\Support\Carbon|null $last_synced_at
+ * @property Carbon|null $github_created_at
+ * @property Carbon|null $github_updated_at
+ * @property Carbon|null $last_synced_at
  * @property-read bool $is_public
  * @property-read bool $is_private
  * @property-read Project|null $project
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Task> $tasks
+ * @property-read Collection<int, Task> $tasks
  */
 class Repository extends Model
 {
-    /** @use HasFactory<\Database\Factories\RepositoryFactory> */
+    /** @use HasFactory<RepositoryFactory> */
     use HasFactory;
 
+    #[Override]
     protected $fillable = [
         'project_id',
         'name',
@@ -58,6 +63,7 @@ class Repository extends Model
         'last_synced_at',
     ];
 
+    #[Override]
     protected $casts = [
         'is_active' => 'boolean',
         'github_created_at' => 'datetime',
@@ -81,12 +87,12 @@ class Repository extends Model
         return $this->hasMany(Task::class);
     }
 
-    public function getIsPublicAttribute(): bool
+    protected function getIsPublicAttribute(): bool
     {
         return $this->visibility === 'public';
     }
 
-    public function getIsPrivateAttribute(): bool
+    protected function getIsPrivateAttribute(): bool
     {
         return $this->visibility === 'private';
     }

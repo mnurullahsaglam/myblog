@@ -6,6 +6,7 @@ use App\Models\Debt;
 use App\Models\Expense;
 use App\Models\User;
 use App\Services\ExchangeRateService;
+use App\Support\Navigation;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia;
@@ -170,8 +171,8 @@ it('records a full payment and settles the debt', function (): void {
 
     $debt->refresh();
 
-    expect((float) $debt->amount)->toBe(0.0);
-    expect($debt->status)->toBe('paid');
+    expect((float) $debt->amount)->toBe(0.0)
+        ->and($debt->status)->toBe('paid');
 });
 
 it('records a partial payment and reduces the balance', function (): void {
@@ -184,8 +185,8 @@ it('records a partial payment and reduces the balance', function (): void {
 
     $debt->refresh();
 
-    expect((float) $debt->amount)->toBe(600.0);
-    expect($debt->status)->toBe('pending');
+    expect((float) $debt->amount)->toBe(600.0)
+        ->and($debt->status)->toBe('pending');
 });
 
 it('creates one expense for the payment, not two', function (): void {
@@ -201,8 +202,8 @@ it('creates one expense for the payment, not two', function (): void {
     // The observer also reacts to the status flip; the controller creates the
     // expense first so the observer's guard finds it.
     expect($expenses)->toHaveCount(1);
-    expect((float) $expenses->first()->amount)->toBe(200.0);
-    expect($expenses->first()->currency->value)->toBe('USD');
+    expect((float) $expenses->first()->amount)->toBe(200.0)
+        ->and($expenses->first()->currency->value)->toBe('USD');
 });
 
 it('stores a payment receipt', function (): void {
@@ -227,8 +228,8 @@ it('rejects a payment larger than the debt', function (): void {
         ->post(route('admin.debts.pay', $debt), ['payment_amount' => 500.00, 'payment_description' => 'Too much'])
         ->assertSessionHasErrors('payment_amount');
 
-    expect((float) $debt->fresh()->amount)->toBe(100.0);
-    expect(Expense::where('debt_id', $debt->id)->exists())->toBeFalse();
+    expect((float) $debt->fresh()->amount)->toBe(100.0)
+        ->and(Expense::where('debt_id', $debt->id)->exists())->toBeFalse();
 });
 
 it('rejects a zero payment', function (): void {
@@ -261,7 +262,7 @@ it('reports the remaining balance after a partial payment', function (): void {
 });
 
 it('lists debts in the budget cluster', function (): void {
-    $budget = collect(App\Support\Navigation::clusters())->firstWhere('label', 'Budget');
+    $budget = collect(Navigation::clusters())->firstWhere('label', 'Budget');
 
     expect(collect($budget['items'])->pluck('route'))->toContain('admin.debts.index');
 });

@@ -6,6 +6,7 @@ use App\Http\Middleware\HandleInertiaRequests;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Inertia\Testing\AssertableInertia;
+use PHPUnit\Framework\AssertionFailedError;
 
 beforeEach(function (): void {
     config(['app.admin_email' => 'admin@example.test']);
@@ -14,7 +15,7 @@ beforeEach(function (): void {
 
 function inertiaVersion(): string
 {
-    return (string) app(HandleInertiaRequests::class)->version(request());
+    return (string) resolve(HandleInertiaRequests::class)->version(request());
 }
 
 it('renders an inertia page with props', function (): void {
@@ -35,7 +36,7 @@ it('fails loudly when a page component file is missing', function (): void {
 
     expect(fn () => $this->get('/__inertia-missing')
         ->assertInertia(fn (AssertableInertia $page) => $page->component('NoSuchPage')))
-        ->toThrow(PHPUnit\Framework\AssertionFailedError::class);
+        ->toThrow(AssertionFailedError::class);
 });
 
 it('does not evaluate a closure prop excluded from a partial reload', function (): void {

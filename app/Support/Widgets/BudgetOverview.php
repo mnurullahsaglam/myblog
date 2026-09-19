@@ -15,7 +15,7 @@ use Throwable;
 
 final class BudgetOverview
 {
-    private const BASE_CURRENCY = 'TRY';
+    private const string BASE_CURRENCY = 'TRY';
 
     /**
      * @return array<int, array{label: string, value: string, caption: string|null, icon: string|null}>
@@ -97,7 +97,7 @@ final class BudgetOverview
     private static function convert(float $amount, string $from): float
     {
         try {
-            return app(ExchangeRateService::class)->convert($amount, $from, self::BASE_CURRENCY);
+            return resolve(ExchangeRateService::class)->convert($amount, $from, self::BASE_CURRENCY);
         } catch (Throwable) {
             return 0.0;
         }

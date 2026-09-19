@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\User;
+use App\Support\Navigation;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia;
@@ -236,8 +237,8 @@ it('bulk deletes posts', function (): void {
     $this->delete(route('admin.posts.bulk-destroy'), ['ids' => $posts->pluck('id')->all()])
         ->assertRedirect(route('admin.posts.index'));
 
-    expect(Post::count())->toBe(1);
-    expect(Post::first()->id)->toBe($keep->id);
+    expect(Post::count())->toBe(1)
+        ->and(Post::first()->id)->toBe($keep->id);
 });
 
 it('rejects a bulk delete of unknown ids', function (): void {
@@ -259,7 +260,7 @@ it('flashes a notification after creating', function (): void {
 });
 
 it('appears in the navigation', function (): void {
-    $blog = collect(App\Support\Navigation::clusters())->firstWhere('label', 'Blog');
+    $blog = collect(Navigation::clusters())->firstWhere('label', 'Blog');
 
     expect($blog['items'])->toContain([
         'label' => 'Posts',

@@ -97,7 +97,7 @@ trait AggregatesWakaTimeData
         }
 
         $top = array_slice($totals, 0, $limit, true);
-        $top['Other'] = (int) array_sum(array_slice($totals, $limit, null, true));
+        $top['Other'] = array_sum(array_slice($totals, $limit, null, true));
 
         return $top;
     }

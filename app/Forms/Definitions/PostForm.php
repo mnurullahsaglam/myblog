@@ -7,9 +7,11 @@ namespace App\Forms\Definitions;
 use App\Forms\Field;
 use App\Forms\ResourceForm;
 use App\Models\Category;
+use Override;
 
 final class PostForm extends ResourceForm
 {
+    #[Override]
     protected int $columns = 1;
 
     protected function fields(): array

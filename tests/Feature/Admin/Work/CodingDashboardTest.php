@@ -6,6 +6,7 @@ use App\Models\Repository;
 use App\Models\User;
 use App\Models\WakaTimeSummary;
 use App\Models\WakaTimeSummaryEntry;
+use App\Support\Navigation;
 use Inertia\Testing\AssertableInertia;
 
 beforeEach(function (): void {
@@ -81,8 +82,8 @@ it('reports total time and daily average as durations', function (): void {
         ->assertInertia(function (AssertableInertia $page): void {
             $tiles = collect($page->toArray()['props']['data']['tiles'])->keyBy('label');
 
-            expect($tiles['Total coding time']['value'])->toBe('3h 0m');
-            expect($tiles['Daily average']['value'])->toBe('1h 30m');
+            expect($tiles['Total coding time']['value'])->toBe('3h 0m')
+                ->and($tiles['Daily average']['value'])->toBe('1h 30m');
         });
 });
 
@@ -108,8 +109,8 @@ it('counts active repositories and their commits', function (): void {
         ->assertInertia(function (AssertableInertia $page): void {
             $tiles = collect($page->toArray()['props']['data']['tiles'])->keyBy('label');
 
-            expect($tiles['Active repositories']['value'])->toBe('2');
-            expect($tiles['Active repositories']['caption'])->toContain('1,384 commits');
+            expect($tiles['Active repositories']['value'])->toBe('2')
+                ->and($tiles['Active repositories']['caption'])->toContain('1,384 commits');
         });
 });
 
@@ -168,9 +169,9 @@ it('shows the AI tile when wakatime reported spend', function (): void {
         ->assertInertia(function (AssertableInertia $page): void {
             $tiles = collect($page->toArray()['props']['data']['tiles'])->keyBy('label');
 
-            expect($tiles)->toHaveKey('AI spend');
-            expect($tiles['AI spend']['value'])->toBe('$4.20');
-            expect($tiles['AI spend']['caption'])->toBe('120 prompts');
+            expect($tiles)->toHaveKey('AI spend')
+                ->and($tiles['AI spend']['value'])->toBe('$4.20')
+                ->and($tiles['AI spend']['caption'])->toBe('120 prompts');
         });
 });
 
@@ -184,7 +185,7 @@ it('reports when the data was last synced', function (): void {
 });
 
 it('appears in the work cluster', function (): void {
-    $work = collect(App\Support\Navigation::clusters())->firstWhere('label', 'Work');
+    $work = collect(Navigation::clusters())->firstWhere('label', 'Work');
 
     expect(collect($work['items'])->pluck('route'))->toContain('admin.coding-dashboard');
 });

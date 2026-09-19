@@ -63,7 +63,7 @@ class AdminNotifier
             return null;
         }
 
-        $store = app('session')->driver();
+        $store = resolve('session')->driver();
 
         return $store instanceof Store && $store->isStarted() ? $store : null;
     }

@@ -7,9 +7,11 @@ namespace App\Forms\Definitions;
 use App\Enums\Currencies;
 use App\Forms\Field;
 use App\Forms\ResourceForm;
+use Override;
 
 final class InvoiceForm extends ResourceForm
 {
+    #[Override]
     protected int $columns = 2;
 
     protected function fields(): array

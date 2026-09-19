@@ -57,7 +57,7 @@ class WakaTimeOAuthController extends Controller
 
     private function back(string $url, bool $success, string $message): RedirectResponse
     {
-        $notifier = app(AdminNotifier::class);
+        $notifier = resolve(AdminNotifier::class);
         $title = $success ? 'WakaTime connected' : 'WakaTime connection failed';
 
         $success

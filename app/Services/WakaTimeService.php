@@ -8,28 +8,29 @@ use App\Models\Setting;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Http;
 use RuntimeException;
 use Throwable;
 
 class WakaTimeService
 {
-    private const BASE_URL = 'https://api.wakatime.com/api/v1';
+    private const string BASE_URL = 'https://api.wakatime.com/api/v1';
 
-    private const AUTHORIZE_URL = 'https://wakatime.com/oauth/authorize';
+    private const string AUTHORIZE_URL = 'https://wakatime.com/oauth/authorize';
 
-    private const TOKEN_URL = 'https://wakatime.com/oauth/token';
+    private const string TOKEN_URL = 'https://wakatime.com/oauth/token';
 
-    private const SETTING_GROUP = 'wakatime';
+    private const string SETTING_GROUP = 'wakatime';
 
     /** Scope required to read summaries (incl. project/language/editor/os/category breakdowns). */
     public const SCOPE = 'read_summaries';
 
-    private string $appId;
+    private readonly string $appId;
 
-    private string $appSecret;
+    private readonly string $appSecret;
 
-    private string $redirectUri;
+    private readonly string $redirectUri;
 
     public function __construct()
     {
@@ -79,9 +80,7 @@ class WakaTimeService
      */
     public function getValidAccessToken(): string
     {
-        if (! $this->isConnected()) {
-            throw new RuntimeException('WakaTime is not connected. Visit the admin panel and click "Connect WakaTime".');
-        }
+        throw_unless($this->isConnected(), RuntimeException::class, 'WakaTime is not connected. Visit the admin panel and click "Connect WakaTime".');
 
         $expiresAt = $this->getExpiresAt();
 
@@ -99,9 +98,7 @@ class WakaTimeService
     {
         $refreshToken = $this->decrypt($this->setting('refresh_token'));
 
-        if ($refreshToken === '') {
-            throw new RuntimeException('No WakaTime refresh token stored. Reconnect required.');
-        }
+        throw_if($refreshToken === '', RuntimeException::class, 'No WakaTime refresh token stored. Reconnect required.');
 
         $response = Http::asForm()
             ->acceptJson()
@@ -146,7 +143,7 @@ class WakaTimeService
         }
 
         /** @var array<int, array<string, mixed>> $days */
-        $days = array_values(array_filter($data, 'is_array'));
+        $days = array_values(array_filter($data, is_array(...)));
 
         return $days;
     }
@@ -193,7 +190,7 @@ class WakaTimeService
         $expiresInRaw = $payload['expires_in'] ?? null;
 
         $expiresAt = match (true) {
-            is_string($expiresAtRaw) || is_int($expiresAtRaw) => Carbon::parse($expiresAtRaw),
+            is_string($expiresAtRaw) || is_int($expiresAtRaw) => Date::parse($expiresAtRaw),
             is_numeric($expiresInRaw) => now()->addSeconds((int) $expiresInRaw),
             default => null,
         };
@@ -207,7 +204,7 @@ class WakaTimeService
     {
         $value = $this->setting('expires_at');
 
-        return ($value !== null && $value !== '') ? Carbon::parse($value) : null;
+        return ($value !== null && $value !== '') ? Date::parse($value) : null;
     }
 
     /**

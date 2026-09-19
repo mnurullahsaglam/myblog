@@ -7,12 +7,14 @@ namespace Database\Factories;
 use App\Models\Project;
 use App\Models\Task;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Override;
 
 /**
  * @extends Factory<Task>
  */
 class TaskFactory extends Factory
 {
+    #[Override]
     protected $model = Task::class;
 
     /**

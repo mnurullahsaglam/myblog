@@ -6,12 +6,14 @@ namespace Database\Factories;
 
 use App\Models\Setting;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Override;
 
 /**
  * @extends Factory<Setting>
  */
 class SettingFactory extends Factory
 {
+    #[Override]
     protected $model = Setting::class;
 
     /**

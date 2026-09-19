@@ -8,13 +8,17 @@ use App\Models\WakaTimeSummary;
 use App\Tables\Column;
 use App\Tables\Filter;
 use App\Tables\ResourceTable;
+use Override;
 
 final class WakaTimeSummaryTable extends ResourceTable
 {
+    #[Override]
     protected string $model = WakaTimeSummary::class;
 
+    #[Override]
     protected array $withCount = ['entries'];
 
+    #[Override]
     protected string $defaultSort = '-date';
 
     protected function columns(): array

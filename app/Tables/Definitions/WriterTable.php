@@ -8,13 +8,17 @@ use App\Models\Writer;
 use App\Tables\Column;
 use App\Tables\Filter;
 use App\Tables\ResourceTable;
+use Override;
 
 final class WriterTable extends ResourceTable
 {
+    #[Override]
     protected string $model = Writer::class;
 
+    #[Override]
     protected array $withCount = ['books'];
 
+    #[Override]
     protected string $defaultSort = 'name';
 
     protected function columns(): array

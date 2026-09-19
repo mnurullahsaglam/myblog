@@ -36,17 +36,14 @@ it('carries help text, a placeholder and a default', function (): void {
         ->placeholderText('#000000')
         ->default('#CCCCCC')
         ->schema();
-
-    expect($schema['help'])->toBe('Hex code, e.g. #FF0000');
-    expect($schema['placeholder'])->toBe('#000000');
-    expect($schema['default'])->toBe('#CCCCCC');
+    expect($schema)->toMatchArray(['help' => 'Hex code, e.g. #FF0000', 'placeholder' => '#000000', 'default' => '#CCCCCC']);
 });
 
 it('builds enum options from HasLabel', function (): void {
     $options = Field::enum('currency', Currencies::class)->schema()['options'];
 
-    expect($options)->toContain(['value' => 'TRY', 'label' => 'Turkish Lira']);
-    expect($options)->toHaveCount(count(Currencies::cases()));
+    expect($options)->toContain(['value' => 'TRY', 'label' => 'Turkish Lira'])
+        ->toHaveSameSize(Currencies::cases());
 });
 
 it('builds select options from a map', function (): void {
@@ -73,14 +70,14 @@ it('builds many-to-many options from the named model', function (): void {
 
     $schema = Field::multiRelationship('categories', Category::class, 'name')->schema();
 
-    expect($schema['type'])->toBe('multiselect');
-    expect($schema['options'])->toContain(['value' => $rust->id, 'label' => 'Rust']);
+    expect($schema['type'])->toBe('multiselect')
+        ->and($schema['options'])->toContain(['value' => $rust->id, 'label' => 'Rust']);
 });
 
 it('marks many-to-many fields for syncing', function (): void {
-    expect(Field::multiRelationship('categories', Category::class, 'name')->isRelationSync())->toBeTrue();
-    expect(Field::relationship('client_id', 'client', 'title')->isRelationSync())->toBeFalse();
-    expect(Field::text('title')->isRelationSync())->toBeFalse();
+    expect(Field::multiRelationship('categories', Category::class, 'name')->isRelationSync())->toBeTrue()
+        ->and(Field::relationship('client_id', 'client', 'title')->isRelationSync())->toBeFalse()
+        ->and(Field::text('title')->isRelationSync())->toBeFalse();
 });
 
 it('carries textarea rows in meta', function (): void {
@@ -110,5 +107,5 @@ it('offers a read-only code field for slugs', function (): void {
 });
 
 it('returns no options for an unknown relationship', function (): void {
-    expect(Field::relationship('unicorn_id', 'unicorn', 'name')->schema()['options'])->toBe([]);
+    expect(Field::relationship('unicorn_id', 'unicorn', 'name')->schema()['options'])->toBeEmpty();
 });

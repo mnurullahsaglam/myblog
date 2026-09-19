@@ -65,8 +65,8 @@ it('keeps groups isolated from each other', function (): void {
     Setting::set('appearance', 'accent', 'khaki');
     Setting::set('branding', 'accent', 'logo.png');
 
-    expect(Setting::get('appearance', 'accent'))->toBe('khaki');
-    expect(Setting::get('branding', 'accent'))->toBe('logo.png');
+    expect(Setting::get('appearance', 'accent'))->toBe('khaki')
+        ->and(Setting::get('branding', 'accent'))->toBe('logo.png');
 });
 
 it('returns a group as a name-keyed collection', function (): void {

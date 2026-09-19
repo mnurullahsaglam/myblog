@@ -23,11 +23,9 @@ class GitHubService
      */
     private function token(): string
     {
-        $token = config('services.github.token') ?? config('services.github.personal_access_token');
+        $token = config('services.github.token', config('services.github.personal_access_token'));
 
-        if (! is_string($token) || $token === '') {
-            throw new Exception('GitHub token is required. Set GITHUB_TOKEN environment variable.');
-        }
+        throw_if(! is_string($token) || $token === '', Exception::class, 'GitHub token is required. Set GITHUB_TOKEN environment variable.');
 
         return $token;
     }

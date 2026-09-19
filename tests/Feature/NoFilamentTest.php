@@ -26,11 +26,11 @@ it('no longer requires the removed packages', function (string $package): void {
 ]);
 
 it('has none of the removed packages installed at all', function (string $package): void {
-    expect(is_dir(base_path('vendor/'.$package)))->toBeFalse($package.' is still in vendor/');
+    expect(base_path('vendor/'.$package))->not->toBeDirectory();
 })->with(['filament', 'livewire', 'laravel/pulse', 'relaticle']);
 
 it('no longer has the Filament directories', function (string $path): void {
-    expect(is_dir(base_path($path)))->toBeFalse($path.' still exists');
+    expect(base_path($path))->not->toBeDirectory();
 })->with([
     'app/Filament',
     'app/Providers/Filament',
@@ -43,7 +43,5 @@ it('does not register a Filament panel provider', function (): void {
     /** @var array<int, class-string> $providers */
     $providers = require base_path('bootstrap/providers.php');
 
-    foreach ($providers as $provider) {
-        expect($provider)->not->toContain('Filament');
-    }
+    expect($providers)->each->not->toContain('Filament');
 });

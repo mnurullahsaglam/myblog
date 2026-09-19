@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\Currencies;
+use Database\Factories\IncomeFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
+use Override;
 
 /**
  * @property int $id
@@ -18,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property numeric-string $amount
  * @property Currencies $currency
  * @property string $description
- * @property \Illuminate\Support\Carbon $date
+ * @property Carbon $date
  * @property-read Client|null $client
  * @property-read IncomeCategory|null $incomeCategory
  * @property-read Invoice|null $invoice
@@ -28,9 +31,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Income extends Model
 {
-    /** @use HasFactory<\Database\Factories\IncomeFactory> */
+    /** @use HasFactory<IncomeFactory> */
     use HasFactory;
 
+    #[Override]
     protected $fillable = [
         'client_id',
         'income_category_id',
@@ -42,6 +46,7 @@ class Income extends Model
         'date',
     ];
 
+    #[Override]
     protected $casts = [
         'amount' => 'decimal:2',
         'currency' => Currencies::class,
@@ -80,12 +85,12 @@ class Income extends Model
         return $this->belongsTo(Debt::class);
     }
 
-    public function getFormattedAmountAttribute(): string
+    protected function getFormattedAmountAttribute(): string
     {
         return $this->currency->getSymbol().' '.number_format((float) $this->amount, 2);
     }
 
-    public function getSourceAttribute(): string
+    protected function getSourceAttribute(): string
     {
         if ($this->relationLoaded('client') && $this->client) {
             return $this->client->title;

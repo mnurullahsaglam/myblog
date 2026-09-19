@@ -11,8 +11,8 @@ it('ships the nine accents from the spec', function (): void {
 });
 
 it('defaults to khaki', function (): void {
-    expect(AccentRamps::DEFAULT)->toBe('khaki');
-    expect(AccentRamps::all()['khaki']['400'])->toBe('#C9BE6E');
+    expect(AccentRamps::DEFAULT)->toBe('khaki')
+        ->and(AccentRamps::all()['khaki']['400'])->toBe('#C9BE6E');
 });
 
 it('never puts white text on an accent fill', function (): void {
@@ -23,17 +23,15 @@ it('gives every accent a complete eleven-stop ramp', function (string $name): vo
     $ramp = AccentRamps::all()[$name];
 
     // PHP coerces the numeric string keys to integers.
-    expect(array_map('strval', array_keys($ramp)))
+    expect(array_map(strval(...), array_keys($ramp)))
         ->toBe(['50', '100', '200', '300', '400', '500', '600', '700', '800', '900', '950']);
 
-    foreach ($ramp as $hex) {
-        expect($hex)->toMatch('/^#[0-9A-F]{6}$/');
-    }
+    expect($ramp)->each->toMatch('/^#[0-9A-F]{6}$/');
 })->with(['khaki', 'amber', 'orange', 'rose', 'emerald', 'sky', 'indigo', 'violet', 'zinc']);
 
 it('knows which accents exist', function (): void {
-    expect(AccentRamps::has('khaki'))->toBeTrue();
-    expect(AccentRamps::has('chartreuse'))->toBeFalse();
+    expect(AccentRamps::has('khaki'))->toBeTrue()
+        ->and(AccentRamps::has('chartreuse'))->toBeFalse();
 });
 
 it('renders css custom properties for an accent', function (): void {
@@ -47,8 +45,8 @@ it('renders css custom properties for an accent', function (): void {
 });
 
 it('falls back to khaki for an unknown accent', function (): void {
-    expect(AccentRamps::cssVariables('chartreuse'))->toBe(AccentRamps::cssVariables('khaki'));
-    expect(AccentRamps::swatch('chartreuse'))->toBe(AccentRamps::swatch('khaki'));
+    expect(AccentRamps::cssVariables('chartreuse'))->toBe(AccentRamps::cssVariables('khaki'))
+        ->and(AccentRamps::swatch('chartreuse'))->toBe(AccentRamps::swatch('khaki'));
 });
 
 it('exposes a swatch for the settings picker', function (): void {

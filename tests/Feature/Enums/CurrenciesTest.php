@@ -14,6 +14,6 @@ it('implements the application HasLabel contract, not Filament\'s', function ():
 });
 
 it('returns a label and symbol for every case', function (Currencies $currency): void {
-    expect($currency->getLabel())->toBeString()->not->toBeEmpty();
-    expect($currency->getSymbol())->toBeString()->not->toBeEmpty();
+    expect($currency->getLabel())->toBeString()->not->toBeEmpty()
+        ->and($currency->getSymbol())->toBeString()->not->toBeEmpty();
 })->with(Currencies::cases());

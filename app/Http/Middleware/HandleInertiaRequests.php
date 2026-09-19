@@ -10,9 +10,11 @@ use App\Support\Theme\Appearance;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\DatabaseNotification;
 use Inertia\Middleware;
+use Override;
 
 class HandleInertiaRequests extends Middleware
 {
+    #[Override]
     protected $rootView = 'app';
 
     public function version(Request $request): ?string
@@ -38,9 +40,9 @@ class HandleInertiaRequests extends Middleware
                 ],
             ],
 
-            'navigation' => fn (): array => Navigation::clusters(),
+            'navigation' => Navigation::clusters(...),
 
-            'appearance' => fn (): array => Appearance::toArray(),
+            'appearance' => Appearance::toArray(...),
 
             'flash' => [
                 'notification' => fn (): mixed => $request->session()->get(AdminNotifier::SESSION_KEY),

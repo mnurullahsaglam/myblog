@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Publisher;
 use App\Models\User;
 use App\Models\Writer;
+use App\Support\Navigation;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia;
@@ -142,10 +143,10 @@ it('lists books with writer and publisher names', function (): void {
             // dot path, so read the cells array directly.
             $cells = $page->toArray()['props']['rows']['data'][0]['cells'];
 
-            expect($cells['name']['display'])->toBe('The Dispossessed');
-            expect($cells['writer.name']['display'])->toBe('Le Guin');
-            expect($cells['publisher.name']['display'])->toBe('Ace');
-            expect($cells['publication_date']['display'])->toBe('1974');
+            expect($cells['name']['display'])->toBe('The Dispossessed')
+                ->and($cells['writer.name']['display'])->toBe('Le Guin')
+                ->and($cells['publisher.name']['display'])->toBe('Ace')
+                ->and($cells['publication_date']['display'])->toBe('1974');
         });
 });
 
@@ -185,8 +186,8 @@ it('creates a book with categories', function (): void {
 
     $book = Book::where('slug', 'a-new-book')->firstOrFail();
 
-    expect($book->page_count)->toBe(320);
-    expect($book->categories)->toHaveCount(2);
+    expect($book->page_count)->toBe(320)
+        ->and($book->categories)->toHaveCount(2);
 });
 
 it('requires a writer and a publisher', function (): void {
@@ -209,8 +210,8 @@ it('rejects a writer that does not exist', function (): void {
 });
 
 it('does not clash with the public books routes', function (): void {
-    expect(route('admin.books.index'))->toContain('/admin/books');
-    expect(route('books.index'))->not->toContain('/admin/');
+    expect(route('admin.books.index'))->toContain('/admin/books')
+        ->and(route('books.index'))->not->toContain('/admin/');
 });
 
 it('keeps the public book pages working', function (): void {
@@ -222,7 +223,7 @@ it('keeps the public book pages working', function (): void {
 // ---------------------------------------------------------------- Navigation
 
 it('lists the library cluster in navigation', function (): void {
-    $library = collect(App\Support\Navigation::clusters())->firstWhere('label', 'Library');
+    $library = collect(Navigation::clusters())->firstWhere('label', 'Library');
 
     expect(collect($library['items'])->pluck('route')->all())
         ->toContain('admin.books.index', 'admin.writers.index', 'admin.publishers.index');

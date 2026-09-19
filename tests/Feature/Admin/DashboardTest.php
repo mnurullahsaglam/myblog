@@ -46,10 +46,10 @@ it('totals this month income and spending', function (): void {
         ->assertInertia(function (AssertableInertia $page): void {
             $tiles = collect($page->toArray()['props']['budget'])->keyBy('label');
 
-            expect($tiles['Income this month']['value'])->toBe('₺1,000.00');
-            expect($tiles['Spent this month']['value'])->toBe('₺400.00');
-            expect($tiles['Net']['value'])->toBe('₺600.00');
-            expect($tiles['Net']['caption'])->toBe('in the black');
+            expect($tiles['Income this month']['value'])->toBe('₺1,000.00')
+                ->and($tiles['Spent this month']['value'])->toBe('₺400.00')
+                ->and($tiles['Net']['value'])->toBe('₺600.00')
+                ->and($tiles['Net']['caption'])->toBe('in the black');
         });
 });
 
@@ -84,8 +84,8 @@ it('counts outstanding and overdue debts', function (): void {
         ->assertInertia(function (AssertableInertia $page): void {
             $tiles = collect($page->toArray()['props']['budget'])->keyBy('label');
 
-            expect($tiles['Outstanding debts']['value'])->toBe('2');
-            expect($tiles['Outstanding debts']['caption'])->toBe('1 overdue');
+            expect($tiles['Outstanding debts']['value'])->toBe('2')
+                ->and($tiles['Outstanding debts']['caption'])->toBe('1 overdue');
         });
 });
 
@@ -112,8 +112,8 @@ it('summarises work', function (): void {
         ->assertInertia(function (AssertableInertia $page): void {
             $tiles = collect($page->toArray()['props']['work'])->keyBy('label');
 
-            expect($tiles['Open tasks']['value'])->toBe('2');
-            expect($tiles['Open tasks']['caption'])->toBe('1 in progress');
+            expect($tiles['Open tasks']['value'])->toBe('2')
+                ->and($tiles['Open tasks']['caption'])->toBe('1 in progress');
             // Task -> Project -> Client, so factories create more than the two here.
             expect($tiles['Clients']['value'])->toBe(number_format(Client::count()));
             expect($tiles['Repositories']['value'])->toBe('1');
@@ -130,11 +130,11 @@ it('summarises the library', function (): void {
         ->assertInertia(function (AssertableInertia $page): void {
             $tiles = collect($page->toArray()['props']['library'])->keyBy('label');
 
-            expect($tiles['Books']['value'])->toBe('2');
-            expect($tiles['Writers']['value'])->toBe('2');
-            expect($tiles['Writers']['caption'])->toBe('1 with a book');
-            expect($tiles['Pages']['value'])->toBe('600');
-            expect($tiles['Pages']['caption'])->toBe('300 per book');
+            expect($tiles['Books']['value'])->toBe('2')
+                ->and($tiles['Writers']['value'])->toBe('2')
+                ->and($tiles['Writers']['caption'])->toBe('1 with a book')
+                ->and($tiles['Pages']['value'])->toBe('600')
+                ->and($tiles['Pages']['caption'])->toBe('300 per book');
         });
 });
 

@@ -6,9 +6,11 @@ namespace App\Forms\Definitions;
 
 use App\Forms\Field;
 use App\Forms\ResourceForm;
+use Override;
 
 final class WriterForm extends ResourceForm
 {
+    #[Override]
     protected int $columns = 2;
 
     protected function fields(): array

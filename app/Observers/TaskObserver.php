@@ -11,12 +11,7 @@ use Illuminate\Support\Facades\Log;
 
 class TaskObserver
 {
-    private GitHubService $githubService;
-
-    public function __construct(GitHubService $githubService)
-    {
-        $this->githubService = $githubService;
-    }
+    public function __construct(private readonly GitHubService $githubService) {}
 
     /**
      * Handle the Task "updated" event.
@@ -31,7 +26,7 @@ class TaskObserver
         // Check if relevant fields were changed
         $relevantFields = ['title', 'description', 'status'];
         $hasRelevantChanges = collect($relevantFields)
-            ->some(fn ($field) => $task->wasChanged($field));
+            ->contains(fn ($field) => $task->wasChanged($field));
 
         if (! $hasRelevantChanges) {
             return;

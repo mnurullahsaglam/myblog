@@ -8,12 +8,14 @@ use App\Enums\Currencies;
 use App\Models\Client;
 use App\Models\Invoice;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Override;
 
 /**
  * @extends Factory<Invoice>
  */
 class InvoiceFactory extends Factory
 {
+    #[Override]
     protected $model = Invoice::class;
 
     /**

@@ -9,13 +9,17 @@ use App\Tables\Column;
 use App\Tables\Filter;
 use App\Tables\ResourceTable;
 use Illuminate\Database\Eloquent\Builder;
+use Override;
 
 final class WakaTimeSummaryEntryTable extends ResourceTable
 {
+    #[Override]
     protected string $model = WakaTimeSummaryEntry::class;
 
+    #[Override]
     protected string $defaultSort = '-seconds';
 
+    #[Override]
     protected int $perPage = 50;
 
     public function __construct(private readonly int $summaryId) {}

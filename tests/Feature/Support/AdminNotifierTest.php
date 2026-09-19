@@ -10,13 +10,13 @@ use Illuminate\Support\Facades\Route;
 
 beforeEach(function (): void {
     Route::middleware('web')->get('/__notify/{variant}', function (string $variant): string {
-        app(AdminNotifier::class)->{$variant}('Saved', 'The record was saved.');
+        resolve(AdminNotifier::class)->{$variant}('Saved', 'The record was saved.');
 
         return 'ok';
     });
 
     Route::middleware('web')->get('/__notify-bare', function (): string {
-        app(AdminNotifier::class)->danger('Something broke');
+        resolve(AdminNotifier::class)->danger('Something broke');
 
         return 'ok';
     });
@@ -51,14 +51,14 @@ it('flashes an info notification', function (): void {
 it('logs instead of flashing when there is no session to flash into', function (): void {
     Log::spy();
 
-    (new AdminNotifier(forceLog: true))->info('Sync finished', '42 rows');
+    new AdminNotifier(forceLog: true)->info('Sync finished', '42 rows');
 
     Log::shouldHaveReceived('info')->once()->with('Sync finished', ['body' => '42 rows']);
     expect(session()->has(AdminNotifier::SESSION_KEY))->toBeFalse();
 });
 
 it('resolves from the container without forcing the log', function (): void {
-    expect(app(AdminNotifier::class))->toBeInstanceOf(AdminNotifier::class);
+    expect(resolve(AdminNotifier::class))->toBeInstanceOf(AdminNotifier::class);
 });
 
 it('stores an admin alert as a database notification', function (): void {
@@ -76,7 +76,7 @@ it('stores an admin alert as a database notification', function (): void {
 it('defaults an admin alert to the info variant', function (): void {
     $user = User::factory()->create();
 
-    expect((new AdminAlert('Heads up'))->toDatabase($user))->toBe([
+    expect(new AdminAlert('Heads up')->toDatabase($user))->toBe([
         'title' => 'Heads up',
         'body' => null,
         'variant' => 'info',
@@ -84,5 +84,5 @@ it('defaults an admin alert to the info variant', function (): void {
 });
 
 it('routes admin alerts to the database channel only', function (): void {
-    expect((new AdminAlert('x'))->via(User::factory()->create()))->toBe(['database']);
+    expect(new AdminAlert('x')->via(User::factory()->create()))->toBe(['database']);
 });

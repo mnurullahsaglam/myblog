@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Traits\CategoriableRelation;
 use App\Traits\SlugAsRouteKeyName;
+use Database\Factories\PostFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Sluggable\HasSlug;
@@ -13,7 +14,7 @@ use Spatie\Sluggable\SlugOptions;
 
 class Post extends Model
 {
-    /** @use HasFactory<\Database\Factories\PostFactory> */
+    /** @use HasFactory<PostFactory> */
     use CategoriableRelation, HasFactory, HasSlug, SlugAsRouteKeyName;
 
     /**

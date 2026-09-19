@@ -31,20 +31,18 @@ it('writes a csv with the expected headings and rows', function (): void {
     ]);
     $book->categories()->attach(Category::factory()->create(['name' => 'Utopian']));
 
-    $path = (new RunResourceExport('books'))->handle();
+    $path = new RunResourceExport('books')->handle();
 
     Storage::disk('local')->assertExists($path);
 
     $lines = array_values(array_filter(explode("\n", Storage::disk('local')->get($path))));
-
-    expect($lines[0])->toContain('name', 'writer', 'publisher', 'categories');
-    expect($lines[1])->toContain('The Dispossessed', 'Le Guin', 'Ace', 'Utopian');
+    expect($lines)->sequence(fn ($e) => $e->toContain('name', 'writer', 'publisher', 'categories'), fn ($e) => $e->toContain('The Dispossessed', 'Le Guin', 'Ace', 'Utopian'));
 });
 
 it('exports every row, not just the first page', function (): void {
     Publisher::factory()->count(120)->create();
 
-    $path = (new RunResourceExport('publishers'))->handle();
+    $path = new RunResourceExport('publishers')->handle();
 
     $lines = array_values(array_filter(explode("\n", Storage::disk('local')->get($path))));
 
@@ -55,11 +53,11 @@ it('includes counts in the writers export', function (): void {
     $writer = Writer::factory()->create(['name' => 'Prolific']);
     Book::factory()->count(3)->create(['writer_id' => $writer->id]);
 
-    $path = (new RunResourceExport('writers'))->handle();
+    $path = new RunResourceExport('writers')->handle();
     $csv = Storage::disk('local')->get($path);
 
-    expect($csv)->toContain('Prolific');
-    expect(str_contains($csv, ',3'))->toBeTrue();
+    expect($csv)->toContain('Prolific')
+        ->and(str_contains($csv, ',3'))->toBeTrue();
 });
 
 it('notifies with a signed download link when the export finishes', function (): void {
@@ -69,8 +67,8 @@ it('notifies with a signed download link when the export finishes', function ():
 
     $notification = session('flash.notification');
 
-    expect($notification)->toHaveKey('variant', 'success');
-    expect($notification['body'])->toContain('signature=');
+    expect($notification)->toHaveKey('variant', 'success')
+        ->and($notification['body'])->toContain('signature=');
 });
 
 it('refuses an unsigned download', function (): void {

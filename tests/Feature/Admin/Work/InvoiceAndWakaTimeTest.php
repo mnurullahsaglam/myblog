@@ -7,6 +7,7 @@ use App\Models\Invoice;
 use App\Models\User;
 use App\Models\WakaTimeSummary;
 use App\Models\WakaTimeSummaryEntry;
+use App\Support\Navigation;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -30,8 +31,8 @@ it('lists invoices with the client title', function (): void {
 
             $cells = $page->toArray()['props']['rows']['data'][0]['cells'];
 
-            expect($cells['invoice_number']['display'])->toBe('INV-001');
-            expect($cells['client.title']['display'])->toBe('Acme');
+            expect($cells['invoice_number']['display'])->toBe('INV-001')
+                ->and($cells['client.title']['display'])->toBe('Acme');
         });
 });
 
@@ -76,8 +77,8 @@ it('recomputes tax and total on the server', function (): void {
 
     $invoice = Invoice::where('invoice_number', 'INV-100')->firstOrFail();
 
-    expect($invoice->tax_amount)->toBe(200);
-    expect($invoice->total_amount)->toBe(1200);
+    expect($invoice->tax_amount)->toBe(200)
+        ->and($invoice->total_amount)->toBe(1200);
 });
 
 it('stores the invoice archive privately', function (): void {
@@ -126,8 +127,8 @@ it('requires an archive on create but not on update', function (): void {
 
     $invoice->refresh();
 
-    expect($invoice->invoice)->toBe('invoices/existing.zip');
-    expect($invoice->total_amount)->toBe(220);
+    expect($invoice->invoice)->toBe('invoices/existing.zip')
+        ->and($invoice->total_amount)->toBe(220);
 });
 
 it('rejects a duplicate invoice number and a non-zip upload', function (): void {
@@ -214,7 +215,7 @@ it('exposes no write routes for summaries', function (string $name): void {
 ]);
 
 it('lists invoices and summaries in the work cluster', function (): void {
-    $work = collect(App\Support\Navigation::clusters())->firstWhere('label', 'Work');
+    $work = collect(Navigation::clusters())->firstWhere('label', 'Work');
 
     expect(collect($work['items'])->pluck('route'))
         ->toContain('admin.invoices.index', 'admin.waka-time-summaries.index');

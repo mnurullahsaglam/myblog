@@ -2,13 +2,16 @@
 
 declare(strict_types=1);
 
+use App\Enums\Currencies;
 use App\Forms\Field;
 use App\Forms\ResourceForm;
 use App\Models\Category;
+use App\Models\Expense;
 use App\Models\Post;
 
 final class FixturePostForm extends ResourceForm
 {
+    #[Override]
     protected int $columns = 1;
 
     protected function fields(): array
@@ -37,9 +40,8 @@ final class FixtureDefaultsForm extends ResourceForm
 it('emits a schema with every field', function (): void {
     $schema = (new FixturePostForm)->schema();
 
-    expect($schema['columns'])->toBe(1);
-    expect(array_column($schema['fields'], 'key'))
-        ->toBe(['title', 'slug', 'content', 'categories', 'created_at']);
+    expect($schema['columns'])->toBe(1)
+        ->and(array_column($schema['fields'], 'key'))->toBe(['title', 'slug', 'content', 'categories', 'created_at']);
 });
 
 it('returns empty values for a new record', function (): void {
@@ -93,12 +95,12 @@ it('renders placeholder values separately', function (): void {
 });
 
 it('returns no placeholders for a new record', function (): void {
-    expect((new FixturePostForm)->placeholders(null))->toBe([]);
+    expect((new FixturePostForm)->placeholders(null))->toBeEmpty();
 });
 
 it('lists the relation keys that need syncing', function (): void {
-    expect((new FixturePostForm)->relationKeys())->toBe(['categories']);
-    expect((new FixtureDefaultsForm)->relationKeys())->toBe([]);
+    expect((new FixturePostForm)->relationKeys())->toBe(['categories'])
+        ->and((new FixtureDefaultsForm)->relationKeys())->toBeEmpty();
 });
 
 it('partitions input into attributes and relations', function (): void {
@@ -107,16 +109,12 @@ it('partitions input into attributes and relations', function (): void {
         'content' => '# Hi',
         'categories' => [1, 2],
     ]);
-
-    expect($result['attributes'])->toBe(['title' => 'Learning Rust', 'content' => '# Hi']);
-    expect($result['relations'])->toBe(['categories' => [1, 2]]);
+    expect($result)->toMatchArray(['attributes' => ['title' => 'Learning Rust', 'content' => '# Hi'], 'relations' => ['categories' => [1, 2]]]);
 });
 
 it('treats an absent relation as untouched', function (): void {
     $result = (new FixturePostForm)->partition(['title' => 'Learning Rust']);
-
-    expect($result['attributes'])->toBe(['title' => 'Learning Rust']);
-    expect($result['relations'])->toBe([]);
+    expect($result)->toMatchArray(['attributes' => ['title' => 'Learning Rust'], 'relations' => []]);
 });
 
 it('treats a null relation as an empty sync', function (): void {
@@ -130,11 +128,11 @@ it('unwraps a backed enum into its value', function (): void {
     {
         protected function fields(): array
         {
-            return [Field::enum('currency', App\Enums\Currencies::class)];
+            return [Field::enum('currency', Currencies::class)];
         }
     };
 
-    $expense = App\Models\Expense::factory()->create(['currency' => 'USD']);
+    $expense = Expense::factory()->create(['currency' => 'USD']);
 
     expect($form->values($expense)['currency'])->toBe('USD');
 });

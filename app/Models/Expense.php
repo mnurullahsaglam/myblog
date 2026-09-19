@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\Currencies;
+use Database\Factories\ExpenseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
+use Override;
 
 /**
  * @property int $id
@@ -17,7 +20,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Currencies $currency
  * @property string $description
  * @property string|null $receipt_path
- * @property \Illuminate\Support\Carbon $date
+ * @property Carbon $date
  * @property-read ExpenseCategory|null $expenseCategory
  * @property-read Debt|null $debt
  * @property-read string $formatted_amount
@@ -26,9 +29,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Expense extends Model
 {
-    /** @use HasFactory<\Database\Factories\ExpenseFactory> */
+    /** @use HasFactory<ExpenseFactory> */
     use HasFactory;
 
+    #[Override]
     protected $fillable = [
         'expense_category_id',
         'debt_id',
@@ -39,6 +43,7 @@ class Expense extends Model
         'date',
     ];
 
+    #[Override]
     protected $casts = [
         'amount' => 'decimal:2',
         'currency' => Currencies::class,
@@ -63,17 +68,17 @@ class Expense extends Model
         return $this->belongsTo(Debt::class);
     }
 
-    public function getFormattedAmountAttribute(): string
+    protected function getFormattedAmountAttribute(): string
     {
         return $this->currency->getSymbol().' '.number_format((float) $this->amount, 2);
     }
 
-    public function getHasReceiptAttribute(): bool
+    protected function getHasReceiptAttribute(): bool
     {
         return ! is_null($this->receipt_path);
     }
 
-    public function getReceiptUrlAttribute(): ?string
+    protected function getReceiptUrlAttribute(): ?string
     {
         return $this->receipt_path ? asset('storage/'.$this->receipt_path) : null;
     }

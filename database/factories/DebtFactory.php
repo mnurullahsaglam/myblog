@@ -7,12 +7,14 @@ namespace Database\Factories;
 use App\Enums\Currencies;
 use App\Models\Debt;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Override;
 
 /**
  * @extends Factory<Debt>
  */
 class DebtFactory extends Factory
 {
+    #[Override]
     protected $model = Debt::class;
 
     /**

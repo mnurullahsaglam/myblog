@@ -10,6 +10,7 @@ use App\Models\Income;
 use App\Models\IncomeCategory;
 use App\Models\Invoice;
 use App\Models\User;
+use App\Support\Navigation;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia;
@@ -223,8 +224,8 @@ it('creates an expense with a receipt and flags', function (): void {
 
     $expense = Expense::where('description', 'Office chair')->firstOrFail();
 
-    expect($expense->is_tax_deductible)->toBeTrue();
-    expect($expense->receipt_path)->toStartWith('receipts/');
+    expect($expense->is_tax_deductible)->toBeTrue()
+        ->and($expense->receipt_path)->toStartWith('receipts/');
     Storage::disk('public')->assertExists($expense->receipt_path);
 });
 
@@ -235,7 +236,7 @@ it('requires the core expense fields', function (): void {
 });
 
 it('lists the budget cluster in navigation', function (): void {
-    $budget = collect(App\Support\Navigation::clusters())->firstWhere('label', 'Budget');
+    $budget = collect(Navigation::clusters())->firstWhere('label', 'Budget');
 
     expect(collect($budget['items'])->pluck('route')->all())
         ->toContain('admin.incomes.index', 'admin.expenses.index');

@@ -26,9 +26,9 @@ use Throwable;
  */
 final class GlobalSearch
 {
-    private const MINIMUM_TERM_LENGTH = 2;
+    private const int MINIMUM_TERM_LENGTH = 2;
 
-    private const PER_RESOURCE = 5;
+    private const int PER_RESOURCE = 5;
 
     /**
      * Group label => [table factory, route name for a single record].

@@ -12,9 +12,9 @@ use Illuminate\Support\Facades\Log;
 
 class ExchangeRateService
 {
-    private string $openExchangeApiKey;
+    private readonly string $openExchangeApiKey;
 
-    private string $metalsApiKey;
+    private readonly string $metalsApiKey;
 
     private string $baseCurrency = 'TRY';
 
@@ -34,7 +34,7 @@ class ExchangeRateService
      */
     public function getConvertedAmount(float $amount, string $fromCurrency, ?string $displayCurrency = null): array
     {
-        $displayCurrency = $displayCurrency ?? $this->baseCurrency;
+        $displayCurrency ??= $this->baseCurrency;
 
         if ($fromCurrency === $displayCurrency) {
             return [
@@ -106,9 +106,7 @@ class ExchangeRateService
      */
     public function getAllRates(): array
     {
-        return Cache::remember('exchange_rates', 3600, function () {
-            return $this->fetchRatesFromApi();
-        });
+        return Cache::remember('exchange_rates', 3600, fn () => $this->fetchRatesFromApi());
     }
 
     /**

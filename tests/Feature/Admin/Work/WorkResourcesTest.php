@@ -8,6 +8,7 @@ use App\Models\Repository;
 use App\Models\Task;
 use App\Models\User;
 use App\Services\GitHubService;
+use App\Support\Navigation;
 use Inertia\Testing\AssertableInertia;
 
 beforeEach(function (): void {
@@ -75,9 +76,9 @@ it('lists projects with their client and counts', function (): void {
 
             $cells = $page->toArray()['props']['rows']['data'][0]['cells'];
 
-            expect($cells['name']['display'])->toBe('Website');
-            expect($cells['client.title']['display'])->toBe('Acme');
-            expect($cells['tasks_count']['display'])->toBe('3');
+            expect($cells['name']['display'])->toBe('Website')
+                ->and($cells['client.title']['display'])->toBe('Acme')
+                ->and($cells['tasks_count']['display'])->toBe('3');
         });
 });
 
@@ -156,9 +157,9 @@ it('hides noisy repository columns by default', function (): void {
         ->assertInertia(function (AssertableInertia $page): void {
             $columns = collect($page->toArray()['props']['schema']['columns'])->keyBy('key');
 
-            expect($columns['last_synced_at']['hiddenByDefault'])->toBeTrue();
-            expect($columns['created_at']['hiddenByDefault'])->toBeTrue();
-            expect($columns['name']['hiddenByDefault'])->toBeFalse();
+            expect($columns['last_synced_at']['hiddenByDefault'])->toBeTrue()
+                ->and($columns['created_at']['hiddenByDefault'])->toBeTrue()
+                ->and($columns['name']['hiddenByDefault'])->toBeFalse();
         });
 });
 
@@ -246,7 +247,7 @@ it('rejects a github url that is not a url', function (): void {
 });
 
 it('lists the work cluster in navigation', function (): void {
-    $work = collect(App\Support\Navigation::clusters())->firstWhere('label', 'Work');
+    $work = collect(Navigation::clusters())->firstWhere('label', 'Work');
 
     expect(collect($work['items'])->pluck('route')->all())
         ->toContain('admin.clients.index', 'admin.projects.index', 'admin.repositories.index');

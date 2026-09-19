@@ -7,13 +7,17 @@ namespace App\Tables\Definitions;
 use App\Models\Category;
 use App\Tables\Column;
 use App\Tables\ResourceTable;
+use Override;
 
 final class CategoryTable extends ResourceTable
 {
+    #[Override]
     protected string $model = Category::class;
 
+    #[Override]
     protected array $withCount = ['posts', 'books'];
 
+    #[Override]
     protected string $defaultSort = 'name';
 
     protected function columns(): array

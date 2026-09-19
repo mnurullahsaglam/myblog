@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\WakaTimeSummaryEntryFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Override;
 
 /**
  * @property int $id
@@ -19,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class WakaTimeSummaryEntry extends Model
 {
-    /** @use HasFactory<\Database\Factories\WakaTimeSummaryEntryFactory> */
+    /** @use HasFactory<WakaTimeSummaryEntryFactory> */
     use HasFactory;
 
     public const TYPE_PROJECT = 'project';
@@ -32,6 +34,7 @@ class WakaTimeSummaryEntry extends Model
 
     public const TYPE_CATEGORY = 'category';
 
+    #[Override]
     protected $fillable = [
         'waka_time_summary_id',
         'type',

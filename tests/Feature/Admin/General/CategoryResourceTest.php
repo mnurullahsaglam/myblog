@@ -6,6 +6,7 @@ use App\Models\Book;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\User;
+use App\Support\Navigation;
 use Inertia\Testing\AssertableInertia;
 
 beforeEach(function (): void {
@@ -50,9 +51,9 @@ it('creates a standalone category with no parent', function (): void {
 
     $category = Category::where('slug', 'rust')->firstOrFail();
 
-    expect($category->name)->toBe('Rust');
-    expect($category->posts)->toHaveCount(0);
-    expect($category->books)->toHaveCount(0);
+    expect($category->name)->toBe('Rust')
+        ->and($category->posts)->toBeEmpty()
+        ->and($category->books)->toBeEmpty();
 });
 
 it('requires a name and a unique slug', function (): void {
@@ -79,8 +80,8 @@ it('deletes a category and detaches it from posts', function (): void {
 
     $this->delete(route('admin.categories.destroy', $category));
 
-    expect(Category::find($category->id))->toBeNull();
-    expect($post->fresh()->categories)->toHaveCount(0);
+    expect(Category::find($category->id))->toBeNull()
+        ->and($post->fresh()->categories)->toBeEmpty();
 });
 
 it('bulk deletes categories', function (): void {
@@ -92,7 +93,7 @@ it('bulk deletes categories', function (): void {
 });
 
 it('appears in the General cluster', function (): void {
-    $general = collect(App\Support\Navigation::clusters())->firstWhere('label', 'General');
+    $general = collect(Navigation::clusters())->firstWhere('label', 'General');
 
     expect(collect($general['items'])->pluck('route'))->toContain('admin.categories.index');
 });

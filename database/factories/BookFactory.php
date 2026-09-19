@@ -8,13 +8,15 @@ use App\Models\Book;
 use App\Models\Publisher;
 use App\Models\Writer;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Date;
+use Override;
 
 /**
  * @extends Factory<Book>
  */
 class BookFactory extends Factory
 {
+    #[Override]
     protected $model = Book::class;
 
     public function definition(): array
@@ -28,8 +30,8 @@ class BookFactory extends Factory
             'publication_location' => fake()->word(),
             'edition_number' => fake()->randomNumber(),
             'image' => fake()->word(),
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
+            'created_at' => Date::now(),
+            'updated_at' => Date::now(),
 
             'writer_id' => Writer::factory(),
             'publisher_id' => Publisher::factory(),

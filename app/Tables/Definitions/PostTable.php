@@ -8,13 +8,17 @@ use App\Models\Post;
 use App\Tables\Column;
 use App\Tables\Filter;
 use App\Tables\ResourceTable;
+use Override;
 
 final class PostTable extends ResourceTable
 {
+    #[Override]
     protected string $model = Post::class;
 
+    #[Override]
     protected array $withCount = ['categories'];
 
+    #[Override]
     protected string $defaultSort = '-created_at';
 
     protected function columns(): array

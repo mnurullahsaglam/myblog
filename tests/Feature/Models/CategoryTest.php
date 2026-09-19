@@ -12,8 +12,8 @@ it('attaches one category to many posts', function (): void {
 
     $category->posts()->attach($posts);
 
-    expect($category->posts)->toHaveCount(3);
-    expect($posts->first()->categories->pluck('name')->all())->toBe(['Rust']);
+    expect($category->posts)->toHaveCount(3)
+        ->and($posts->first()->categories->pluck('name')->all())->toBe(['Rust']);
 });
 
 it('shares one category across posts and books', function (): void {
@@ -24,10 +24,10 @@ it('shares one category across posts and books', function (): void {
     $post->categories()->attach($category);
     $book->categories()->attach($category);
 
-    expect($category->posts)->toHaveCount(1);
-    expect($category->books)->toHaveCount(1);
-    expect($post->categories->first()->is($category))->toBeTrue();
-    expect($book->categories->first()->is($category))->toBeTrue();
+    expect($category->posts)->toHaveCount(1)
+        ->and($category->books)->toHaveCount(1)
+        ->and($post->categories->first()->is($category))->toBeTrue()
+        ->and($book->categories->first()->is($category))->toBeTrue();
 });
 
 it('gives a post many categories', function (): void {
@@ -55,8 +55,8 @@ it('detaches a category from a post without deleting it', function (): void {
 
     $post->categories()->detach($category);
 
-    expect($post->fresh()->categories)->toHaveCount(0);
-    expect(Category::find($category->id))->not->toBeNull();
+    expect($post->fresh()->categories)->toBeEmpty()
+        ->and(Category::find($category->id))->not->toBeNull();
 });
 
 it('drops pivot rows when the category is deleted', function (): void {
@@ -66,7 +66,7 @@ it('drops pivot rows when the category is deleted', function (): void {
 
     $category->delete();
 
-    expect($post->fresh()->categories)->toHaveCount(0);
+    expect($post->fresh()->categories)->toBeEmpty();
 });
 
 it('generates a distinct slug for a duplicate name', function (): void {
@@ -79,7 +79,7 @@ it('generates a distinct slug for a duplicate name', function (): void {
 it('exists standalone with no attachments', function (): void {
     $category = Category::factory()->create(['name' => 'Orphan']);
 
-    expect($category->exists)->toBeTrue();
-    expect($category->posts)->toHaveCount(0);
-    expect($category->books)->toHaveCount(0);
+    expect($category->exists)->toBeTrue()
+        ->and($category->posts)->toBeEmpty()
+        ->and($category->books)->toBeEmpty();
 });

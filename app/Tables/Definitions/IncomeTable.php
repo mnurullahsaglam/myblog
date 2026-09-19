@@ -10,13 +10,17 @@ use App\Tables\Column;
 use App\Tables\Filter;
 use App\Tables\ResourceTable;
 use Illuminate\Database\Eloquent\Builder;
+use Override;
 
 final class IncomeTable extends ResourceTable
 {
+    #[Override]
     protected string $model = Income::class;
 
+    #[Override]
     protected array $with = ['client', 'invoice', 'debt', 'incomeCategory'];
 
+    #[Override]
     protected string $defaultSort = '-date';
 
     protected function columns(): array

@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\SettingFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Override;
 
 /**
  * @property string $group
@@ -16,9 +19,10 @@ use Illuminate\Support\Facades\Cache;
  */
 class Setting extends Model
 {
-    /** @use HasFactory<\Database\Factories\SettingFactory> */
+    /** @use HasFactory<SettingFactory> */
     use HasFactory;
 
+    #[Override]
     public $timestamps = false;
 
     public static function get(string $group, string $name, mixed $default = null): mixed
@@ -52,9 +56,9 @@ class Setting extends Model
      * Get all settings for a group
      */
     /**
-     * @return \Illuminate\Support\Collection<array-key, mixed>
+     * @return Collection<array-key, mixed>
      */
-    public static function getGroup(string $group): \Illuminate\Support\Collection
+    public static function getGroup(string $group): Collection
     {
         return static::where('group', $group)->pluck('value', 'name');
     }

@@ -8,6 +8,7 @@ use App\Models\ExpenseCategory;
 use App\Models\Post;
 use App\Models\Publisher;
 use App\Models\Repository;
+use App\Models\Writer;
 use App\Tables\Column;
 
 it('describes itself in the schema', function (): void {
@@ -38,17 +39,17 @@ it('honours an explicit label', function (): void {
 });
 
 it('right-aligns money and counts by default', function (): void {
-    expect(Column::money('amount', currency: 'TRY')->schema()['align'])->toBe('right');
-    expect(Column::count('books_count')->schema()['align'])->toBe('right');
-    expect(Column::text('title')->schema()['align'])->toBe('left');
-    expect(Column::text('title')->numeric()->schema()['align'])->toBe('right');
+    expect(Column::money('amount', currency: 'TRY')->schema()['align'])->toBe('right')
+        ->and(Column::count('books_count')->schema()['align'])->toBe('right')
+        ->and(Column::text('title')->schema()['align'])->toBe('left')
+        ->and(Column::text('title')->numeric()->schema()['align'])->toBe('right');
 });
 
 it('marks a toggleable column hidden by default', function (): void {
     $schema = Column::datetime('created_at')->toggleable(hiddenByDefault: true)->schema();
 
-    expect($schema['toggleable'])->toBeTrue();
-    expect($schema['hiddenByDefault'])->toBeTrue();
+    expect($schema['toggleable'])->toBeTrue()
+        ->and($schema['hiddenByDefault'])->toBeTrue();
 });
 
 it('resolves a plain text value', function (): void {
@@ -75,9 +76,7 @@ it('formats money from a currency held on another column', function (): void {
     $expense = Expense::factory()->create(['amount' => 1250.5, 'currency' => Currencies::TRY->value]);
 
     $resolved = Column::money('amount', currencyFrom: 'currency')->resolve($expense);
-
-    expect($resolved['display'])->toBe('₺1,250.50');
-    expect($resolved['raw'])->toBe(1250.5);
+    expect($resolved)->toMatchArray(['display' => '₺1,250.50', 'raw' => 1250.5]);
 });
 
 it('formats money with a fixed currency', function (): void {
@@ -92,9 +91,9 @@ it('truncates a long value and keeps the whole of it as a tooltip', function ():
 
     $resolved = Column::text('content')->limit(50)->tooltip()->resolve($post);
 
-    expect($resolved['display'])->toEndWith('...');
-    expect(mb_strlen($resolved['display']))->toBeLessThanOrEqual(53);
-    expect($resolved['tooltip'])->toBe($long);
+    expect($resolved['display'])->toEndWith('...')
+        ->and(mb_strlen($resolved['display']))->toBeLessThanOrEqual(53)
+        ->and($resolved['tooltip'])->toBe($long);
 });
 
 it('does not tooltip a short value', function (): void {
@@ -109,9 +108,7 @@ it('resolves a badge variant from a closure', function (): void {
     $resolved = Column::badge('visibility')
         ->color(fn (Repository $record): string => $record->visibility === 'public' ? 'success' : 'warning')
         ->resolve($repository);
-
-    expect($resolved['variant'])->toBe('success');
-    expect($resolved['display'])->toBe('public');
+    expect($resolved)->toMatchArray(['variant' => 'success', 'display' => 'public']);
 });
 
 it('resolves a badge variant from a static string', function (): void {
@@ -130,9 +127,7 @@ it('labels a HasLabel enum in a badge and keeps the raw value', function (): voi
     $expense = Expense::factory()->create(['currency' => 'USD']);
 
     $resolved = Column::badge('currency')->resolve($expense);
-
-    expect($resolved['display'])->toBe('US Dollar');
-    expect($resolved['raw'])->toBe('USD');
+    expect($resolved)->toMatchArray(['display' => 'US Dollar', 'raw' => 'USD']);
 });
 
 it('can show the short enum value instead, via state', function (): void {
@@ -150,9 +145,7 @@ it('formats a date and keeps the iso value', function (): void {
     $expense = Expense::factory()->create(['date' => '2026-03-14']);
 
     $resolved = Column::date('date')->resolve($expense);
-
-    expect($resolved['display'])->toBe('14 Mar 2026');
-    expect($resolved['raw'])->toBe('2026-03-14');
+    expect($resolved)->toMatchArray(['display' => '14 Mar 2026', 'raw' => '2026-03-14']);
 });
 
 it('formats a datetime', function (): void {
@@ -167,14 +160,14 @@ it('resolves an image to a public url with its meta', function (): void {
 
     $resolved = Column::image('receipt_path')->circular()->size(40)->resolve($expense);
 
-    expect($resolved['display'])->toContain('receipts/one.png');
-    expect($resolved['meta'])->toBe(['circular' => true, 'size' => 40]);
+    expect($resolved['display'])->toContain('receipts/one.png')
+        ->and($resolved['meta'])->toBe(['circular' => true, 'size' => 40]);
 });
 
 it('resolves an empty image to an empty string', function (): void {
     $expense = Expense::factory()->create(['receipt_path' => null]);
 
-    expect(Column::image('receipt_path')->resolve($expense)['display'])->toBe('');
+    expect(Column::image('receipt_path')->resolve($expense)['display'])->toBeEmpty();
 });
 
 it('resolves a boolean', function (): void {
@@ -182,9 +175,8 @@ it('resolves a boolean', function (): void {
     $inactive = Repository::factory()->create(['is_active' => false]);
 
     expect(Column::boolean('is_active')->resolve($active))
-        ->toMatchArray(['display' => 'Yes', 'raw' => true, 'variant' => 'success']);
-    expect(Column::boolean('is_active')->resolve($inactive))
-        ->toMatchArray(['display' => 'No', 'raw' => false, 'variant' => 'gray']);
+        ->toMatchArray(['display' => 'Yes', 'raw' => true, 'variant' => 'success'])
+        ->and(Column::boolean('is_active')->resolve($inactive))->toMatchArray(['display' => 'No', 'raw' => false, 'variant' => 'gray']);
 });
 
 it('formats a count with thousands separators', function (): void {
@@ -213,7 +205,7 @@ it('resolves a computed state closure', function (): void {
 });
 
 it('renders a bare number without separators', function (): void {
-    $writer = App\Models\Writer::factory()->create(['birth_year' => 1929]);
+    $writer = Writer::factory()->create(['birth_year' => 1929]);
 
     expect(Column::number('birth_year')->resolve($writer))
         ->toMatchArray(['display' => '1929', 'raw' => 1929]);
@@ -224,7 +216,7 @@ it('right-aligns a bare number', function (): void {
 });
 
 it('falls back to the default for a missing number', function (): void {
-    $writer = App\Models\Writer::factory()->create(['death_year' => null]);
+    $writer = Writer::factory()->create(['death_year' => null]);
 
     expect(Column::number('death_year')->default('—')->resolve($writer)['display'])->toBe('—');
 });

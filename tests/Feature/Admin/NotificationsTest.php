@@ -108,8 +108,8 @@ it('cannot touch another user notification', function (): void {
     $this->patch(route('admin.notifications.read', $id))->assertNotFound();
     $this->delete(route('admin.notifications.destroy', $id))->assertNotFound();
 
-    expect(DB::table('notifications')->where('id', $id)->value('read_at'))->toBeNull();
-    expect(DB::table('notifications')->where('id', $id)->exists())->toBeTrue();
+    expect(DB::table('notifications')->where('id', $id)->value('read_at'))->toBeNull()
+        ->and(DB::table('notifications')->where('id', $id)->exists())->toBeTrue();
 });
 
 it('caps the shared list but not the count', function (): void {

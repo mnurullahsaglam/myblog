@@ -13,10 +13,10 @@ it('creates an expense when a debt is marked paid', function (): void {
 
     $expense = Expense::where('debt_id', $debt->id)->first();
 
-    expect($expense)->not->toBeNull();
-    expect((float) $expense->amount)->toBe(1500.00);
-    expect($expense->currency->value)->toBe($debt->currency->value);
-    expect($expense->description)->toContain($debt->creditor_name);
+    expect($expense)->not->toBeNull()
+        ->and((float) $expense->amount)->toBe(1500.00)
+        ->and($expense->currency->value)->toBe($debt->currency->value)
+        ->and($expense->description)->toContain($debt->creditor_name);
 });
 
 it('does not create a second expense for an already-paid debt', function (): void {

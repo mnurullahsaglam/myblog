@@ -17,15 +17,9 @@ it('describes a relationship filter with its options', function (): void {
         ->label('Category')
         ->multiple()
         ->schema();
-
-    expect($schema['key'])->toBe('expense_category_id');
-    expect($schema['type'])->toBe('select');
-    expect($schema['label'])->toBe('Category');
-    expect($schema['multiple'])->toBeTrue();
-    expect($schema['options'])->toContain(
-        ['value' => $food->id, 'label' => 'Food'],
-        ['value' => $rent->id, 'label' => 'Rent'],
-    );
+    expect($schema)->toMatchArray(['key' => 'expense_category_id', 'type' => 'select', 'label' => 'Category'])
+        ->and($schema['multiple'])->toBeTrue()
+        ->and($schema['options'])->toContain(['value' => $food->id, 'label' => 'Food'], ['value' => $rent->id, 'label' => 'Rent']);
 });
 
 it('humanises a foreign key into a label', function (): void {
@@ -36,8 +30,8 @@ it('humanises a foreign key into a label', function (): void {
 it('describes an enum filter using HasLabel', function (): void {
     $schema = Filter::enum('currency', Currencies::class)->multiple()->schema();
 
-    expect($schema['options'])->toContain(['value' => 'TRY', 'label' => 'Turkish Lira']);
-    expect($schema['options'])->toHaveCount(count(Currencies::cases()));
+    expect($schema['options'])->toContain(['value' => 'TRY', 'label' => 'Turkish Lira'])
+        ->toHaveSameSize(Currencies::cases());
 });
 
 it('describes a select filter from a plain map', function (): void {
@@ -50,9 +44,7 @@ it('describes a select filter from a plain map', function (): void {
 
 it('describes a date range filter', function (): void {
     $schema = Filter::dateRange('date')->schema();
-
-    expect($schema['type'])->toBe('dateRange');
-    expect($schema['options'])->toBe([]);
+    expect($schema)->toMatchArray(['type' => 'dateRange', 'options' => []]);
 });
 
 it('describes a boolean filter with custom labels', function (): void {
@@ -61,12 +53,10 @@ it('describes a boolean filter with custom labels', function (): void {
         ->trueLabel('Has receipt')
         ->falseLabel('No receipt')
         ->schema();
-
-    expect($schema['type'])->toBe('boolean');
-    expect($schema['options'])->toBe([
+    expect($schema)->toMatchArray(['type' => 'boolean', 'options' => [
         ['value' => 'yes', 'label' => 'Has receipt'],
         ['value' => 'no', 'label' => 'No receipt'],
-    ]);
+    ]]);
 });
 
 it('exposes a default value', function (): void {
@@ -205,11 +195,11 @@ it('still describes a display-only filter to the browser', function (): void {
         ->displayOnly()
         ->schema();
 
-    expect($schema['displayOnly'])->toBeTrue();
-    expect($schema['default'])->toBe('TRY');
-    expect($schema['options'])->not->toBeEmpty();
+    expect($schema['displayOnly'])->toBeTrue()
+        ->and($schema['default'])->toBe('TRY')
+        ->and($schema['options'])->not->toBeEmpty();
 });
 
 it('returns no options for an unknown relationship', function (): void {
-    expect(Filter::relationship('unicorn_id', 'unicorn', 'name')->schema()['options'])->toBe([]);
+    expect(Filter::relationship('unicorn_id', 'unicorn', 'name')->schema()['options'])->toBeEmpty();
 });

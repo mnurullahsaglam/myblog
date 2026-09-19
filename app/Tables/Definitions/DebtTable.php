@@ -11,13 +11,17 @@ use App\Tables\Column;
 use App\Tables\Filter;
 use App\Tables\ResourceTable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Override;
 use Throwable;
 
 final class DebtTable extends ResourceTable
 {
+    #[Override]
     protected string $model = Debt::class;
 
+    #[Override]
     protected string $defaultSort = '-date';
 
     /**
@@ -59,7 +63,7 @@ final class DebtTable extends ResourceTable
         }
 
         try {
-            $converted = app(ExchangeRateService::class)->convert(
+            $converted = resolve(ExchangeRateService::class)->convert(
                 (float) $record->amount,
                 $record->currency->value,
                 $target->value,
@@ -103,7 +107,7 @@ final class DebtTable extends ResourceTable
         $overdue = 0;
         $dueSoon = 0;
 
-        /** @var \Illuminate\Database\Eloquent\Collection<int, Debt> $pending */
+        /** @var Collection<int, Debt> $pending */
         $pending = (clone $query)->where('status', 'pending')->get();
 
         foreach ($pending as $debt) {

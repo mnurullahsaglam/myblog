@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\WakaTimeSummaryFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Override;
 
 /**
  * @property int $id
@@ -20,9 +22,10 @@ use Illuminate\Support\Carbon;
  */
 class WakaTimeSummary extends Model
 {
-    /** @use HasFactory<\Database\Factories\WakaTimeSummaryFactory> */
+    /** @use HasFactory<WakaTimeSummaryFactory> */
     use HasFactory;
 
+    #[Override]
     protected $fillable = [
         'date',
         'total_seconds',
@@ -54,7 +57,7 @@ class WakaTimeSummary extends Model
         return $this->entries()->where('type', $type);
     }
 
-    public function getTotalHumanAttribute(): string
+    protected function getTotalHumanAttribute(): string
     {
         $hours = intdiv($this->total_seconds, 3600);
         $minutes = intdiv($this->total_seconds % 3600, 60);

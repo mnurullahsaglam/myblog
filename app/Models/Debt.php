@@ -6,10 +6,13 @@ namespace App\Models;
 
 use App\Enums\Currencies;
 use App\Observers\DebtObserver;
+use Database\Factories\DebtFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
+use Override;
 
 /**
  * @property int $id
@@ -17,10 +20,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $creditor_type
  * @property numeric-string $amount
  * @property Currencies $currency
- * @property \Illuminate\Support\Carbon|null $due_date
+ * @property Carbon|null $due_date
  * @property string $status
  * @property string|null $description
- * @property \Illuminate\Support\Carbon $date
+ * @property Carbon $date
  * @property-read bool $is_pending
  * @property-read bool $is_overdue
  * @property-read int|null $days_until_due
@@ -29,9 +32,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[ObservedBy([DebtObserver::class])]
 class Debt extends Model
 {
-    /** @use HasFactory<\Database\Factories\DebtFactory> */
+    /** @use HasFactory<DebtFactory> */
     use HasFactory;
 
+    #[Override]
     protected $fillable = [
         'creditor_name',
         'creditor_type',
@@ -43,6 +47,7 @@ class Debt extends Model
         'date',
     ];
 
+    #[Override]
     protected $casts = [
         'amount' => 'decimal:2',
         'currency' => Currencies::class,
@@ -66,22 +71,22 @@ class Debt extends Model
         return $this->hasMany(Expense::class);
     }
 
-    public function getFormattedAmountAttribute(): string
+    protected function getFormattedAmountAttribute(): string
     {
         return $this->currency->getSymbol().' '.number_format((float) $this->amount, 2);
     }
 
-    public function getIsPendingAttribute(): bool
+    protected function getIsPendingAttribute(): bool
     {
         return $this->status === 'pending';
     }
 
-    public function getIsOverdueAttribute(): bool
+    protected function getIsOverdueAttribute(): bool
     {
         return $this->isPending && $this->due_date && $this->due_date->isPast();
     }
 
-    public function getStatusColorAttribute(): string
+    protected function getStatusColorAttribute(): string
     {
         return match ($this->status) {
             'pending' => $this->isOverdue ? 'danger' : 'warning',
@@ -89,7 +94,7 @@ class Debt extends Model
         };
     }
 
-    public function getDaysUntilDueAttribute(): ?int
+    protected function getDaysUntilDueAttribute(): ?int
     {
         if (! $this->due_date || ! $this->isPending) {
             return null;
@@ -98,12 +103,12 @@ class Debt extends Model
         return (int) now()->diffInDays($this->due_date, false);
     }
 
-    public function getHasDueDateAttribute(): bool
+    protected function getHasDueDateAttribute(): bool
     {
         return ! is_null($this->due_date);
     }
 
-    public function getDueDateStatusAttribute(): string
+    protected function getDueDateStatusAttribute(): string
     {
         if (! $this->due_date) {
             return 'No due date';

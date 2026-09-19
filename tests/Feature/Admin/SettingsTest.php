@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\Setting;
 use App\Models\User;
+use App\Support\Navigation;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia;
@@ -30,8 +31,8 @@ it('offers every accent with a swatch', function (): void {
         ->assertInertia(function (AssertableInertia $page): void {
             $accents = collect($page->toArray()['props']['accents']);
 
-            expect($accents->pluck('name'))->toContain('khaki', 'emerald', 'zinc');
-            expect($accents->firstWhere('name', 'khaki')['swatch'])->toBe('#C9BE6E');
+            expect($accents->pluck('name'))->toContain('khaki', 'emerald', 'zinc')
+                ->and($accents->firstWhere('name', 'khaki')['swatch'])->toBe('#C9BE6E');
         });
 });
 
@@ -51,8 +52,8 @@ it('saves the accent and colour scheme', function (): void {
         'appearance' => ['accent' => 'emerald', 'color_scheme' => 'dark'],
     ])->assertRedirect(route('admin.settings'));
 
-    expect(Setting::get('appearance', 'accent'))->toBe('emerald');
-    expect(Setting::get('appearance', 'color_scheme'))->toBe('dark');
+    expect(Setting::get('appearance', 'accent'))->toBe('emerald')
+        ->and(Setting::get('appearance', 'color_scheme'))->toBe('dark');
 });
 
 it('rejects an unknown accent or scheme', function (): void {
@@ -91,8 +92,8 @@ it('saves site information', function (): void {
         ],
     ])->assertSessionHasNoErrors();
 
-    expect(Setting::get('site_info', 'site_name'))->toBe('My Blog');
-    expect(Setting::get('site_info', 'site_url'))->toBe('https://example.test');
+    expect(Setting::get('site_info', 'site_name'))->toBe('My Blog')
+        ->and(Setting::get('site_info', 'site_url'))->toBe('https://example.test');
 });
 
 it('rejects an invalid url or email', function (): void {
@@ -146,7 +147,7 @@ it('flashes a notification after saving', function (): void {
 });
 
 it('appears in the general cluster', function (): void {
-    $general = collect(App\Support\Navigation::clusters())->firstWhere('label', 'General');
+    $general = collect(Navigation::clusters())->firstWhere('label', 'General');
 
     expect(collect($general['items'])->pluck('route'))->toContain('admin.settings');
 });

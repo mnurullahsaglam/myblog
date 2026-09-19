@@ -8,13 +8,17 @@ use App\Models\Repository;
 use App\Tables\Column;
 use App\Tables\Filter;
 use App\Tables\ResourceTable;
+use Override;
 
 final class RepositoryTable extends ResourceTable
 {
+    #[Override]
     protected string $model = Repository::class;
 
+    #[Override]
     protected array $with = ['project'];
 
+    #[Override]
     protected string $defaultSort = 'name';
 
     protected function columns(): array

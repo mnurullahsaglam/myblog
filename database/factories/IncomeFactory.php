@@ -8,12 +8,14 @@ use App\Enums\Currencies;
 use App\Models\Income;
 use App\Models\IncomeCategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Override;
 
 /**
  * @extends Factory<Income>
  */
 class IncomeFactory extends Factory
 {
+    #[Override]
     protected $model = Income::class;
 
     /**

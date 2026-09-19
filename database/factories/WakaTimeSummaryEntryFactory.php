@@ -7,12 +7,14 @@ namespace Database\Factories;
 use App\Models\WakaTimeSummary;
 use App\Models\WakaTimeSummaryEntry;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Override;
 
 /**
  * @extends Factory<WakaTimeSummaryEntry>
  */
 class WakaTimeSummaryEntryFactory extends Factory
 {
+    #[Override]
     protected $model = WakaTimeSummaryEntry::class;
 
     /**

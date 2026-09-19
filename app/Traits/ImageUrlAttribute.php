@@ -11,7 +11,7 @@ trait ImageUrlAttribute
     /**
      * @return Attribute<string, never>
      */
-    public function imageUrl(): Attribute
+    protected function imageUrl(): Attribute
     {
         return Attribute::make(
             get: fn () => asset((string) $this->image),

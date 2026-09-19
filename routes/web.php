@@ -6,9 +6,7 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\WakaTimeOAuthController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', fn () => view('welcome'));
 
 Route::resource('books', BookController::class);
 

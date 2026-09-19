@@ -26,7 +26,7 @@ class TaskBoardController extends Controller
     /**
      * @var array<int, array{key: string, label: string, color: string}>
      */
-    private const COLUMNS = [
+    private const array COLUMNS = [
         ['key' => 'todo', 'label' => 'To Do', 'color' => 'info'],
         ['key' => 'in_progress', 'label' => 'In Progress', 'color' => 'warn'],
         ['key' => 'completed', 'label' => 'Completed', 'color' => 'success'],
@@ -190,12 +190,10 @@ class TaskBoardController extends Controller
 
     public function syncToGitHub(Task $task): RedirectResponse
     {
-        if (! $task->is_github_issue) {
-            throw new AccessDeniedHttpException('This task is not linked to a GitHub issue.');
-        }
+        throw_unless($task->is_github_issue, AccessDeniedHttpException::class, 'This task is not linked to a GitHub issue.');
 
         try {
-            app(GitHubService::class)->updateIssue($task)
+            resolve(GitHubService::class)->updateIssue($task)
                 ? $this->notifier->success('Synced to GitHub')
                 : $this->notifier->danger('GitHub rejected the update');
         } catch (Throwable $exception) {

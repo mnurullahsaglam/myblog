@@ -8,15 +8,20 @@ use App\Models\Project;
 use App\Tables\Column;
 use App\Tables\Filter;
 use App\Tables\ResourceTable;
+use Override;
 
 final class ProjectTable extends ResourceTable
 {
+    #[Override]
     protected string $model = Project::class;
 
+    #[Override]
     protected array $with = ['client'];
 
+    #[Override]
     protected array $withCount = ['tasks', 'repositories'];
 
+    #[Override]
     protected string $defaultSort = 'name';
 
     protected function columns(): array

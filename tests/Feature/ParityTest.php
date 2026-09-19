@@ -127,6 +127,6 @@ it('covers every cluster the old panel had', function (): void {
 });
 
 it('still exposes the wakatime oauth routes', function (): void {
-    expect(Route::has('wakatime.connect'))->toBeTrue();
-    expect(Route::has('wakatime.callback'))->toBeTrue();
+    expect(Route::has('wakatime.connect'))->toBeTrue()
+        ->and(Route::has('wakatime.callback'))->toBeTrue();
 });

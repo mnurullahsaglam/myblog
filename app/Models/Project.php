@@ -4,31 +4,37 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\ProjectFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
+use Override;
 
 /**
  * @property int $id
  * @property int|null $client_id
  * @property string $name
- * @property \Illuminate\Support\Carbon|null $due_date
+ * @property Carbon|null $due_date
  * @property-read Client|null $client
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Task> $tasks
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Repository> $repositories
+ * @property-read Collection<int, Task> $tasks
+ * @property-read Collection<int, Repository> $repositories
  */
 class Project extends Model
 {
-    /** @use HasFactory<\Database\Factories\ProjectFactory> */
+    /** @use HasFactory<ProjectFactory> */
     use HasFactory;
 
+    #[Override]
     protected $fillable = [
         'client_id',
         'name',
         'due_date',
     ];
 
+    #[Override]
     protected $casts = [
         'due_date' => 'date',
     ];

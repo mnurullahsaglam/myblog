@@ -7,9 +7,11 @@ namespace App\Forms\Definitions;
 use App\Forms\Field;
 use App\Forms\ResourceForm;
 use App\Models\Category;
+use Override;
 
 final class BookForm extends ResourceForm
 {
+    #[Override]
     protected int $columns = 2;
 
     protected function fields(): array

@@ -7,12 +7,14 @@ namespace Database\Factories;
 use App\Models\Project;
 use App\Models\Repository;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Override;
 
 /**
  * @extends Factory<Repository>
  */
 class RepositoryFactory extends Factory
 {
+    #[Override]
     protected $model = Repository::class;
 
     /**

@@ -10,14 +10,19 @@ use App\Tables\Column;
 use App\Tables\Filter;
 use App\Tables\ResourceTable;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Date;
+use Override;
 
 final class ExpenseTable extends ResourceTable
 {
+    #[Override]
     protected string $model = Expense::class;
 
+    #[Override]
     protected array $with = ['expenseCategory', 'debt'];
 
+    #[Override]
     protected string $defaultSort = '-date';
 
     protected function columns(): array
@@ -49,7 +54,7 @@ final class ExpenseTable extends ResourceTable
     {
         $query = $this->filteredQuery($request);
 
-        /** @var \Illuminate\Support\Collection<string, float> $byCurrency */
+        /** @var Collection<string, float> $byCurrency */
         $byCurrency = (clone $query)
             ->selectRaw('currency, SUM(amount) as total')
             ->groupBy('currency')
@@ -60,7 +65,7 @@ final class ExpenseTable extends ResourceTable
         $latest = (clone $query)->max('date');
 
         $days = is_scalar($earliest) && is_scalar($latest)
-            ? max(1, (int) Carbon::parse((string) $earliest)->diffInDays(Carbon::parse((string) $latest)) + 1)
+            ? max(1, (int) Date::parse((string) $earliest)->diffInDays(Date::parse((string) $latest)) + 1)
             : 1;
 
         $dominant = $byCurrency->sortDesc()->keys()->first();

@@ -6,13 +6,15 @@ namespace Database\Factories;
 
 use App\Models\Post;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Date;
+use Override;
 
 /**
  * @extends Factory<Post>
  */
 class PostFactory extends Factory
 {
+    #[Override]
     protected $model = Post::class;
 
     public function definition(): array
@@ -22,8 +24,8 @@ class PostFactory extends Factory
             'slug' => fake()->slug(),
             'content' => fake()->word(),
             'image' => fake()->word(),
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
+            'created_at' => Date::now(),
+            'updated_at' => Date::now(),
         ];
     }
 }

@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\IncomeCategoryFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Override;
 
 /**
  * @property int $id
@@ -16,9 +18,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class IncomeCategory extends Model
 {
-    /** @use HasFactory<\Database\Factories\IncomeCategoryFactory> */
+    /** @use HasFactory<IncomeCategoryFactory> */
     use HasFactory;
 
+    #[Override]
     protected $fillable = [
         'name',
         'description',

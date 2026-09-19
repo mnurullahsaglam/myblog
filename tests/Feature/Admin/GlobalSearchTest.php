@@ -87,9 +87,9 @@ it('gives every result a label, a group and a url', function (): void {
     Post::factory()->create(['title' => 'Learning Rust']);
 
     foreach (GlobalSearch::query('rust') as $result) {
-        expect($result)->toHaveKeys(['label', 'group', 'url']);
-        expect($result['label'])->toBeString()->not->toBeEmpty();
-        expect($result['url'])->toStartWith('http');
+        expect($result)->toHaveKeys(['label', 'group', 'url'])
+            ->and($result['label'])->toBeString()->not->toBeEmpty()
+            ->and($result['url'])->toStartWith('http');
     }
 });
 

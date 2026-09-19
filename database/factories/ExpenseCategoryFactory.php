@@ -6,12 +6,14 @@ namespace Database\Factories;
 
 use App\Models\ExpenseCategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Override;
 
 /**
  * @extends Factory<ExpenseCategory>
  */
 class ExpenseCategoryFactory extends Factory
 {
+    #[Override]
     protected $model = ExpenseCategory::class;
 
     /**

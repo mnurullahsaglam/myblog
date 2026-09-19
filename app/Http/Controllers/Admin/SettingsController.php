@@ -20,14 +20,14 @@ class SettingsController extends Controller
     /**
      * @var array<int, string>
      */
-    private const GROUPS = ['appearance', 'site_info', 'meta', 'branding', 'social', 'contact'];
+    private const array GROUPS = ['appearance', 'site_info', 'meta', 'branding', 'social', 'contact'];
 
     /**
      * Fields stored as an uploaded file rather than a plain value.
      *
      * @var array<string, string>
      */
-    private const UPLOADS = [
+    private const array UPLOADS = [
         'meta.og_image' => 'settings/meta',
         'branding.logo' => 'settings/branding',
         'branding.footer_logo' => 'settings/branding',

@@ -17,7 +17,7 @@ final class DashboardData
     use AggregatesWakaTimeData;
 
     /** @var array<int, string> */
-    public const RANGES = ['7', '14', '30', '90', 'all'];
+    public const array RANGES = ['7', '14', '30', '90', 'all'];
 
     private function __construct(private readonly ?string $range) {}
 
@@ -175,9 +175,9 @@ final class DashboardData
         $total = array_sum($seconds);
 
         return [
-            'labels' => array_map('strval', array_keys($seconds)),
-            'data' => array_map('intval', array_values($seconds)),
-            'durations' => array_map(fn (int $value): string => $this->formatDuration($value), array_values($seconds)),
+            'labels' => array_map(strval(...), array_keys($seconds)),
+            'data' => array_map(intval(...), array_values($seconds)),
+            'durations' => array_map($this->formatDuration(...), array_values($seconds)),
             'percentages' => array_map(
                 fn (int $value): float => $total > 0 ? round($value / $total * 100, 1) : 0.0,
                 array_values($seconds),

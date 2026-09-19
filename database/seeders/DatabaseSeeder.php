@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Models\Client;
+use App\Models\Debt;
+use App\Models\Expense;
+use App\Models\ExpenseCategory;
+use App\Models\Income;
+use App\Models\IncomeCategory;
 use App\Models\Project;
 use App\Models\Repository;
 use App\Models\Task;
@@ -165,7 +171,7 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($incomeCategories as $categoryData) {
-            \App\Models\IncomeCategory::create($categoryData);
+            IncomeCategory::create($categoryData);
         }
 
         // Create expense categories
@@ -179,7 +185,7 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($expenseCategories as $categoryData) {
-            \App\Models\ExpenseCategory::create($categoryData);
+            ExpenseCategory::create($categoryData);
         }
 
         // Create sample debts
@@ -217,12 +223,12 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($debts as $debtData) {
-            \App\Models\Debt::create($debtData);
+            Debt::create($debtData);
         }
 
         // Create sample incomes
-        $firstClient = \App\Models\Client::first();
-        $incomeCategory = \App\Models\IncomeCategory::first();
+        $firstClient = Client::first();
+        $incomeCategory = IncomeCategory::first();
 
         $incomes = [
             [
@@ -241,21 +247,21 @@ class DatabaseSeeder extends Seeder
                 'date' => now()->subDays(10),
             ],
             [
-                'income_category_id' => \App\Models\IncomeCategory::skip(2)->first()?->id,
+                'income_category_id' => IncomeCategory::skip(2)->first()?->id,
                 'amount' => 750.00,
                 'currency' => 'EUR',
                 'description' => 'Investment dividend payment',
                 'date' => now()->subDays(15),
             ],
             [
-                'income_category_id' => \App\Models\IncomeCategory::skip(2)->first()?->id,
+                'income_category_id' => IncomeCategory::skip(2)->first()?->id,
                 'amount' => 10.50,
                 'currency' => 'XAU',
                 'description' => 'Gold sale from investment portfolio',
                 'date' => now()->subDays(20),
             ],
             [
-                'income_category_id' => \App\Models\IncomeCategory::skip(2)->first()?->id,
+                'income_category_id' => IncomeCategory::skip(2)->first()?->id,
                 'amount' => 250.75,
                 'currency' => 'XAG',
                 'description' => 'Silver sale from precious metals collection',
@@ -264,11 +270,11 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($incomes as $incomeData) {
-            \App\Models\Income::create($incomeData);
+            Income::create($incomeData);
         }
 
         // Create sample expenses
-        $expenseCategory = \App\Models\ExpenseCategory::first();
+        $expenseCategory = ExpenseCategory::first();
 
         $expenses = [
             [
@@ -279,35 +285,35 @@ class DatabaseSeeder extends Seeder
                 'date' => now()->subDays(3),
             ],
             [
-                'expense_category_id' => \App\Models\ExpenseCategory::skip(1)->first()?->id,
+                'expense_category_id' => ExpenseCategory::skip(1)->first()?->id,
                 'amount' => 99.99,
                 'currency' => 'USD',
                 'description' => 'Adobe Creative Suite subscription',
                 'date' => now()->subDays(7),
             ],
             [
-                'expense_category_id' => \App\Models\ExpenseCategory::skip(4)->first()?->id,
+                'expense_category_id' => ExpenseCategory::skip(4)->first()?->id,
                 'amount' => 450.00,
                 'currency' => 'TRY',
                 'description' => 'Internet and phone bills',
                 'date' => now()->subDays(12),
             ],
             [
-                'expense_category_id' => \App\Models\ExpenseCategory::skip(5)->first()?->id,
+                'expense_category_id' => ExpenseCategory::skip(5)->first()?->id,
                 'amount' => 250.00,
                 'currency' => 'TRY',
                 'description' => 'Client dinner meeting',
                 'date' => now()->subDays(8),
             ],
             [
-                'expense_category_id' => \App\Models\ExpenseCategory::skip(2)->first()?->id,
+                'expense_category_id' => ExpenseCategory::skip(2)->first()?->id,
                 'amount' => 5.25,
                 'currency' => 'XAU',
                 'description' => 'Gold purchase for investment (5.25 grams)',
                 'date' => now()->subDays(18),
             ],
             [
-                'expense_category_id' => \App\Models\ExpenseCategory::skip(2)->first()?->id,
+                'expense_category_id' => ExpenseCategory::skip(2)->first()?->id,
                 'amount' => 100.00,
                 'currency' => 'XAG',
                 'description' => 'Silver purchase for portfolio (100 grams)',
@@ -316,7 +322,7 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($expenses as $expenseData) {
-            \App\Models\Expense::create($expenseData);
+            Expense::create($expenseData);
         }
     }
 }

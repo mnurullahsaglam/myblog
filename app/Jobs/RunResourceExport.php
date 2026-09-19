@@ -47,14 +47,12 @@ class RunResourceExport implements ShouldQueue
 
         $handle = fopen('php://temp/maxmemory:2097152', 'r+');
 
-        if ($handle === false) {
-            throw new RuntimeException('Could not open a temporary stream for the export.');
-        }
+        throw_if($handle === false, RuntimeException::class, 'Could not open a temporary stream for the export.');
 
-        fputcsv($handle, $export->headings());
+        fputcsv($handle, $export->headings(), escape: '\\');
 
         $export->query()->lazy(500)->each(function (Model $record) use ($handle, $export): void {
-            fputcsv($handle, $export->row($record));
+            fputcsv($handle, $export->row($record), escape: '\\');
         });
 
         rewind($handle);

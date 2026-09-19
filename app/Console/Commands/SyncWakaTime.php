@@ -12,6 +12,7 @@ use App\Services\WakaTimeService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Override;
 use Throwable;
 
 class SyncWakaTime extends Command
@@ -29,9 +30,11 @@ class SyncWakaTime extends Command
         'categories' => WakaTimeSummaryEntry::TYPE_CATEGORY,
     ];
 
+    #[Override]
     protected $signature = 'wakatime:sync
                             {--days=7 : Number of trailing days to fetch and upsert (max ~14 on the free plan)}';
 
+    #[Override]
     protected $description = 'Fetch WakaTime daily summaries and upsert them (totals + project/language/editor/os/category breakdowns)';
 
     public function handle(WakaTimeService $wakatime): int

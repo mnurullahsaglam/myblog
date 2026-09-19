@@ -6,6 +6,7 @@ use App\Models\Setting;
 use App\Models\User;
 use App\Support\AdminNotifier;
 use App\Support\Theme\Appearance;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 use Inertia\Testing\AssertableInertia;
 
@@ -15,16 +16,16 @@ beforeEach(function (): void {
 });
 
 it('defaults to khaki and system', function (): void {
-    expect(Appearance::accent())->toBe('khaki');
-    expect(Appearance::colorScheme())->toBe('system');
+    expect(Appearance::accent())->toBe('khaki')
+        ->and(Appearance::colorScheme())->toBe('system');
 });
 
 it('reads stored values', function (): void {
     Setting::set('appearance', 'accent', 'emerald');
     Setting::set('appearance', 'color_scheme', 'light');
 
-    expect(Appearance::accent())->toBe('emerald');
-    expect(Appearance::colorScheme())->toBe('light');
+    expect(Appearance::accent())->toBe('emerald')
+        ->and(Appearance::colorScheme())->toBe('light');
 });
 
 it('falls back to khaki for an unknown stored accent', function (): void {
@@ -71,13 +72,13 @@ it('never shares the password hash', function (): void {
     $this->actingAs($this->admin)
         ->get(route('admin.dashboard'))
         ->assertInertia(fn (AssertableInertia $page) => $page
-            ->where('auth.user', fn (Illuminate\Support\Collection $user): bool => $user->keys()->all() === ['id', 'name', 'email'])
+            ->where('auth.user', fn (Collection $user): bool => $user->keys()->all() === ['id', 'name', 'email'])
         );
 });
 
 it('shares a flashed notification', function (): void {
     Route::middleware('web')->get('/__flash-probe', function () {
-        app(AdminNotifier::class)->success('Saved');
+        resolve(AdminNotifier::class)->success('Saved');
 
         return inertia('Dashboard');
     });

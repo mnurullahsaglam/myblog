@@ -7,13 +7,17 @@ namespace App\Tables\Definitions;
 use App\Models\Client;
 use App\Tables\Column;
 use App\Tables\ResourceTable;
+use Override;
 
 final class ClientTable extends ResourceTable
 {
+    #[Override]
     protected string $model = Client::class;
 
+    #[Override]
     protected array $withCount = ['projects'];
 
+    #[Override]
     protected string $defaultSort = 'title';
 
     protected function columns(): array

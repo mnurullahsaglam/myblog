@@ -6,9 +6,12 @@ namespace App\Models;
 
 use App\Observers\TaskObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
+use Override;
 
 /**
  * @property int $id
@@ -23,9 +26,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $github_issue_state
  * @property array<int, array<string, mixed>>|null $github_issue_labels
  * @property string|null $github_assignee
- * @property \Illuminate\Support\Carbon|null $github_created_at
- * @property \Illuminate\Support\Carbon|null $github_updated_at
- * @property \Illuminate\Support\Carbon|null $github_closed_at
+ * @property Carbon|null $github_created_at
+ * @property Carbon|null $github_updated_at
+ * @property Carbon|null $github_closed_at
  * @property-read bool $is_github_issue
  * @property-read string $github_labels_string
  * @property-read Project|null $project
@@ -34,9 +37,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[ObservedBy([TaskObserver::class])]
 class Task extends Model
 {
-    /** @use HasFactory<\Illuminate\Database\Eloquent\Factories\Factory<self>> */
+    /** @use HasFactory<Factory<self>> */
     use HasFactory;
 
+    #[Override]
     protected $fillable = [
         'project_id', 'repository_id', 'title', 'description', 'status', 'sort_order',
         'github_issue_number', 'github_issue_url', 'github_issue_state',
@@ -44,6 +48,7 @@ class Task extends Model
         'github_updated_at', 'github_closed_at',
     ];
 
+    #[Override]
     protected $casts = [
         'github_issue_labels' => 'array',
         'github_created_at' => 'datetime',
@@ -67,12 +72,12 @@ class Task extends Model
         return $this->belongsTo(Repository::class);
     }
 
-    public function getIsGithubIssueAttribute(): bool
+    protected function getIsGithubIssueAttribute(): bool
     {
         return ! is_null($this->github_issue_number);
     }
 
-    public function getGithubLabelsStringAttribute(): string
+    protected function getGithubLabelsStringAttribute(): string
     {
         if (! $this->github_issue_labels) {
             return '';

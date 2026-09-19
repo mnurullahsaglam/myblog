@@ -105,8 +105,8 @@ it('buckets everything past the limit into Other', function (): void {
 
     $result = wakaTimeAggregator()->publicBreakdownSeconds(WakaTimeSummaryEntry::TYPE_LANGUAGE);
 
-    expect($result)->toHaveCount(9);
-    expect($result)->toHaveKey('Other');
+    expect($result)->toHaveCount(9)
+        ->toHaveKey('Other');
     // The four smallest (100 + 200 + 300 + 400) fall into Other.
     expect($result['Other'])->toBe(1000);
 });
@@ -150,7 +150,7 @@ it('formats large numbers compactly', function (float $value, string $expected):
 ]);
 
 it('labels the range', function (): void {
-    expect(wakaTimeAggregator('30')->publicRangeLabel())->toBe('Last 30 days');
-    expect(wakaTimeAggregator('all')->publicRangeLabel())->toBe('All time');
-    expect(wakaTimeAggregator()->publicRangeLabel())->toBe('Last 7 days');
+    expect(wakaTimeAggregator('30')->publicRangeLabel())->toBe('Last 30 days')
+        ->and(wakaTimeAggregator('all')->publicRangeLabel())->toBe('All time')
+        ->and(wakaTimeAggregator()->publicRangeLabel())->toBe('Last 7 days');
 });

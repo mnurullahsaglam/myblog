@@ -18,8 +18,8 @@ it('keeps post slugs unique', function (): void {
     Post::factory()->create(['title' => 'Learning Rust', 'slug' => null]);
     $second = Post::factory()->create(['title' => 'Learning Rust', 'slug' => null]);
 
-    expect($second->slug)->not->toBe('learning-rust');
-    expect($second->slug)->toStartWith('learning-rust');
+    expect($second->slug)->not->toBe('learning-rust')
+        ->toStartWith('learning-rust');
 });
 
 it('generates slugs from the name for models that have one', function (string $model): void {

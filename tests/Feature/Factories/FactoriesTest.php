@@ -49,9 +49,9 @@ it('can create several records from every factory', function (string $model): vo
 it('creates a github-linked task via the state', function (): void {
     $task = Task::factory()->githubIssue()->create();
 
-    expect($task->is_github_issue)->toBeTrue();
-    expect($task->github_issue_number)->not->toBeNull();
-    expect($task->github_issue_labels)->toBeArray();
+    expect($task->is_github_issue)->toBeTrue()
+        ->and($task->github_issue_number)->not->toBeNull()
+        ->and($task->github_issue_labels)->toBeArray();
 });
 
 it('leaves sort order to the observer by default', function (): void {
@@ -63,8 +63,8 @@ it('creates paid and overdue debts via states', function (): void {
 
     $overdue = Debt::factory()->overdue()->create();
 
-    expect($overdue->status)->toBe('pending');
-    expect($overdue->due_date->isPast())->toBeTrue();
+    expect($overdue->status)->toBe('pending')
+        ->and($overdue->due_date->isPast())->toBeTrue();
 });
 
 it('creates an expense with a receipt via the state', function (): void {
@@ -72,8 +72,8 @@ it('creates an expense with a receipt via the state', function (): void {
 });
 
 it('creates a category without a colour via the state', function (): void {
-    expect(ExpenseCategory::factory()->withoutColor()->create()->color)->toBeNull();
-    expect(IncomeCategory::factory()->withoutColor()->create()->color)->toBeNull();
+    expect(ExpenseCategory::factory()->withoutColor()->create()->color)->toBeNull()
+        ->and(IncomeCategory::factory()->withoutColor()->create()->color)->toBeNull();
 });
 
 it('keeps invoice totals internally consistent', function (): void {

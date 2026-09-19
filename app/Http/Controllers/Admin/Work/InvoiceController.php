@@ -55,7 +55,7 @@ class InvoiceController extends AdminResourceController
      */
     protected function validated(): array
     {
-        $request = app(InvoiceRequest::class);
+        $request = resolve(InvoiceRequest::class);
 
         /** @var array<string, mixed> $data */
         $data = $request->validated();

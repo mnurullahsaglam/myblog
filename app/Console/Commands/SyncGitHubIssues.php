@@ -10,14 +10,17 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Http;
+use Override;
 
 class SyncGitHubIssues extends Command
 {
+    #[Override]
     protected $signature = 'github:sync-issues 
                             {--repository= : Specific repository ID to sync}
                             {--all : Sync all active repositories}
                             {--token= : GitHub personal access token}';
 
+    #[Override]
     protected $description = 'Sync GitHub issues from repositories to tasks';
 
     private string $githubToken;
@@ -73,9 +76,7 @@ class SyncGitHubIssues extends Command
         }
 
         /** @var array<int, string> $choices */
-        $choices = $repositories->mapWithKeys(function (Repository $repo): array {
-            return [$repo->id => "$repo->name ($repo->owner)"];
-        })->toArray();
+        $choices = $repositories->mapWithKeys(fn (Repository $repo): array => [$repo->id => "$repo->name ($repo->owner)"])->all();
 
         $selectedIds = $this->choice(
             'Select repositories to sync (multiple allowed)',
@@ -87,7 +88,7 @@ class SyncGitHubIssues extends Command
 
         $selectedIds = is_array($selectedIds) ? $selectedIds : [$selectedIds];
 
-        $selectedIds = array_values(array_filter($selectedIds, 'is_string'));
+        $selectedIds = array_values(array_filter($selectedIds, is_string(...)));
 
         return $repositories->whereIn('id', array_keys(array_flip($selectedIds)));
     }
@@ -154,9 +155,7 @@ class SyncGitHubIssues extends Command
             $issues = $response->json();
 
             // Filter out pull requests (GitHub API includes PRs in issues endpoint)
-            $issuesOnly = array_filter($issues, function (array $issue): bool {
-                return ! isset($issue['pull_request']);
-            });
+            $issuesOnly = array_filter($issues, fn (array $issue): bool => ! isset($issue['pull_request']));
 
             $allIssues = array_merge($allIssues, $issuesOnly);
             $page++;

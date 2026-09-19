@@ -6,12 +6,14 @@ namespace Database\Factories;
 
 use App\Models\Client;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Override;
 
 /**
  * @extends Factory<Client>
  */
 class ClientFactory extends Factory
 {
+    #[Override]
     protected $model = Client::class;
 
     /**

@@ -18,9 +18,9 @@ class DashboardController extends Controller
     public function __invoke(): Response
     {
         return Inertia::render('Dashboard', [
-            'budget' => fn (): array => BudgetOverview::stats(),
-            'work' => fn (): array => WorkOverview::stats(),
-            'library' => fn (): array => LibraryOverview::stats(),
+            'budget' => BudgetOverview::stats(...),
+            'work' => WorkOverview::stats(...),
+            'library' => LibraryOverview::stats(...),
 
             'recentPosts' => fn (): array => Post::query()
                 ->latest()

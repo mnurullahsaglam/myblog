@@ -8,15 +8,20 @@ use App\Models\Book;
 use App\Tables\Column;
 use App\Tables\Filter;
 use App\Tables\ResourceTable;
+use Override;
 
 final class BookTable extends ResourceTable
 {
+    #[Override]
     protected string $model = Book::class;
 
+    #[Override]
     protected array $with = ['writer', 'publisher'];
 
+    #[Override]
     protected array $withCount = ['categories'];
 
+    #[Override]
     protected string $defaultSort = 'name';
 
     protected function columns(): array

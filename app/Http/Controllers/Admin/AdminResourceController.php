@@ -219,7 +219,7 @@ abstract class AdminResourceController extends Controller
     protected function validated(): array
     {
         /** @var FormRequest $request */
-        $request = app($this->requestClass());
+        $request = resolve($this->requestClass());
 
         /** @var array<string, mixed> $data */
         $data = $request->validated();

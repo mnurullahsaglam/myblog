@@ -11,6 +11,7 @@ use BackedEnum;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -308,7 +309,7 @@ final class Column
             return $this->payload($this->default ?? '', null);
         }
 
-        $date = $raw instanceof Carbon ? $raw : Carbon::parse($this->stringify($raw));
+        $date = $raw instanceof Carbon ? $raw : Date::parse($this->stringify($raw));
 
         return $this->payload(
             $date->format($format),
@@ -439,7 +440,7 @@ final class Column
     private function humanisedLabel(): string
     {
         $segments = explode('.', $this->key);
-        $last = (string) end($segments);
+        $last = end($segments);
 
         if ($last === 'name' && count($segments) > 1) {
             $last = $segments[count($segments) - 2];

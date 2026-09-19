@@ -39,7 +39,7 @@ final class Filter
     private function __construct(
         public readonly string $key,
         public readonly string $type,
-        private array $options = [],
+        private readonly array $options = [],
         private readonly ?string $relation = null,
         private readonly ?string $labelColumn = null,
         private readonly ?string $enumClass = null,
@@ -83,7 +83,7 @@ final class Filter
     /** An arbitrary constraint, shown as a yes/no control. */
     public static function custom(string $key, string $label, Closure $query): self
     {
-        return (new self($key, 'boolean', query: $query))->label($label);
+        return new self($key, 'boolean', query: $query)->label($label);
     }
 
     public function label(string $label): self

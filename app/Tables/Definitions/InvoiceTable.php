@@ -10,13 +10,18 @@ use App\Tables\Column;
 use App\Tables\Filter;
 use App\Tables\ResourceTable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Override;
 
 final class InvoiceTable extends ResourceTable
 {
+    #[Override]
     protected string $model = Invoice::class;
 
+    #[Override]
     protected array $with = ['client'];
 
+    #[Override]
     protected string $defaultSort = '-issued_at';
 
     protected function columns(): array
@@ -41,7 +46,7 @@ final class InvoiceTable extends ResourceTable
     {
         $query = $this->filteredQuery($request);
 
-        /** @var \Illuminate\Support\Collection<string, float> $byCurrency */
+        /** @var Collection<string, float> $byCurrency */
         $byCurrency = (clone $query)
             ->selectRaw('currency, SUM(total_amount) as total')
             ->groupBy('currency')

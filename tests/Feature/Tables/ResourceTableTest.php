@@ -15,10 +15,13 @@ use Illuminate\Support\Facades\DB;
  */
 final class FixtureExpenseTable extends ResourceTable
 {
+    #[Override]
     protected string $model = Expense::class;
 
+    #[Override]
     protected array $with = ['expenseCategory'];
 
+    #[Override]
     protected string $defaultSort = '-date';
 
     protected function columns(): array
@@ -60,13 +63,13 @@ function tableRequest(array $query = []): Request
 it('emits a schema describing columns and filters', function (): void {
     $schema = (new FixtureExpenseTable)->schema();
 
-    expect($schema['columns'])->toHaveCount(5);
-    expect($schema['columns'][0]['key'])->toBe('amount');
-    expect($schema['columns'][0]['sortable'])->toBeTrue();
-    expect($schema['filters'])->toHaveCount(3);
-    expect($schema['defaultSort'])->toBe('-date');
-    expect($schema['searchable'])->toBeTrue();
-    expect($schema['perPage'])->toBe(25);
+    expect($schema['columns'])->toHaveCount(5)
+        ->and($schema['columns'][0]['key'])->toBe('amount')
+        ->and($schema['columns'][0]['sortable'])->toBeTrue()
+        ->and($schema['filters'])->toHaveCount(3)
+        ->and($schema['defaultSort'])->toBe('-date')
+        ->and($schema['searchable'])->toBeTrue()
+        ->and($schema['perPage'])->toBe(25);
 });
 
 it('returns rows keyed by id with resolved cells', function (): void {
@@ -80,10 +83,10 @@ it('returns rows keyed by id with resolved cells', function (): void {
 
     $row = (new FixtureExpenseTable)->rows(tableRequest())->items()[0];
 
-    expect($row['id'])->toBe($expense->id);
-    expect($row['cells']['amount']['display'])->toBe('₺250.00');
-    expect($row['cells']['expenseCategory.name']['display'])->toBe('Food');
-    expect($row['cells']['description']['display'])->toBe('Lunch');
+    expect($row['id'])->toBe($expense->id)
+        ->and($row['cells']['amount']['display'])->toBe('₺250.00')
+        ->and($row['cells']['expenseCategory.name']['display'])->toBe('Food')
+        ->and($row['cells']['description']['display'])->toBe('Lunch');
 });
 
 it('applies the default sort', function (): void {
@@ -184,18 +187,18 @@ it('paginates and honours a per-page override', function (): void {
 
     $rows = (new FixtureExpenseTable)->rows(tableRequest(['perPage' => 10, 'page' => 2]));
 
-    expect($rows->perPage())->toBe(10);
-    expect($rows->currentPage())->toBe(2);
-    expect($rows->total())->toBe(30);
-    expect($rows->items())->toHaveCount(10);
+    expect($rows->perPage())->toBe(10)
+        ->and($rows->currentPage())->toBe(2)
+        ->and($rows->total())->toBe(30)
+        ->and($rows->items())->toHaveCount(10);
 });
 
 it('clamps an absurd per-page value', function (): void {
     Expense::factory()->count(3)->create();
 
-    expect((new FixtureExpenseTable)->rows(tableRequest(['perPage' => 5000]))->perPage())->toBe(100);
-    expect((new FixtureExpenseTable)->rows(tableRequest(['perPage' => 0]))->perPage())->toBe(25);
-    expect((new FixtureExpenseTable)->rows(tableRequest(['perPage' => -5]))->perPage())->toBe(25);
+    expect((new FixtureExpenseTable)->rows(tableRequest(['perPage' => 5000]))->perPage())->toBe(100)
+        ->and((new FixtureExpenseTable)->rows(tableRequest(['perPage' => 0]))->perPage())->toBe(25)
+        ->and((new FixtureExpenseTable)->rows(tableRequest(['perPage' => -5]))->perPage())->toBe(25);
 });
 
 it('eager loads the declared relations rather than querying per row', function (): void {
@@ -217,9 +220,9 @@ it('returns lightweight search results for the palette', function (): void {
 
     $results = (new FixtureExpenseTable)->search('coffee', 5);
 
-    expect($results)->toHaveCount(5);
-    expect($results->first())->toHaveKeys(['id', 'label']);
-    expect($results->first()['label'])->toContain('Coffee');
+    expect($results)->toHaveCount(5)
+        ->and($results->first())->toHaveKeys(['id', 'label'])
+        ->and($results->first()['label'])->toContain('Coffee');
 });
 
 it('returns nothing from search for a blank term', function (): void {

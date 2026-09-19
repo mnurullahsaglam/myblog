@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Route;
 use Inertia\Testing\AssertableInertia;
 use Laravel\Passkeys\Contracts\PasskeyUser;
@@ -24,21 +25,20 @@ function withConfirmedPassword(): TestCase
 }
 
 it('makes the user a passkey user', function (): void {
-    expect($this->admin)->toBeInstanceOf(PasskeyUser::class);
-    expect($this->admin->passkeys())->toBeInstanceOf(Illuminate\Database\Eloquent\Relations\HasMany::class);
-    expect($this->admin->hasPasskeysEnabled())->toBeFalse();
+    expect($this->admin)->toBeInstanceOf(PasskeyUser::class)
+        ->and($this->admin->passkeys())->toBeInstanceOf(HasMany::class)
+        ->and($this->admin->hasPasskeysEnabled())->toBeFalse();
 });
 
 it('derives a stable user handle that is not the id', function (): void {
     $handle = $this->admin->getPasskeyUserHandle();
 
-    expect($handle)->toBe($this->admin->getPasskeyUserHandle());
-    expect($handle)->not->toContain((string) $this->admin->id);
+    expect($handle)->toBe($this->admin->getPasskeyUserHandle())->not->toContain((string) $this->admin->id);
 });
 
 it('gives authenticators a display name and username', function (): void {
-    expect($this->admin->getPasskeyDisplayName())->toBe($this->admin->name);
-    expect($this->admin->getPasskeyUsername())->toBe('admin@example.test');
+    expect($this->admin->getPasskeyDisplayName())->toBe($this->admin->name)
+        ->and($this->admin->getPasskeyUsername())->toBe('admin@example.test');
 });
 
 it('registers the passkey routes', function (string $name): void {
@@ -62,8 +62,8 @@ it('offers registration options to an authenticated user', function (): void {
     expect($options)->toHaveKeys(['challenge', 'rp', 'user', 'pubKeyCredParams']);
     // Derived from APP_URL, which differs between local and CI.
     expect($options['rp']['id'])->toBe(parse_url((string) config('app.url'), PHP_URL_HOST));
-    expect($options['user']['displayName'])->toBe($this->admin->name);
-    expect(session()->has('passkey.registration_options'))->toBeTrue();
+    expect($options['user']['displayName'])->toBe($this->admin->name)
+        ->and(session()->has('passkey.registration_options'))->toBeTrue();
 });
 
 it('refuses registration options to a guest', function (): void {
@@ -73,8 +73,8 @@ it('refuses registration options to a guest', function (): void {
 it('offers login options to a guest', function (): void {
     $response = $this->getJson(route('passkey.login-options'))->assertOk();
 
-    expect($response->json('options'))->toHaveKey('challenge');
-    expect(session()->has('passkey.verification_options'))->toBeTrue();
+    expect($response->json('options'))->toHaveKey('challenge')
+        ->and(session()->has('passkey.verification_options'))->toBeTrue();
 });
 
 it('rejects a malformed credential', function (): void {
@@ -163,6 +163,6 @@ it('sends a passkey login to the panel', function (): void {
 });
 
 it('binds passkeys to the application origin', function (): void {
-    expect(config('passkeys.relying_party_id'))->toBe(parse_url((string) config('app.url'), PHP_URL_HOST));
-    expect(config('passkeys.allowed_origins'))->toContain(config('app.url'));
+    expect(config('passkeys.relying_party_id'))->toBe(parse_url((string) config('app.url'), PHP_URL_HOST))
+        ->and(config('passkeys.allowed_origins'))->toContain(config('app.url'));
 });

@@ -7,6 +7,7 @@ use App\Models\Repository;
 use App\Models\Task;
 use App\Models\User;
 use App\Services\GitHubService;
+use App\Support\Navigation;
 use Inertia\Testing\AssertableInertia;
 
 beforeEach(function (): void {
@@ -99,8 +100,8 @@ it('moves a task to another column at a position', function (): void {
 
     $task->refresh();
 
-    expect($task->status)->toBe('in_progress');
-    expect($task->sort_order)->toBe(1);
+    expect($task->status)->toBe('in_progress')
+        ->and($task->sort_order)->toBe(1);
 });
 
 it('reindexes the destination column so positions stay contiguous', function (): void {
@@ -112,9 +113,8 @@ it('reindexes the destination column so positions stay contiguous', function ():
 
     $ordered = Task::where('status', 'in_progress')->orderBy('sort_order')->pluck('id')->all();
 
-    expect($ordered)->toBe([$a->id, $moving->id, $b->id]);
-    expect(Task::where('status', 'in_progress')->orderBy('sort_order')->pluck('sort_order')->all())
-        ->toBe([1, 2, 3]);
+    expect($ordered)->toBe([$a->id, $moving->id, $b->id])
+        ->and(Task::where('status', 'in_progress')->orderBy('sort_order')->pluck('sort_order')->all())->toBe([1, 2, 3]);
 });
 
 it('reorders within the same column', function (): void {
@@ -236,7 +236,7 @@ it('refuses to sync a task that is not a github issue', function (): void {
 });
 
 it('lists the board in the work cluster', function (): void {
-    $work = collect(App\Support\Navigation::clusters())->firstWhere('label', 'Work');
+    $work = collect(Navigation::clusters())->firstWhere('label', 'Work');
 
     expect(collect($work['items'])->pluck('route'))->toContain('admin.tasks.board');
 });

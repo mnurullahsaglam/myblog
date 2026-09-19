@@ -10,16 +10,16 @@ beforeEach(function (): void {
 });
 
 it('marks the configured admin email as admin', function (): void {
-    expect(User::factory()->create(['email' => 'admin@example.test'])->isAdmin())->toBeTrue();
-    expect(User::factory()->create(['email' => 'someone@example.test'])->isAdmin())->toBeFalse();
+    expect(User::factory()->create(['email' => 'admin@example.test'])->isAdmin())->toBeTrue()
+        ->and(User::factory()->create(['email' => 'someone@example.test'])->isAdmin())->toBeFalse();
 });
 
 it('gates admin access on the same rule', function (): void {
     $admin = User::factory()->create(['email' => 'admin@example.test']);
     $other = User::factory()->create(['email' => 'someone@example.test']);
 
-    expect(Gate::forUser($admin)->allows('access-admin'))->toBeTrue();
-    expect(Gate::forUser($other)->allows('access-admin'))->toBeFalse();
+    expect(Gate::forUser($admin)->allows('access-admin'))->toBeTrue()
+        ->and(Gate::forUser($other)->allows('access-admin'))->toBeFalse();
 });
 
 it('does not implement any Filament contract', function (): void {
