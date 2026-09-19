@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\Category;
 use App\Models\Expense;
+use App\Models\Invoice;
 use App\Models\Post;
 use App\Models\User;
 
@@ -108,3 +109,78 @@ it('turns a guest away', function (): void {
         'value' => [],
     ])->assertRedirect(route('login'));
 });
+
+it('sets a money field across the selection', function (): void {
+    $expenses = Expense::factory()->count(3)->create(['amount' => 10]);
+
+    $this->patch(route('admin.expenses.bulk-update'), [
+        'ids' => $expenses->modelKeys(),
+        'field' => 'amount',
+        'value' => 250.5,
+    ])->assertRedirect(route('admin.expenses.index'));
+
+    expect(Expense::whereKey($expenses->modelKeys())->pluck('amount')->all())
+        ->each->toEqual(250.5);
+});
+
+it('rejects a non-numeric value for a money field', function (mixed $value): void {
+    $expenses = Expense::factory()->count(2)->create(['amount' => 10]);
+
+    $this->from(route('admin.expenses.index'))
+        ->patch(route('admin.expenses.bulk-update'), [
+            'ids' => $expenses->modelKeys(),
+            'field' => 'amount',
+            'value' => $value,
+        ])
+        ->assertSessionHasErrors('value');
+
+    expect(Expense::pluck('amount')->all())->each->toEqual(10);
+})->with(['not a number', '', null, [[1, 2]]]);
+
+it('honours the minimum declared on the field', function (): void {
+    $expenses = Expense::factory()->count(2)->create(['amount' => 10]);
+
+    $this->from(route('admin.expenses.index'))
+        ->patch(route('admin.expenses.bulk-update'), [
+            'ids' => $expenses->modelKeys(),
+            'field' => 'amount',
+            'value' => -5,
+        ])
+        ->assertSessionHasErrors('value');
+});
+
+it('honours the maximum declared on the field', function (): void {
+    $invoices = Invoice::factory()->count(2)->create(['tax_rate' => 10]);
+
+    $this->from(route('admin.invoices.index'))
+        ->patch(route('admin.invoices.bulk-update'), [
+            'ids' => $invoices->modelKeys(),
+            'field' => 'tax_rate',
+            'value' => 250,
+        ])
+        ->assertSessionHasErrors('value');
+});
+
+it('accepts a value at the declared boundary', function (): void {
+    $invoices = Invoice::factory()->count(2)->create(['tax_rate' => 10]);
+
+    $this->patch(route('admin.invoices.bulk-update'), [
+        'ids' => $invoices->modelKeys(),
+        'field' => 'tax_rate',
+        'value' => 100,
+    ])->assertRedirect(route('admin.invoices.index'));
+
+    expect(Invoice::whereKey($invoices->modelKeys())->pluck('tax_rate')->all())->each->toEqual(100);
+});
+
+it('refuses a field the form marks disabled', function (string $field): void {
+    $invoices = Invoice::factory()->count(2)->create();
+
+    $this->from(route('admin.invoices.index'))
+        ->patch(route('admin.invoices.bulk-update'), [
+            'ids' => $invoices->modelKeys(),
+            'field' => $field,
+            'value' => 999,
+        ])
+        ->assertSessionHasErrors('field');
+})->with(['tax_amount', 'total_amount']);

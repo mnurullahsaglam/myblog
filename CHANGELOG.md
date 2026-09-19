@@ -12,13 +12,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bulk edit: set one field across a selection from the table toolbar.
   `App\Actions\Resources\BulkEditRecords` writes through each model inside a
   transaction, for the same reason bulk delete does.
-- `ResourceForm::bulkEditableFields()` restricts bulk editing to choices and
-  switches - selects, relations, toggles and dates. Models are unguarded, so
-  this list is the authorisation boundary: a title, a slug or an upload cannot
-  be written in bulk.
+- `ResourceForm::bulkEditableFields()` restricts bulk editing to choices,
+  switches, dates and numbers - selects, relations, toggles, dates, numbers and
+  money. Models are unguarded, so this list is the authorisation boundary: a
+  title, a slug or an upload cannot be written in bulk, and neither can a field
+  the form marks disabled because it is computed on save.
 - `ResourceForm::bulkValueRules()` validates the submitted value against the
   field's own option list rather than the resource's FormRequest, which would
-  demand every other field too.
+  demand every other field too. Numeric fields carry through the `min` and
+  `max` the form declares, so a tax rate still cannot exceed 100 in bulk.
 - A `*.bulk-update` route for each of the twelve resources that already had
   bulk delete.
 

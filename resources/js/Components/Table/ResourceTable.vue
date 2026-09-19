@@ -12,6 +12,7 @@ import Dialog from 'primevue/dialog'
 import Select from 'primevue/select'
 import DatePicker from 'primevue/datepicker'
 import ToggleSwitch from 'primevue/toggleswitch'
+import InputNumber from 'primevue/inputnumber'
 import { useConfirm } from 'primevue/useconfirm'
 import FilterBar from './FilterBar.vue'
 import TableCell from './TableCell.vue'
@@ -347,6 +348,19 @@ function runExport() {
           />
 
           <ToggleSwitch v-else-if="chosenField.type === 'toggle'" id="bulk-value" v-model="editValue" />
+
+          <InputNumber
+            v-else-if="chosenField.type === 'number' || chosenField.type === 'money'"
+            id="bulk-value"
+            v-model="editValue"
+            :min="chosenField.meta.min"
+            :max="chosenField.meta.max"
+            :step="chosenField.meta.step ?? 1"
+            :max-fraction-digits="chosenField.type === 'money' ? 2 : 0"
+            :prefix="chosenField.meta.prefix ? `${chosenField.meta.prefix} ` : undefined"
+            :invalid="Boolean(editErrors.value)"
+            fluid
+          />
 
           <DatePicker
             v-else-if="chosenField.type === 'date' || chosenField.type === 'datetime'"

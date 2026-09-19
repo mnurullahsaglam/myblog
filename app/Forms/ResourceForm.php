@@ -95,8 +95,10 @@ abstract class ResourceForm
     /**
      * Fields that can safely take one value across a whole selection.
      *
-     * Restricted to choices and switches: a title, a slug or an uploaded file
-     * is per-record, and setting one across many rows is never what was meant.
+     * Restricted to choices, switches, dates and numbers: a title, a slug or an
+     * uploaded file is per-record, and setting one across many rows is never
+     * what was meant. Disabled fields are excluded too - the form marks those
+     * computed on save, so writing them directly would be overwritten anyway.
      * This list is also the authorisation boundary for bulk editing, because
      * models are unguarded - anything outside it cannot be written in bulk.
      *
@@ -106,10 +108,18 @@ abstract class ResourceForm
     {
         $keys = [];
 
+        $types = ['select', 'multiselect', 'toggle', 'date', 'datetime', 'number', 'money'];
+
         foreach ($this->fields() as $field) {
-            if (in_array($field->type, ['select', 'multiselect', 'toggle', 'date', 'datetime'], true)) {
-                $keys[] = $field->key;
+            if (! in_array($field->type, $types, true)) {
+                continue;
             }
+
+            if ($field->schema()['disabled']) {
+                continue;
+            }
+
+            $keys[] = $field->key;
         }
 
         return $keys;
@@ -139,12 +149,34 @@ abstract class ResourceForm
                     'value.*' => ['required', Rule::in($values)],
                 ],
                 'toggle' => ['value' => ['required', 'boolean']],
+                'number', 'money' => ['value' => $this->numericRules($schema)],
                 'date', 'datetime' => ['value' => [$schema['required'] ? 'required' : 'nullable', 'date']],
                 default => ['value' => [$schema['required'] ? 'required' : 'nullable', Rule::in($values)]],
             };
         }
 
         return ['value' => ['prohibited']];
+    }
+
+    /**
+     * @param  array<string, mixed>  $schema
+     * @return array<int, string>
+     */
+    private function numericRules(array $schema): array
+    {
+        $rules = [$schema['required'] === true ? 'required' : 'nullable', 'numeric'];
+
+        $meta = is_array($schema['meta']) ? $schema['meta'] : [];
+
+        foreach (['min', 'max'] as $bound) {
+            $value = $meta[$bound] ?? null;
+
+            if (is_int($value) || is_float($value)) {
+                $rules[] = $bound.':'.$value;
+            }
+        }
+
+        return $rules;
     }
 
     /**
