@@ -3,21 +3,21 @@ import AdminLayout from '@/Layouts/AdminLayout.vue'
 import ResourceTable from '@/Components/Table/ResourceTable.vue'
 
 defineProps({
-    schema: { type: Object, required: true },
-    rows: { type: Object, required: true },
+  schema: { type: Object, required: true },
+  rows: { type: Object, required: true },
 })
 </script>
 
 <template>
-    <AdminLayout title="Writers">
-        <ResourceTable
-            :schema="schema"
-            :rows="rows"
-            resource="writers"
-            label="writer"
-            :row-actions="['edit', 'delete']"
-            :bulk-actions="['delete']"
-            exportable
-        />
-    </AdminLayout>
+  <AdminLayout title="Writers">
+    <ResourceTable
+      :schema="schema"
+      :rows="rows"
+      resource="writers"
+      label="writer"
+      :row-actions="['edit', 'delete']"
+      :bulk-actions="['delete']"
+      exportable
+    />
+  </AdminLayout>
 </template>

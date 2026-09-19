@@ -9,29 +9,29 @@ import preset from './theme/preset'
 import 'primeicons/primeicons.css'
 
 createInertiaApp({
-    title: (title) => (title ? `${title} — Admin` : 'Admin'),
-    resolve: (name) => {
-        const pages = import.meta.glob('./pages/**/*.vue', { eager: true })
+  title: (title) => (title ? `${title} — Admin` : 'Admin'),
+  resolve: (name) => {
+    const pages = import.meta.glob('./pages/**/*.vue', { eager: true })
 
-        return pages[`./pages/${name}.vue`]
-    },
-    setup({ el, App, props, plugin }) {
-        createApp({ render: () => h(App, props) })
-            .use(plugin)
-            .use(ZiggyVue)
-            .use(PrimeVue, {
-                theme: {
-                    preset,
-                    options: {
-                        darkModeSelector: '.dark',
-                        cssLayer: { name: 'primevue', order: 'theme, base, primevue' },
-                    },
-                },
-            })
-            .use(ToastService)
-            .use(ConfirmationService)
-            .directive('tooltip', Tooltip)
-            .mount(el)
-    },
-    progress: { color: '#C9BE6E' },
+    return pages[`./pages/${name}.vue`]
+  },
+  setup({ el, App, props, plugin }) {
+    createApp({ render: () => h(App, props) })
+      .use(plugin)
+      .use(ZiggyVue)
+      .use(PrimeVue, {
+        theme: {
+          preset,
+          options: {
+            darkModeSelector: '.dark',
+            cssLayer: { name: 'primevue', order: 'theme, base, primevue' },
+          },
+        },
+      })
+      .use(ToastService)
+      .use(ConfirmationService)
+      .directive('tooltip', Tooltip)
+      .mount(el)
+  },
+  progress: { color: '#C9BE6E' },
 })

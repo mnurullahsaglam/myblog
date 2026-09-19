@@ -6,33 +6,34 @@
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 
 @theme {
-    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-    --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-sans:
+    'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
-    /* Terminal Horizon. See docs/superpowers/design-system.md. */
-    --color-canvas: #0D0E11;
-    --color-surface: #15171C;
-    --color-elevated: #1A1D24;
-    --color-embedded: #121317;
-    --color-hairline: #272B35;
-    --color-hairline-subtle: #20232B;
-    --color-ink: #ECEEF2;
-    --color-ink-muted: #9096A2;
-    --color-ink-faint: #5A606E;
-    --color-status-nominal: #529E72;
-    --color-status-alert: #D95757;
+  /* Terminal Horizon. See docs/superpowers/design-system.md. */
+  --color-canvas: #0d0e11;
+  --color-surface: #15171c;
+  --color-elevated: #1a1d24;
+  --color-embedded: #121317;
+  --color-hairline: #272b35;
+  --color-hairline-subtle: #20232b;
+  --color-ink: #eceef2;
+  --color-ink-muted: #9096a2;
+  --color-ink-faint: #5a606e;
+  --color-status-nominal: #529e72;
+  --color-status-alert: #d95757;
 }
 
 @layer base {
-    html {
-        color-scheme: light dark;
-    }
+  html {
+    color-scheme: light dark;
+  }
 
-    /* Tabular figures everywhere numbers are monospaced. */
-    .font-mono {
-        font-variant-numeric: tabular-nums;
-    }
+  /* Tabular figures everywhere numbers are monospaced. */
+  .font-mono {
+    font-variant-numeric: tabular-nums;
+  }
 }
 
 /*
@@ -44,11 +45,11 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
-    *,
-    ::after,
-    ::before,
-    ::backdrop,
-    ::file-selector-button {
-        border-color: var(--color-gray-200, currentcolor);
-    }
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
 }
