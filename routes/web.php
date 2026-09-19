@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn (): Factory|View => view('welcome'));
 
-Route::resource('books', BookController::class);
+Route::get('books', [BookController::class, 'index'])->name('books.index');
 
 Route::middleware('auth')->group(function (): void {
     Route::get('wakatime/connect', [WakaTimeOAuthController::class, 'connect'])->name('wakatime.connect');
