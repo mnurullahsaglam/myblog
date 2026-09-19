@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\Notifications\DismissNotification;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -28,13 +29,13 @@ class NotificationController extends Controller
         return back();
     }
 
-    public function destroy(Request $request, string $notification): RedirectResponse
+    public function destroy(Request $request, string $notification, DismissNotification $dismiss): RedirectResponse
     {
-        $record = $request->user()?->notifications()->whereKey($notification)->first();
+        $user = $request->user();
 
-        abort_if($record === null, 404);
+        abort_if($user === null, 404);
 
-        $record->delete();
+        $dismiss->handle($user, $notification);
 
         return back();
     }

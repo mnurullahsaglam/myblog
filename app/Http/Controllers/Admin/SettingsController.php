@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\Settings\SaveSettings;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\SettingsRequest;
 use App\Models\Setting;
@@ -66,45 +67,22 @@ class SettingsController extends Controller
         ]);
     }
 
-    public function update(SettingsRequest $request): RedirectResponse
+    public function update(SettingsRequest $request, SaveSettings $saveSettings): RedirectResponse
     {
-        foreach ($request->validated() as $group => $values) {
-            if (! is_array($values)) {
-                continue;
-            }
+        $files = [];
 
-            foreach ($values as $name => $value) {
-                $this->persist((string) $group, (string) $name, $value, $request);
+        foreach (array_keys(self::UPLOADS) as $key) {
+            $file = $request->file($key);
+
+            if ($file instanceof UploadedFile) {
+                $files[$key] = $file;
             }
         }
+
+        $saveSettings->handle($request->validated(), $files, self::UPLOADS);
 
         $this->notifier->success('Settings saved');
 
         return to_route('admin.settings');
-    }
-
-    private function persist(string $group, string $name, mixed $value, SettingsRequest $request): void
-    {
-        $key = $group.'.'.$name;
-
-        if (array_key_exists($key, self::UPLOADS)) {
-            $file = $request->file($key);
-
-            if (! $file instanceof UploadedFile) {
-                return;
-            }
-
-            Setting::set($group, $name, $file->store(self::UPLOADS[$key], 'public'), 'file');
-
-            return;
-        }
-
-        if (is_array($value)) {
-            Setting::set($group, $name, json_encode($value), 'json');
-
-            return;
-        }
-
-        Setting::set($group, $name, is_scalar($value) ? (string) $value : null);
     }
 }

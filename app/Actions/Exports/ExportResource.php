@@ -2,45 +2,40 @@
 
 declare(strict_types=1);
 
-namespace App\Jobs;
+namespace App\Actions\Exports;
 
 use App\Exports\BookExport;
 use App\Exports\PublisherExport;
 use App\Exports\ResourceExport;
 use App\Exports\WriterExport;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Storage;
 use RuntimeException;
 
-class RunResourceExport implements ShouldQueue
+/**
+ * Build a resource's CSV on the private disk.
+ */
+final class ExportResource
 {
-    use Queueable;
-
     /**
      * @var array<string, class-string<ResourceExport>>
      */
-    public const EXPORTS = [
+    public const array EXPORTS = [
         'books' => BookExport::class,
         'publishers' => PublisherExport::class,
         'writers' => WriterExport::class,
     ];
-
-    public function __construct(public readonly string $resource) {}
 
     /**
      * Streams through the rows so memory stays flat however many there are.
      *
      * @return string the stored path on the private disk
      */
-    public function handle(): string
+    public function handle(string $resource): string
     {
-        $exportClass = self::EXPORTS[$this->resource] ?? null;
+        $exportClass = self::EXPORTS[$resource] ?? null;
 
-        if ($exportClass === null) {
-            throw new RuntimeException("No export is defined for [{$this->resource}].");
-        }
+        throw_if($exportClass === null, RuntimeException::class, "No export is defined for [{$resource}].");
 
         $export = new $exportClass;
         $path = $export->filename();

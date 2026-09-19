@@ -107,6 +107,7 @@ it('can be called repeatedly until the debt is settled', function (): void {
 
     resolve(PayDebt::class)->handle($debt, 100.0, 'One');
     resolve(PayDebt::class)->handle($debt->refresh(), 100.0, 'Two');
+
     $remaining = resolve(PayDebt::class)->handle($debt->refresh(), 100.0, 'Three');
 
     expect($remaining)->toBe(0.0)

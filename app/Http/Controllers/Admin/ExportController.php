@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\Exports\ExportResource;
 use App\Http\Controllers\Controller;
-use App\Jobs\RunResourceExport;
 use App\Support\AdminNotifier;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,11 +18,11 @@ class ExportController extends Controller
 {
     public function __construct(private readonly AdminNotifier $notifier) {}
 
-    public function store(string $resource): RedirectResponse
+    public function store(string $resource, ExportResource $exportResource): RedirectResponse
     {
-        abort_unless(array_key_exists($resource, RunResourceExport::EXPORTS), 404);
+        abort_unless(array_key_exists($resource, ExportResource::EXPORTS), 404);
 
-        $path = new RunResourceExport($resource)->handle();
+        $path = $exportResource->handle($resource);
 
         $this->notifier->success(
             'Export ready',

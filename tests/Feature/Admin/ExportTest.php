@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Jobs\RunResourceExport;
+use App\Actions\Exports\ExportResource;
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\Publisher;
@@ -31,7 +31,7 @@ it('writes a csv with the expected headings and rows', function (): void {
     ]);
     $book->categories()->attach(Category::factory()->create(['name' => 'Utopian']));
 
-    $path = new RunResourceExport('books')->handle();
+    $path = resolve(ExportResource::class)->handle('books');
 
     Storage::disk('local')->assertExists($path);
 
@@ -42,7 +42,7 @@ it('writes a csv with the expected headings and rows', function (): void {
 it('exports every row, not just the first page', function (): void {
     Publisher::factory()->count(120)->create();
 
-    $path = new RunResourceExport('publishers')->handle();
+    $path = resolve(ExportResource::class)->handle('publishers');
 
     $lines = array_values(array_filter(explode("\n", Storage::disk('local')->get($path))));
 
@@ -53,7 +53,7 @@ it('includes counts in the writers export', function (): void {
     $writer = Writer::factory()->create(['name' => 'Prolific']);
     Book::factory()->count(3)->create(['writer_id' => $writer->id]);
 
-    $path = new RunResourceExport('writers')->handle();
+    $path = resolve(ExportResource::class)->handle('writers');
     $csv = Storage::disk('local')->get($path);
 
     expect($csv)->toContain('Prolific')
