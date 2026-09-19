@@ -4,7 +4,7 @@
     "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
     "This file is @generated automatically"
   ],
-  "content-hash": "4c9708bfcc9db842ad51ed045fa8ffb4",
+  "content-hash": "f13cdc04d829c05d0b1cc8fde6a39a71",
   "packages": [
     {
       "name": "bacon/bacon-qr-code",
@@ -2396,73 +2396,6 @@
       "time": "2026-03-08T20:05:35+00:00"
     },
     {
-      "name": "masterminds/html5",
-      "version": "2.10.0",
-      "source": {
-        "type": "git",
-        "url": "https://github.com/Masterminds/html5-php.git",
-        "reference": "fcf91eb64359852f00d921887b219479b4f21251"
-      },
-      "dist": {
-        "type": "zip",
-        "url": "https://api.github.com/repos/Masterminds/html5-php/zipball/fcf91eb64359852f00d921887b219479b4f21251",
-        "reference": "fcf91eb64359852f00d921887b219479b4f21251",
-        "shasum": ""
-      },
-      "require": {
-        "ext-dom": "*",
-        "php": ">=5.3.0"
-      },
-      "require-dev": {
-        "phpunit/phpunit": "^4.8.35 || ^5.7.21 || ^6 || ^7 || ^8 || ^9"
-      },
-      "type": "library",
-      "extra": {
-        "branch-alias": {
-          "dev-master": "2.7-dev"
-        }
-      },
-      "autoload": {
-        "psr-4": {
-          "Masterminds\\": "src"
-        }
-      },
-      "notification-url": "https://packagist.org/downloads/",
-      "license": [
-        "MIT"
-      ],
-      "authors": [
-        {
-          "name": "Matt Butcher",
-          "email": "technosophos@gmail.com"
-        },
-        {
-          "name": "Matt Farina",
-          "email": "matt@mattfarina.com"
-        },
-        {
-          "name": "Asmir Mustafic",
-          "email": "goetas@gmail.com"
-        }
-      ],
-      "description": "An HTML5 parser and serializer.",
-      "homepage": "http://masterminds.github.io/html5-php",
-      "keywords": [
-        "HTML5",
-        "dom",
-        "html",
-        "parser",
-        "querypath",
-        "serializer",
-        "xml"
-      ],
-      "support": {
-        "issues": "https://github.com/Masterminds/html5-php/issues",
-        "source": "https://github.com/Masterminds/html5-php/tree/2.10.0"
-      },
-      "time": "2025-07-25T09:04:22+00:00"
-    },
-    {
       "name": "monolog/monolog",
       "version": "3.12.0",
       "source": {
@@ -4128,29 +4061,41 @@
     },
     {
       "name": "spatie/laravel-sluggable",
-      "version": "3.8.1",
+      "version": "4.0.3",
       "source": {
         "type": "git",
         "url": "https://github.com/spatie/laravel-sluggable.git",
-        "reference": "3624a2d7d8c8475d8561c53faf63f1af583ef76c"
+        "reference": "572933c61b70103be4b95fe7674070bb60243254"
       },
       "dist": {
         "type": "zip",
-        "url": "https://api.github.com/repos/spatie/laravel-sluggable/zipball/3624a2d7d8c8475d8561c53faf63f1af583ef76c",
-        "reference": "3624a2d7d8c8475d8561c53faf63f1af583ef76c",
+        "url": "https://api.github.com/repos/spatie/laravel-sluggable/zipball/572933c61b70103be4b95fe7674070bb60243254",
+        "reference": "572933c61b70103be4b95fe7674070bb60243254",
         "shasum": ""
       },
       "require": {
-        "illuminate/database": "^10.0|^11.0|^12.0|^13.0",
-        "illuminate/support": "^10.0|^11.0|^12.0|^13.0",
-        "php": "^8.2"
+        "illuminate/database": "^12.0|^13.0",
+        "illuminate/support": "^12.0|^13.0",
+        "php": "^8.3"
       },
       "require-dev": {
-        "orchestra/testbench": "^8.0|^9.0|^10.0|^11.0",
-        "pestphp/pest": "^2.0|^3.7|^4.0",
-        "spatie/laravel-translatable": "^5.0|^6.0"
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.24",
+        "orchestra/testbench": "^10.0|^11.0",
+        "pestphp/pest": "^4.0",
+        "spatie/laravel-translatable": "^6.0"
       },
       "type": "library",
+      "extra": {
+        "laravel": {
+          "aliases": {
+            "SelfHealing": "Spatie\\Sluggable\\Facades\\SelfHealing"
+          },
+          "providers": [
+            "Spatie\\Sluggable\\SluggableServiceProvider"
+          ]
+        }
+      },
       "autoload": {
         "psr-4": {
           "Spatie\\Sluggable\\": "src"
@@ -4171,11 +4116,18 @@
       "description": "Generate slugs when saving Eloquent models",
       "homepage": "https://github.com/spatie/laravel-sluggable",
       "keywords": [
+        "eloquent",
+        "laravel",
         "laravel-sluggable",
-        "spatie"
+        "self-healing",
+        "slug",
+        "slugs",
+        "spatie",
+        "translatable"
       ],
       "support": {
-        "source": "https://github.com/spatie/laravel-sluggable/tree/3.8.1"
+        "issues": "https://github.com/spatie/laravel-sluggable/issues",
+        "source": "https://github.com/spatie/laravel-sluggable/tree/4.0.3"
       },
       "funding": [
         {
@@ -4183,7 +4135,7 @@
           "type": "github"
         }
       ],
-      "time": "2026-03-23T07:42:02+00:00"
+      "time": "2026-07-28T13:16:49+00:00"
     },
     {
       "name": "spomky-labs/cbor-php",
@@ -4546,20 +4498,20 @@
     },
     {
       "name": "symfony/css-selector",
-      "version": "v7.4.18",
+      "version": "v8.1.6",
       "source": {
         "type": "git",
         "url": "https://github.com/symfony/css-selector.git",
-        "reference": "fecf40067fc8d8880ea87b8ac227600b9aadd1d0"
+        "reference": "08e2905152a39cf3fd1745d83f8c483e258887d9"
       },
       "dist": {
         "type": "zip",
-        "url": "https://api.github.com/repos/symfony/css-selector/zipball/fecf40067fc8d8880ea87b8ac227600b9aadd1d0",
-        "reference": "fecf40067fc8d8880ea87b8ac227600b9aadd1d0",
+        "url": "https://api.github.com/repos/symfony/css-selector/zipball/08e2905152a39cf3fd1745d83f8c483e258887d9",
+        "reference": "08e2905152a39cf3fd1745d83f8c483e258887d9",
         "shasum": ""
       },
       "require": {
-        "php": ">=8.2"
+        "php": ">=8.4.1"
       },
       "type": "library",
       "autoload": {
@@ -4591,7 +4543,7 @@
       "description": "Converts CSS selectors to XPath expressions",
       "homepage": "https://symfony.com",
       "support": {
-        "source": "https://github.com/symfony/css-selector/tree/v7.4.18"
+        "source": "https://github.com/symfony/css-selector/tree/v8.1.6"
       },
       "funding": [
         {
@@ -4611,7 +4563,7 @@
           "type": "tidelift"
         }
       ],
-      "time": "2026-08-23T10:03:40+00:00"
+      "time": "2026-08-23T10:06:25+00:00"
     },
     {
       "name": "symfony/deprecation-contracts",
@@ -4686,27 +4638,25 @@
     },
     {
       "name": "symfony/dom-crawler",
-      "version": "v7.4.12",
+      "version": "v8.1.5",
       "source": {
         "type": "git",
         "url": "https://github.com/symfony/dom-crawler.git",
-        "reference": "b59b59122690976550fd142c23fab62c84738db6"
+        "reference": "94f70e1b2e5b7b8f8618871fd9eaad3e39e9f03d"
       },
       "dist": {
         "type": "zip",
-        "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/b59b59122690976550fd142c23fab62c84738db6",
-        "reference": "b59b59122690976550fd142c23fab62c84738db6",
+        "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/94f70e1b2e5b7b8f8618871fd9eaad3e39e9f03d",
+        "reference": "94f70e1b2e5b7b8f8618871fd9eaad3e39e9f03d",
         "shasum": ""
       },
       "require": {
-        "masterminds/html5": "^2.6",
-        "php": ">=8.2",
-        "symfony/deprecation-contracts": "^2.5|^3",
-        "symfony/polyfill-ctype": "~1.8",
-        "symfony/polyfill-mbstring": "~1.0"
+        "php": ">=8.4.1",
+        "symfony/polyfill-ctype": "^1.8",
+        "symfony/polyfill-mbstring": "^1.0"
       },
       "require-dev": {
-        "symfony/css-selector": "^6.4|^7.0|^8.0"
+        "symfony/css-selector": "^7.4|^8.0"
       },
       "type": "library",
       "autoload": {
@@ -4734,7 +4684,7 @@
       "description": "Eases DOM navigation for HTML and XML documents",
       "homepage": "https://symfony.com",
       "support": {
-        "source": "https://github.com/symfony/dom-crawler/tree/v7.4.12"
+        "source": "https://github.com/symfony/dom-crawler/tree/v8.1.5"
       },
       "funding": [
         {
@@ -4754,7 +4704,7 @@
           "type": "tidelift"
         }
       ],
-      "time": "2026-05-20T07:20:23+00:00"
+      "time": "2026-08-21T17:47:34+00:00"
     },
     {
       "name": "symfony/error-handler",

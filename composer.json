@@ -15,9 +15,9 @@
     "laravel/framework": "^13.0",
     "laravel/tinker": "^3.0",
     "panphp/pan": "^0.1.8",
-    "spatie/laravel-sluggable": "^3.8",
-    "symfony/css-selector": "^7.3",
-    "symfony/dom-crawler": "^7.3",
+    "spatie/laravel-sluggable": "^4.0",
+    "symfony/css-selector": "^8.0",
+    "symfony/dom-crawler": "^8.0",
     "tightenco/ziggy": "^2.6"
   },
   "require-dev": {
