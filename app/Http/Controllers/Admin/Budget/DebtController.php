@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Budget;
 
+use App\Actions\Budget\PayDebt;
 use App\Enums\Currencies;
 use App\Forms\Definitions\DebtForm;
 use App\Forms\ResourceForm;
@@ -11,11 +12,9 @@ use App\Http\Controllers\Admin\AdminResourceController;
 use App\Http\Requests\Admin\DebtRequest;
 use App\Http\Requests\Admin\PayDebtRequest;
 use App\Models\Debt;
-use App\Models\Expense;
 use App\Tables\Definitions\DebtTable;
 use App\Tables\ResourceTable;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\DB;
 
 class DebtController extends AdminResourceController
 {
@@ -65,32 +64,20 @@ class DebtController extends AdminResourceController
     /**
      * Record a payment against a debt, in full or in part.
      */
-    public function pay(PayDebtRequest $request, Debt $debt): RedirectResponse
+    public function pay(PayDebtRequest $request, Debt $debt, PayDebt $payDebt): RedirectResponse
     {
         /** @var array{payment_amount: numeric-string|float|int, payment_description: string} $data */
         $data = $request->validated();
 
         $payment = (float) $data['payment_amount'];
-        $remaining = round((float) $debt->amount - $payment, 2);
 
-        $receiptPath = $request->hasFile('receipt')
+        $stored = $request->hasFile('receipt')
             ? $request->file('receipt')?->store('receipts/debt-payments', 'public')
             : null;
 
-        DB::transaction(function () use ($debt, $data, $payment, $remaining, $receiptPath): void {
-            Expense::create([
-                'debt_id' => $debt->id,
-                'amount' => $payment,
-                'currency' => $debt->currency->value,
-                'description' => $data['payment_description'],
-                'receipt_path' => $receiptPath,
-                'date' => now()->toDateString(),
-            ]);
+        $receiptPath = is_string($stored) ? $stored : null;
 
-            $debt->update($remaining <= 0
-                ? ['amount' => 0, 'status' => 'paid']
-                : ['amount' => $remaining]);
-        });
+        $remaining = $payDebt->handle($debt, $payment, $data['payment_description'], $receiptPath);
 
         $symbol = $debt->currency->getSymbol();
 
