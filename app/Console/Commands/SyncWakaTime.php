@@ -7,8 +7,8 @@ namespace App\Console\Commands;
 use App\Models\User;
 use App\Models\WakaTimeSummary;
 use App\Models\WakaTimeSummaryEntry;
+use App\Notifications\AdminAlert;
 use App\Services\WakaTimeService;
-use Filament\Notifications\Notification;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -89,11 +89,11 @@ class SyncWakaTime extends Command
             return;
         }
 
-        Notification::make()
-            ->title('WakaTime sync failed')
-            ->body($message.' You may need to reconnect WakaTime in the admin panel.')
-            ->danger()
-            ->sendToDatabase($admin);
+        $admin->notify(new AdminAlert(
+            'WakaTime sync failed',
+            $message.' You may need to reconnect WakaTime in the admin panel.',
+            'danger',
+        ));
     }
 
     /**

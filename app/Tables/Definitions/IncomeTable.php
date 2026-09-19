@@ -1,0 +1,67 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Tables\Definitions;
+
+use App\Enums\Currencies;
+use App\Models\Income;
+use App\Tables\Column;
+use App\Tables\Filter;
+use App\Tables\ResourceTable;
+use Illuminate\Database\Eloquent\Builder;
+
+final class IncomeTable extends ResourceTable
+{
+    protected string $model = Income::class;
+
+    protected array $with = ['client', 'invoice', 'debt', 'incomeCategory'];
+
+    protected string $defaultSort = '-date';
+
+    protected function columns(): array
+    {
+        return [
+            Column::date('date')->sortable(),
+            Column::money('amount', currencyFrom: 'currency')->sortable(),
+            Column::badge('currency')->color('success')
+                ->state(fn (Income $record): string => $record->currency->value),
+            Column::badge('incomeCategory.name')->label('Category')
+                ->color(fn (Income $record): string => $record->incomeCategory?->color ? 'primary' : 'gray')
+                ->default('—'),
+            Column::text('source')->default('—'),
+            Column::text('client.title')->label('Client')->default('—')->toggleable(hiddenByDefault: true),
+            Column::text('description')->limit(50)->tooltip(),
+            Column::datetime('created_at')->label('Created')->sortable()->toggleable(hiddenByDefault: true),
+        ];
+    }
+
+    protected function filters(): array
+    {
+        return [
+            Filter::relationship('income_category_id', 'incomeCategory', 'name')->label('Category')->multiple(),
+            Filter::enum('currency', Currencies::class)->multiple(),
+            Filter::relationship('client_id', 'client', 'title')->label('Client')->multiple(),
+            Filter::dateRange('date'),
+            // The original resource branched four ways inside one select, which
+            // the generic contract cannot express. Three independent flags do
+            // the same job with a simpler control.
+            Filter::custom('source_invoice', 'From an invoice', fn (Builder $query): Builder => $query->whereNotNull('invoice_id')),
+            Filter::custom('source_debt', 'From debt repayment', fn (Builder $query): Builder => $query->whereNotNull('debt_id')),
+            Filter::custom('source_client', 'From a client', fn (Builder $query): Builder => $query
+                ->whereNotNull('client_id')
+                ->whereNull('invoice_id')
+                ->whereNull('debt_id')),
+        ];
+    }
+
+    protected function searchable(): array
+    {
+        return ['source', 'description', 'incomeCategory.name'];
+    }
+
+    protected function titleColumn(): string
+    {
+        return 'description';
+    }
+}

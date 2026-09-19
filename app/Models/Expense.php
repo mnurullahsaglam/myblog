@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\Currencies;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -25,6 +26,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Expense extends Model
 {
+    /** @use HasFactory<\Database\Factories\ExpenseFactory> */
+    use HasFactory;
+
     protected $fillable = [
         'expense_category_id',
         'debt_id',
@@ -39,6 +43,8 @@ class Expense extends Model
         'amount' => 'decimal:2',
         'currency' => Currencies::class,
         'date' => 'date',
+        'is_recurring' => 'boolean',
+        'is_tax_deductible' => 'boolean',
     ];
 
     /**

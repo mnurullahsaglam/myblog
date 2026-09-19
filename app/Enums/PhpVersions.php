@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-use Filament\Support\Contracts\HasColor;
-use Filament\Support\Contracts\HasLabel;
+use App\Support\Contracts\HasColor;
+use App\Support\Contracts\HasLabel;
 
 enum PhpVersions: string implements HasColor, HasLabel
 {

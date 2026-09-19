@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Services\WakaTimeService;
-use Filament\Notifications\Notification;
+use App\Support\AdminNotifier;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -31,7 +31,7 @@ class WakaTimeOAuthController extends Controller
      */
     public function callback(Request $request): RedirectResponse
     {
-        $panel = filament()->getDefaultPanel()->getUrl() ?? '/';
+        $panel = route('admin.coding-dashboard');
 
         if ($request->filled('error')) {
             return $this->back($panel, false, 'WakaTime authorization was denied: '.$request->string('error'));
@@ -57,11 +57,12 @@ class WakaTimeOAuthController extends Controller
 
     private function back(string $url, bool $success, string $message): RedirectResponse
     {
-        Notification::make()
-            ->title($success ? 'WakaTime connected' : 'WakaTime connection failed')
-            ->body($message)
-            ->{$success ? 'success' : 'danger'}()
-            ->send();
+        $notifier = app(AdminNotifier::class);
+        $title = $success ? 'WakaTime connected' : 'WakaTime connection failed';
+
+        $success
+            ? $notifier->success($title, $message)
+            : $notifier->danger($title, $message);
 
         return redirect()->to($url);
     }

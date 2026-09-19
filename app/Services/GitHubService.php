@@ -12,11 +12,16 @@ use Illuminate\Support\Facades\Log;
 
 class GitHubService
 {
-    private string $token;
-
     private string $baseUrl = 'https://api.github.com';
 
-    public function __construct()
+    /**
+     * Resolved when a request is actually made, not at construction.
+     *
+     * TaskObserver injects this service, so throwing in the constructor made
+     * every Task insert fail outright when no token was configured, before the
+     * observer's own error handling could see it.
+     */
+    private function token(): string
     {
         $token = config('services.github.token') ?? config('services.github.personal_access_token');
 
@@ -24,7 +29,7 @@ class GitHubService
             throw new Exception('GitHub token is required. Set GITHUB_TOKEN environment variable.');
         }
 
-        $this->token = $token;
+        return $token;
     }
 
     /**
@@ -99,7 +104,7 @@ class GitHubService
         $appName = config('app.name', 'Laravel-App');
 
         return [
-            'Authorization' => "token {$this->token}",
+            'Authorization' => 'token '.$this->token(),
             'Accept' => 'application/vnd.github.v3+json',
             'User-Agent' => is_string($appName) ? $appName : 'Laravel-App',
         ];

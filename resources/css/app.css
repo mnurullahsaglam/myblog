@@ -1,10 +1,38 @@
 @import 'tailwindcss';
+@import 'tailwindcss-primeui';
+
+@source '../js/**/*.vue';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 
 @theme {
-    --font-sans: Figtree, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
     'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+    /* Terminal Horizon. See docs/superpowers/design-system.md. */
+    --color-canvas: #0D0E11;
+    --color-surface: #15171C;
+    --color-elevated: #1A1D24;
+    --color-embedded: #121317;
+    --color-hairline: #272B35;
+    --color-hairline-subtle: #20232B;
+    --color-ink: #ECEEF2;
+    --color-ink-muted: #9096A2;
+    --color-ink-faint: #5A606E;
+    --color-status-nominal: #529E72;
+    --color-status-alert: #D95757;
+}
+
+@layer base {
+    html {
+        color-scheme: light dark;
+    }
+
+    /* Tabular figures everywhere numbers are monospaced. */
+    .font-mono {
+        font-variant-numeric: tabular-nums;
+    }
 }
 
 /*

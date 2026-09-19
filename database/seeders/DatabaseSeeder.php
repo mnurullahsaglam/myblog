@@ -66,7 +66,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'awesome-laravel-project',
                 'full_name' => 'nurullah/awesome-laravel-project',
                 'owner' => 'nurullah',
-                'description' => 'An awesome Laravel project with Filament admin',
+                'description' => 'An awesome Laravel project with an Inertia admin panel',
                 'visibility' => 'private',
                 'github_url' => 'https://github.com/nurullah/awesome-laravel-project',
                 'github_id' => '12346',

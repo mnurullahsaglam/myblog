@@ -6,9 +6,12 @@ namespace App\Observers;
 
 use App\Models\Debt;
 use App\Models\Expense;
+use App\Support\AdminNotifier;
 
 class DebtObserver
 {
+    public function __construct(private readonly AdminNotifier $notifier) {}
+
     /**
      * Handle the Debt "created" event.
      */
@@ -49,11 +52,10 @@ class DebtObserver
             'date' => now()->toDateString(),
         ]);
 
-        \Filament\Notifications\Notification::make()
-            ->title('Expense Created')
-            ->body("Expense record created for debt payment to {$debt->creditor_name}")
-            ->success()
-            ->send();
+        $this->notifier->success(
+            'Expense Created',
+            "Expense record created for debt payment to {$debt->creditor_name}",
+        );
     }
 
     /**

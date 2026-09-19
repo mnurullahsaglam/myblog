@@ -6,19 +6,21 @@ namespace Database\Factories;
 
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Carbon;
 
+/**
+ * @extends Factory<Category>
+ */
 class CategoryFactory extends Factory
 {
     protected $model = Category::class;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'slug' => fake()->slug(),
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
+            'name' => fake()->unique()->words(2, true),
         ];
     }
 }
