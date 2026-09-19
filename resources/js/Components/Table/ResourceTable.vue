@@ -8,6 +8,10 @@ import IconField from 'primevue/iconfield'
 import InputIcon from 'primevue/inputicon'
 import InputText from 'primevue/inputtext'
 import MultiSelect from 'primevue/multiselect'
+import Dialog from 'primevue/dialog'
+import Select from 'primevue/select'
+import DatePicker from 'primevue/datepicker'
+import ToggleSwitch from 'primevue/toggleswitch'
 import { useConfirm } from 'primevue/useconfirm'
 import FilterBar from './FilterBar.vue'
 import TableCell from './TableCell.vue'
@@ -19,7 +23,7 @@ const props = defineProps({
   resource: { type: String, required: true },
   label: { type: String, default: 'record' },
   rowActions: { type: Array, default: () => ['edit', 'delete'] },
-  bulkActions: { type: Array, default: () => ['delete'] },
+  bulkActions: { type: Array, default: () => ['delete', 'edit'] },
   exportable: { type: Boolean, default: false },
 })
 
@@ -111,6 +115,45 @@ function destroySelected() {
   })
 }
 
+const bulkFields = computed(() => props.schema.bulkFields ?? [])
+const editing = ref(false)
+const editField = ref(null)
+const editValue = ref(null)
+const editErrors = ref({})
+
+const chosenField = computed(() => bulkFields.value.find((field) => field.key === editField.value) ?? null)
+
+watch(editField, () => {
+  editValue.value = chosenField.value?.type === 'multiselect' ? [] : null
+  editErrors.value = {}
+})
+
+function openBulkEdit() {
+  editField.value = bulkFields.value[0]?.key ?? null
+  editValue.value = bulkFields.value[0]?.type === 'multiselect' ? [] : null
+  editErrors.value = {}
+  editing.value = true
+}
+
+function applyBulkEdit() {
+  router.patch(
+    route(`admin.${props.resource}.bulk-update`),
+    {
+      ids: selection.value.map((row) => row.id),
+      field: editField.value,
+      value: editValue.value,
+    },
+    {
+      preserveScroll: true,
+      onSuccess: () => {
+        editing.value = false
+        selection.value = []
+      },
+      onError: (errors) => (editErrors.value = errors),
+    },
+  )
+}
+
 function runExport() {
   router.post(route('admin.exports.store', props.resource), {}, { preserveScroll: true })
 }
@@ -140,6 +183,16 @@ function runExport() {
       />
 
       <div class="ml-auto flex items-center gap-2">
+        <Button
+          v-if="bulkActions.includes('edit') && bulkFields.length && selection.length"
+          :label="`Edit ${selection.length}`"
+          icon="pi pi-pencil"
+          severity="secondary"
+          outlined
+          size="small"
+          @click="openBulkEdit"
+        />
+
         <Button
           v-if="bulkActions.includes('delete') && selection.length"
           :label="`Delete ${selection.length}`"
@@ -254,5 +307,81 @@ function runExport() {
         </ColumnComponent>
       </DataTable>
     </div>
+
+    <Dialog
+      v-model:visible="editing"
+      modal
+      :header="`Edit ${selection.length} ${label}${selection.length === 1 ? '' : 's'}`"
+      :style="{ width: '28rem' }"
+    >
+      <p class="text-surface-500 mb-4 text-sm">
+        The chosen value replaces the current one on every selected {{ label }}.
+      </p>
+
+      <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-1">
+          <label for="bulk-field" class="text-sm font-medium">Field</label>
+          <Select
+            id="bulk-field"
+            v-model="editField"
+            :options="bulkFields"
+            option-label="label"
+            option-value="key"
+            :invalid="Boolean(editErrors.field)"
+          />
+          <small v-if="editErrors.field" class="text-red-500">{{ editErrors.field }}</small>
+        </div>
+
+        <div v-if="chosenField" class="flex flex-col gap-1">
+          <label for="bulk-value" class="text-sm font-medium">{{ chosenField.label }}</label>
+
+          <MultiSelect
+            v-if="chosenField.type === 'multiselect'"
+            id="bulk-value"
+            v-model="editValue"
+            :options="chosenField.options"
+            option-label="label"
+            option-value="value"
+            :placeholder="`Choose ${chosenField.label.toLowerCase()}`"
+            filter
+          />
+
+          <ToggleSwitch v-else-if="chosenField.type === 'toggle'" id="bulk-value" v-model="editValue" />
+
+          <DatePicker
+            v-else-if="chosenField.type === 'date' || chosenField.type === 'datetime'"
+            id="bulk-value"
+            v-model="editValue"
+            :show-time="chosenField.type === 'datetime'"
+            date-format="yy-mm-dd"
+          />
+
+          <Select
+            v-else
+            id="bulk-value"
+            v-model="editValue"
+            :options="chosenField.options"
+            option-label="label"
+            option-value="value"
+            show-clear
+            :placeholder="`Choose ${chosenField.label.toLowerCase()}`"
+          />
+
+          <small v-if="editErrors.value" class="text-red-500">{{ editErrors.value }}</small>
+          <small v-if="editErrors['value.0']" class="text-red-500">{{ editErrors['value.0'] }}</small>
+        </div>
+      </div>
+
+      <template #footer>
+        <Button label="Cancel" severity="secondary" outlined size="small" @click="editing = false" />
+        <Button
+          :label="`Update ${selection.length}`"
+          icon="pi pi-check"
+          size="small"
+          :disabled="!editField"
+          @click="applyBulkEdit"
+        />
+      </template>
+    </Dialog>
   </div>
 </template>

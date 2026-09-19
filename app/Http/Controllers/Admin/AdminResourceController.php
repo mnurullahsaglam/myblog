@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Actions\Resources\BulkDeleteRecords;
+use App\Actions\Resources\BulkEditRecords;
 use App\Actions\Resources\DeleteRecord;
 use App\Actions\Resources\StoreRecord;
 use App\Actions\Resources\UpdateRecord;
@@ -18,6 +19,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -35,6 +37,7 @@ abstract class AdminResourceController extends Controller
         protected readonly UpdateRecord $updateRecord,
         protected readonly DeleteRecord $deleteRecord,
         protected readonly BulkDeleteRecords $bulkDeleteRecords,
+        protected readonly BulkEditRecords $bulkEditRecords,
     ) {}
 
     abstract protected function table(): ResourceTable;
@@ -120,10 +123,34 @@ abstract class AdminResourceController extends Controller
         $table = $this->table();
 
         return Inertia::render($this->pagePath().'/Index', [
-            'schema' => $table->schema(),
+            'schema' => [...$table->schema(), 'bulkFields' => $this->bulkFieldSchemas()],
             'rows' => fn (): mixed => $table->rows($request),
             'tiles' => fn (): array => [...$this->indexTiles(), ...$table->tiles($request)],
         ]);
+    }
+
+    /**
+     * The form schema for each field the table may bulk edit.
+     *
+     * Carried on the table schema rather than as its own prop so the thirteen
+     * index pages do not each have to thread it through.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    protected function bulkFieldSchemas(): array
+    {
+        $form = $this->form();
+        $editable = $form->bulkEditableFields();
+
+        $fields = [];
+
+        foreach ($form->schema()['fields'] as $field) {
+            if (in_array($field['key'], $editable, true)) {
+                $fields[] = $field;
+            }
+        }
+
+        return $fields;
     }
 
     public function create(): Response
@@ -206,6 +233,45 @@ abstract class AdminResourceController extends Controller
         $deleted = $this->bulkDeleteRecords->handle($model, $validated['ids']);
 
         $this->notifier->success($deleted.' '.Str::plural($this->label(), $deleted).' deleted');
+
+        return to_route($this->indexRoute());
+    }
+
+    /**
+     * Set one field to one value across a selection.
+     *
+     * The field must be one the form declares bulk editable, and the value is
+     * validated against that field's own options. Models are unguarded, so this
+     * whitelist is what stops an arbitrary column being written in bulk.
+     */
+    public function bulkUpdate(Request $request): RedirectResponse
+    {
+        $model = $this->modelClass();
+        $table = (new $model)->getTable();
+        $form = $this->form();
+        $editable = $form->bulkEditableFields();
+
+        abort_if($editable === [], 404);
+
+        /** @var array{ids: array<int, int>, field: string} $validated */
+        $validated = $request->validate([
+            'ids' => ['required', 'array'],
+            'ids.*' => ['integer', 'exists:'.$table.',id'],
+            'field' => ['required', 'string', Rule::in($editable)],
+        ]);
+
+        $field = $validated['field'];
+
+        /** @var array{value: mixed} $value */
+        $value = $request->validate($form->bulkValueRules($field));
+
+        $updated = $this->bulkEditRecords->handle(
+            $model,
+            $validated['ids'],
+            $form->partition([$field => $value['value']]),
+        );
+
+        $this->notifier->success($updated.' '.Str::plural($this->label(), $updated).' updated');
 
         return to_route($this->indexRoute());
     }

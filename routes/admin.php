@@ -45,30 +45,39 @@ Route::middleware(['auth', 'can:access-admin'])
         Route::post('exports/{resource}', [ExportController::class, 'store'])->name('exports.store');
 
         Route::delete('posts/bulk', [PostController::class, 'bulkDestroy'])->name('posts.bulk-destroy');
+        Route::patch('posts/bulk', [PostController::class, 'bulkUpdate'])->name('posts.bulk-update');
         Route::resource('posts', PostController::class)->except(['show']);
 
         Route::delete('categories/bulk', [CategoryController::class, 'bulkDestroy'])->name('categories.bulk-destroy');
+        Route::patch('categories/bulk', [CategoryController::class, 'bulkUpdate'])->name('categories.bulk-update');
         Route::resource('categories', CategoryController::class)->except(['show']);
 
         Route::delete('publishers/bulk', [PublisherController::class, 'bulkDestroy'])->name('publishers.bulk-destroy');
+        Route::patch('publishers/bulk', [PublisherController::class, 'bulkUpdate'])->name('publishers.bulk-update');
         Route::resource('publishers', PublisherController::class)->except(['show']);
 
         Route::delete('writers/bulk', [WriterController::class, 'bulkDestroy'])->name('writers.bulk-destroy');
+        Route::patch('writers/bulk', [WriterController::class, 'bulkUpdate'])->name('writers.bulk-update');
         Route::resource('writers', WriterController::class)->except(['show']);
 
         Route::delete('books/bulk', [BookController::class, 'bulkDestroy'])->name('books.bulk-destroy');
+        Route::patch('books/bulk', [BookController::class, 'bulkUpdate'])->name('books.bulk-update');
         Route::resource('books', BookController::class)->except(['show']);
 
         Route::delete('clients/bulk', [ClientController::class, 'bulkDestroy'])->name('clients.bulk-destroy');
+        Route::patch('clients/bulk', [ClientController::class, 'bulkUpdate'])->name('clients.bulk-update');
         Route::resource('clients', ClientController::class)->except(['show']);
 
         Route::delete('projects/bulk', [ProjectController::class, 'bulkDestroy'])->name('projects.bulk-destroy');
+        Route::patch('projects/bulk', [ProjectController::class, 'bulkUpdate'])->name('projects.bulk-update');
         Route::resource('projects', ProjectController::class)->except(['show']);
 
         Route::delete('repositories/bulk', [RepositoryController::class, 'bulkDestroy'])->name('repositories.bulk-destroy');
+        Route::patch('repositories/bulk', [RepositoryController::class, 'bulkUpdate'])->name('repositories.bulk-update');
         Route::resource('repositories', RepositoryController::class);
 
         Route::delete('invoices/bulk', [InvoiceController::class, 'bulkDestroy'])->name('invoices.bulk-destroy');
+        Route::patch('invoices/bulk', [InvoiceController::class, 'bulkUpdate'])->name('invoices.bulk-update');
         Route::resource('invoices', InvoiceController::class)->except(['show']);
 
         Route::get('coding-dashboard', CodingDashboardController::class)->name('coding-dashboard');
@@ -84,12 +93,15 @@ Route::middleware(['auth', 'can:access-admin'])
         Route::get('waka-time-summaries/{wakaTimeSummary}', [WakaTimeSummaryController::class, 'show'])->name('waka-time-summaries.show');
 
         Route::delete('incomes/bulk', [IncomeController::class, 'bulkDestroy'])->name('incomes.bulk-destroy');
+        Route::patch('incomes/bulk', [IncomeController::class, 'bulkUpdate'])->name('incomes.bulk-update');
         Route::resource('incomes', IncomeController::class);
 
         Route::delete('expenses/bulk', [ExpenseController::class, 'bulkDestroy'])->name('expenses.bulk-destroy');
+        Route::patch('expenses/bulk', [ExpenseController::class, 'bulkUpdate'])->name('expenses.bulk-update');
         Route::resource('expenses', ExpenseController::class)->except(['show']);
 
         Route::delete('debts/bulk', [DebtController::class, 'bulkDestroy'])->name('debts.bulk-destroy');
+        Route::patch('debts/bulk', [DebtController::class, 'bulkUpdate'])->name('debts.bulk-update');
         Route::post('debts/{debt}/pay', [DebtController::class, 'pay'])->name('debts.pay');
         Route::resource('debts', DebtController::class)->except(['show']);
     });

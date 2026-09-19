@@ -5,6 +5,23 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Bulk edit: set one field across a selection from the table toolbar.
+  `App\Actions\Resources\BulkEditRecords` writes through each model inside a
+  transaction, for the same reason bulk delete does.
+- `ResourceForm::bulkEditableFields()` restricts bulk editing to choices and
+  switches - selects, relations, toggles and dates. Models are unguarded, so
+  this list is the authorisation boundary: a title, a slug or an upload cannot
+  be written in bulk.
+- `ResourceForm::bulkValueRules()` validates the submitted value against the
+  field's own option list rather than the resource's FormRequest, which would
+  demand every other field too.
+- A `*.bulk-update` route for each of the twelve resources that already had
+  bulk delete.
+
 ## [0.4.0] - 2026-09-19
 
 ### Added

@@ -98,3 +98,23 @@ it('redirects a guest away from the panel', function (): void {
 
     visit(route('admin.dashboard'))->assertNoJavaScriptErrors()->assertSee('Sign in');
 });
+
+/**
+ * The server side of bulk editing is covered in tests/Feature/Admin/BulkUpdateTest.php.
+ * This checks the part only a browser can: the dialog renders, and its options
+ * arrive from the table schema rather than being hardcoded in the component.
+ */
+it('opens the bulk edit dialog with options drawn from the schema', function (): void {
+    $category = Category::factory()->create(['name' => 'Bulk Target']);
+
+    visit(route('admin.posts.index'))
+        ->assertNoJavaScriptErrors()
+        ->click('thead .p-checkbox')
+        ->assertSee('Edit 3')
+        ->click('button:has-text("Edit 3")')
+        ->assertSee('Field')
+        ->assertSee('Categories')
+        ->click('.p-dialog .p-multiselect')
+        ->assertSee($category->name)
+        ->assertNoJavaScriptErrors();
+});

@@ -8,6 +8,7 @@ use BackedEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Validation\Rule;
 
 /**
  * A resource form: fields declared once in PHP, rendered by a single Vue
@@ -89,6 +90,61 @@ abstract class ResourceForm
         }
 
         return $values;
+    }
+
+    /**
+     * Fields that can safely take one value across a whole selection.
+     *
+     * Restricted to choices and switches: a title, a slug or an uploaded file
+     * is per-record, and setting one across many rows is never what was meant.
+     * This list is also the authorisation boundary for bulk editing, because
+     * models are unguarded - anything outside it cannot be written in bulk.
+     *
+     * @return array<int, string>
+     */
+    public function bulkEditableFields(): array
+    {
+        $keys = [];
+
+        foreach ($this->fields() as $field) {
+            if (in_array($field->type, ['select', 'multiselect', 'toggle', 'date', 'datetime'], true)) {
+                $keys[] = $field->key;
+            }
+        }
+
+        return $keys;
+    }
+
+    /**
+     * Validation for a bulk value, derived from the field the UI actually offered.
+     *
+     * Choices are checked against their own option list rather than against the
+     * resource's FormRequest, which would demand every other field too.
+     *
+     * @return array<string, array<int, mixed>>
+     */
+    public function bulkValueRules(string $key): array
+    {
+        foreach ($this->fields() as $field) {
+            if ($field->key !== $key) {
+                continue;
+            }
+
+            $schema = $field->schema();
+            $values = array_column($schema['options'], 'value');
+
+            return match ($field->type) {
+                'multiselect' => [
+                    'value' => ['present', 'array'],
+                    'value.*' => ['required', Rule::in($values)],
+                ],
+                'toggle' => ['value' => ['required', 'boolean']],
+                'date', 'datetime' => ['value' => [$schema['required'] ? 'required' : 'nullable', 'date']],
+                default => ['value' => [$schema['required'] ? 'required' : 'nullable', Rule::in($values)]],
+            };
+        }
+
+        return ['value' => ['prohibited']];
     }
 
     /**
