@@ -8,6 +8,7 @@ use App\Traits\CategoriableRelation;
 use App\Traits\DefaultSlugOptions;
 use App\Traits\ImageUrlAttribute;
 use App\Traits\SlugAsRouteKeyName;
+use Database\Factories\BookFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -22,7 +23,10 @@ class Book extends Model
 {
     use CategoriableRelation;
     use DefaultSlugOptions;
+
+    /** @use HasFactory<BookFactory> */
     use HasFactory;
+
     use HasSlug;
     use ImageUrlAttribute;
     use SlugAsRouteKeyName;
