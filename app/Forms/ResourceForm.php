@@ -50,7 +50,7 @@ abstract class ResourceForm
                 continue;
             }
 
-            if ($record === null) {
+            if (! $record instanceof Model) {
                 $values[$field->key] = $field->defaultValue();
 
                 continue;
@@ -71,7 +71,7 @@ abstract class ResourceForm
      */
     public function placeholders(?Model $record): array
     {
-        if ($record === null) {
+        if (! $record instanceof Model) {
             return [];
         }
 

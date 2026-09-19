@@ -34,9 +34,9 @@ class WakaTimeService
 
     public function __construct()
     {
-        $this->appId = self::stringConfig('services.wakatime.app_id');
-        $this->appSecret = self::stringConfig('services.wakatime.app_secret');
-        $this->redirectUri = self::stringConfig('services.wakatime.redirect');
+        $this->appId = $this->stringConfig('services.wakatime.app_id');
+        $this->appSecret = $this->stringConfig('services.wakatime.app_secret');
+        $this->redirectUri = $this->stringConfig('services.wakatime.redirect');
     }
 
     /**
@@ -72,7 +72,7 @@ class WakaTimeService
             throw new RuntimeException("WakaTime token exchange failed: {$response->status()} - {$response->body()}");
         }
 
-        $this->storeTokens(self::jsonArray($response->json()));
+        $this->storeTokens($this->jsonArray($response->json()));
     }
 
     /**
@@ -84,7 +84,7 @@ class WakaTimeService
 
         $expiresAt = $this->getExpiresAt();
 
-        if ($expiresAt === null || $expiresAt->subMinutes(5)->isPast()) {
+        if (! $expiresAt instanceof Carbon || $expiresAt->subMinutes(5)->isPast()) {
             $this->refreshToken();
         }
 
@@ -114,7 +114,7 @@ class WakaTimeService
             throw new RuntimeException("WakaTime token refresh failed: {$response->status()} - {$response->body()}. Reconnect required.");
         }
 
-        $this->storeTokens(self::jsonArray($response->json()));
+        $this->storeTokens($this->jsonArray($response->json()));
     }
 
     /**
@@ -217,7 +217,7 @@ class WakaTimeService
         return is_string($value) ? $value : null;
     }
 
-    private static function stringConfig(string $key): string
+    private function stringConfig(string $key): string
     {
         $value = config($key);
 
@@ -229,7 +229,7 @@ class WakaTimeService
      *
      * @return array<string, mixed>
      */
-    private static function jsonArray(mixed $value): array
+    private function jsonArray(mixed $value): array
     {
         if (! is_array($value)) {
             return [];

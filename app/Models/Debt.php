@@ -122,10 +122,11 @@ class Debt extends Model
         if ($days === null) {
             return 'No due date';
         }
-
         if ($days < 0) {
             return abs($days).' days overdue';
-        } elseif ($days === 0) {
+        }
+
+        if ($days === 0) {
             return 'Due today';
         }
 

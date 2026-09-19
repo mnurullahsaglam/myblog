@@ -26,14 +26,14 @@ final class WakaTimeSummaryTable extends ResourceTable
         return [
             Column::date('date')->sortable(),
             Column::text('duration')->label('Time coded')
-                ->state(fn (WakaTimeSummary $record): string => self::humanDuration((int) $record->total_seconds))
+                ->state(fn (WakaTimeSummary $record): string => $this->humanDuration((int) $record->total_seconds))
                 ->align('right'),
             Column::count('total_seconds')->label('Seconds')->sortable()->toggleable(hiddenByDefault: true),
             Column::count('entries_count')->label('Entries'),
         ];
     }
 
-    private static function humanDuration(int $seconds): string
+    private function humanDuration(int $seconds): string
     {
         $hours = intdiv($seconds, 3600);
         $minutes = intdiv($seconds % 3600, 60);

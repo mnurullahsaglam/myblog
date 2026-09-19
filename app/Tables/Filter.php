@@ -205,13 +205,13 @@ final class Filter
      */
     private function applyBoolean(Builder $query, mixed $value): void
     {
-        if ($value === 'yes' || $value === true || $value === '1') {
+        if (in_array($value, ['yes', true, '1'], true)) {
             $query->whereNotNull($this->key);
 
             return;
         }
 
-        if ($value === 'no' || $value === false || $value === '0') {
+        if (in_array($value, ['no', false, '0'], true)) {
             $query->whereNull($this->key);
         }
     }

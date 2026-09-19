@@ -49,7 +49,7 @@ final class DebtTable extends ResourceTable
                 ->color(fn (Debt $record): string => $record->status_color),
             Column::badge('due_date_status')->label('Due status')
                 ->state(fn (Debt $record): string => $record->due_date_status)
-                ->color(fn (Debt $record): string => self::dueStatusColor($record)),
+                ->color(fn (Debt $record): string => $this->dueStatusColor($record)),
             Column::date('date')->label('Incurred')->sortable(),
             Column::date('due_date')->label('Due')->sortable()->default('—')->toggleable(hiddenByDefault: true),
             Column::datetime('created_at')->label('Created')->sortable()->toggleable(hiddenByDefault: true),
@@ -76,7 +76,7 @@ final class DebtTable extends ResourceTable
         return $target->getSymbol().number_format($converted, 2);
     }
 
-    private static function dueStatusColor(Debt $record): string
+    private function dueStatusColor(Debt $record): string
     {
         if ($record->due_date === null || $record->status === 'paid') {
             return 'gray';

@@ -110,7 +110,7 @@ class SyncWakaTime extends Command
             $summary = WakaTimeSummary::updateOrCreate(
                 ['date' => $date],
                 [
-                    'total_seconds' => self::toInt(data_get($day, 'grand_total.total_seconds', 0)),
+                    'total_seconds' => $this->toInt(data_get($day, 'grand_total.total_seconds', 0)),
                     'raw' => $day,
                 ],
             );
@@ -138,8 +138,8 @@ class SyncWakaTime extends Command
                         'waka_time_summary_id' => $summary->id,
                         'type' => $type,
                         'name' => $name,
-                        'seconds' => self::toInt(data_get($item, 'total_seconds', 0)),
-                        'percent' => self::toFloat(data_get($item, 'percent', 0)),
+                        'seconds' => $this->toInt(data_get($item, 'total_seconds', 0)),
+                        'percent' => $this->toFloat(data_get($item, 'percent', 0)),
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];
@@ -154,12 +154,12 @@ class SyncWakaTime extends Command
         });
     }
 
-    private static function toInt(mixed $value): int
+    private function toInt(mixed $value): int
     {
         return is_numeric($value) ? (int) $value : 0;
     }
 
-    private static function toFloat(mixed $value): float
+    private function toFloat(mixed $value): float
     {
         return is_numeric($value) ? (float) $value : 0.0;
     }

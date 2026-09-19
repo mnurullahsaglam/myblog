@@ -41,7 +41,7 @@ class AdminNotifier
     {
         $session = $this->session();
 
-        if ($session === null) {
+        if (! $session instanceof Store) {
             Log::info($title, ['body' => $body]);
 
             return;
