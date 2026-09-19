@@ -7,7 +7,8 @@
     "lint": "eslint resources/js --fix",
     "lint:check": "eslint resources/js",
     "format": "prettier --write resources/js resources/css",
-    "format:check": "prettier --check resources/js resources/css"
+    "format:check": "prettier --check resources/js resources/css",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -19,7 +20,9 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-vue": "^10.11.0",
     "globals": "^17.12.0",
+    "husky": "^9.1.7",
     "laravel-vite-plugin": "^1.0",
+    "lint-staged": "^17.5.1",
     "playwright": "^1.63.0",
     "postcss": "^8.4.47",
     "prettier": "^3.9.8",
@@ -37,5 +40,13 @@
     "tailwindcss-primeui": "^0.6.1",
     "vue": "^3.5.43",
     "vuedraggable": "^4.1.0"
+  },
+  "lint-staged": {
+    "*.php": "vendor/bin/pint",
+    "resources/js/**/*.{js,vue}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "resources/css/**/*.css": "prettier --write"
   }
 }
