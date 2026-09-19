@@ -115,7 +115,6 @@ class SyncWakaTime extends Command
                 ],
             );
 
-            // Idempotent: rebuild child entries from scratch each run.
             $summary->entries()->delete();
 
             $rows = [];

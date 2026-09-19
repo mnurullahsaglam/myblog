@@ -39,7 +39,6 @@ it('renders all three overview groups', function (): void {
 it('totals this month income and spending', function (): void {
     Income::factory()->create(['amount' => 1000, 'currency' => 'TRY', 'date' => now()->toDateString()]);
     Expense::factory()->create(['amount' => 400, 'currency' => 'TRY', 'date' => now()->toDateString()]);
-    // Last month, so excluded.
     Income::factory()->create(['amount' => 9999, 'currency' => 'TRY', 'date' => now()->subMonth()->toDateString()]);
 
     $this->get(route('admin.dashboard'))
@@ -114,7 +113,6 @@ it('summarises work', function (): void {
 
             expect($tiles['Open tasks']['value'])->toBe('2')
                 ->and($tiles['Open tasks']['caption'])->toBe('1 in progress');
-            // Task -> Project -> Client, so factories create more than the two here.
             expect($tiles['Clients']['value'])->toBe(number_format(Client::count()));
             expect($tiles['Repositories']['value'])->toBe('1');
         });

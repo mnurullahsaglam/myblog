@@ -18,10 +18,7 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    public function register(): void
-    {
-        //
-    }
+    public function register(): void {}
 
     public function boot(): void
     {
@@ -39,7 +36,6 @@ class AppServiceProvider extends ServiceProvider
 
         Gate::define('access-admin', fn (User $user): bool => $user->isAdmin());
 
-        // Feeds the root template so the accent and scheme paint before Vue boots.
         View::composer('app', function (\Illuminate\View\View $view): void {
             $view->with([
                 'accentCss' => AccentRamps::cssVariables(Appearance::accent()),

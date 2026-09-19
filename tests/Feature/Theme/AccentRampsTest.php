@@ -22,7 +22,6 @@ it('never puts white text on an accent fill', function (): void {
 it('gives every accent a complete eleven-stop ramp', function (string $name): void {
     $ramp = AccentRamps::all()[$name];
 
-    // PHP coerces the numeric string keys to integers.
     expect(array_map(strval(...), array_keys($ramp)))
         ->toBe(['50', '100', '200', '300', '400', '500', '600', '700', '800', '900', '950']);
 

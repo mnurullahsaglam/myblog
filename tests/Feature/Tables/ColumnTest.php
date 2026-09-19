@@ -131,7 +131,6 @@ it('labels a HasLabel enum in a badge and keeps the raw value', function (): voi
 });
 
 it('can show the short enum value instead, via state', function (): void {
-    // Badges are 11px and compact, so currency columns want the code.
     $expense = Expense::factory()->create(['currency' => 'USD']);
 
     $resolved = Column::badge('currency')

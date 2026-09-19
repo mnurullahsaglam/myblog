@@ -79,7 +79,6 @@ final class GlobalSearch
                     ];
                 }
             } catch (Throwable) {
-                // One broken resource must not take the whole palette down.
                 continue;
             }
         }

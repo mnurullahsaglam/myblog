@@ -7,7 +7,6 @@ it('has no Filament, Pulse or Livewire references in application code', function
     exec('grep -ril "filament\|livewire\|laravel\\\\pulse" '.base_path($directory).' 2>/dev/null', $output);
 
     expect($output)->toBeEmpty($directory.' still references a removed package: '.implode(', ', $output));
-    // The migration that drops their tables names them, which is correct.
 })->with(['app', 'config', 'routes', 'resources', 'database/seeders', 'database/factories']);
 
 it('no longer requires the removed packages', function (string $package): void {

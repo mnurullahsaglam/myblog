@@ -125,7 +125,6 @@ it('marks the peak day on the trend', function (): void {
 });
 
 it('splits weekday and weekend averages', function (): void {
-    // A Monday and a Saturday.
     seedDay('2026-06-01', 7200);
     seedDay('2026-06-06', 1800);
 

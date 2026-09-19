@@ -33,8 +33,6 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             ],
         ])->validateWithBag('updateProfileInformation');
 
-        // App\Models\User always implements MustVerifyEmail, so a changed
-        // address always needs re-verification.
         if ($input['email'] !== $user->email) {
             $this->updateVerifiedUser($user, $input);
         } else {

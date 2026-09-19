@@ -33,8 +33,6 @@ it('resolves models by slug as the route key', function (string $model): void {
 })->with([Post::class, Category::class, Publisher::class, Writer::class, Book::class]);
 
 it('regenerates the slug when the title changes', function (): void {
-    // Spatie regenerates on update unless doNotGenerateSlugsOnUpdate() is set,
-    // so a slug submitted by a form is advisory: the model recomputes it.
     $post = Post::factory()->create(['title' => 'Learning Rust', 'slug' => null]);
 
     $post->update(['title' => 'Learning Go']);
@@ -49,7 +47,6 @@ it('honours a slug supplied explicitly on create', function (): void {
 });
 
 it('honours a slug supplied explicitly alongside a title change', function (): void {
-    // This is what the admin form submits, so the field is not merely advisory.
     $post = Post::factory()->create(['title' => 'Learning Rust', 'slug' => null]);
 
     $post->update(['title' => 'Learning Go', 'slug' => 'kept-by-hand']);

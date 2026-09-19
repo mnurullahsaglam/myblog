@@ -21,8 +21,6 @@ beforeEach(function (): void {
     app()->instance(GitHubService::class, $github);
 });
 
-// ------------------------------------------------------------------- Clients
-
 it('lists clients with their project counts', function (): void {
     $client = Client::factory()->create(['title' => 'Acme']);
     Project::factory()->count(2)->create(['client_id' => $client->id]);
@@ -63,8 +61,6 @@ it('requires every client field and a valid email', function (): void {
         ->post(route('admin.clients.store'), ['title' => '', 'email' => 'not-an-email'])
         ->assertSessionHasErrors(['title', 'email', 'address', 'country', 'tax_no']);
 });
-
-// ------------------------------------------------------------------ Projects
 
 it('lists projects with their client and counts', function (): void {
     $client = Client::factory()->create(['title' => 'Acme']);
@@ -114,8 +110,6 @@ it('creates a project with no client or deadline', function (): void {
 
     $this->assertDatabaseHas('projects', ['name' => 'Internal', 'client_id' => null]);
 });
-
-// -------------------------------------------------------------- Repositories
 
 it('lists repositories and colours visibility', function (): void {
     Repository::factory()->create(['visibility' => 'public']);

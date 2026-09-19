@@ -136,7 +136,6 @@ class GitHubService
                 /** @var array<string, mixed> $issueData */
                 $issueData = $response->json();
 
-                // Update task with GitHub issue data
                 $task->update([
                     'github_issue_number' => $issueData['number'],
                     'github_issue_url' => $issueData['html_url'],

@@ -21,8 +21,6 @@ beforeEach(function (): void {
     Storage::fake('public');
 });
 
-// ------------------------------------------------------------------- Incomes
-
 it('lists incomes newest first', function (): void {
     Income::factory()->create(['date' => '2026-01-01']);
     $newest = Income::factory()->create(['date' => '2026-06-01']);
@@ -106,8 +104,6 @@ it('renders the income show page', function (): void {
     $this->get(route('admin.incomes.show', $income))
         ->assertInertia(fn (AssertableInertia $page): AssertableInertia => $page->component('Budget/Incomes/Show'));
 });
-
-// ------------------------------------------------------------------ Expenses
 
 it('lists expenses newest first with tiles', function (): void {
     Expense::factory()->create(['date' => '2026-01-01', 'amount' => 100, 'currency' => 'TRY']);

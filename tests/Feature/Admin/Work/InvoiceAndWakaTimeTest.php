@@ -19,8 +19,6 @@ beforeEach(function (): void {
     Storage::fake('local');
 });
 
-// ------------------------------------------------------------------ Invoices
-
 it('lists invoices with the client title', function (): void {
     $client = Client::factory()->create(['title' => 'Acme']);
     Invoice::factory()->create(['client_id' => $client->id, 'invoice_number' => 'INV-001']);
@@ -69,7 +67,6 @@ it('recomputes tax and total on the server', function (): void {
         'currency' => 'TRY',
         'amount' => 1000,
         'tax_rate' => 20,
-        // Deliberately wrong; the server must ignore these.
         'tax_amount' => 9999,
         'total_amount' => 1,
         'invoice' => UploadedFile::fake()->create('invoice.zip', 10, 'application/zip'),
@@ -147,8 +144,6 @@ it('rejects a duplicate invoice number and a non-zip upload', function (): void 
         ])
         ->assertSessionHasErrors(['invoice_number', 'tax_rate', 'invoice']);
 });
-
-// -------------------------------------------------------- WakaTime summaries
 
 it('lists summaries newest first with a human duration', function (): void {
     WakaTimeSummary::factory()->create(['date' => '2026-01-01', 'total_seconds' => 100]);

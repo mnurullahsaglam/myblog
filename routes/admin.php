@@ -32,7 +32,6 @@ Route::middleware(['auth', 'can:access-admin'])
         Route::get('/', DashboardController::class)->name('dashboard');
         Route::get('profile', ProfileController::class)->name('profile');
         Route::get('search', SearchController::class)->name('search');
-        // read-all first, so it is not captured by the parameterised route.
         Route::patch('notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.read-all');
         Route::patch('notifications/{notification}', [NotificationController::class, 'read'])->name('notifications.read');
         Route::delete('notifications/{notification}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
@@ -40,13 +39,11 @@ Route::middleware(['auth', 'can:access-admin'])
         Route::get('settings', [SettingsController::class, 'edit'])->name('settings');
         Route::put('settings', [SettingsController::class, 'update'])->name('settings.update');
 
-        // Declared before the parameterised route so it is not swallowed by it.
         Route::get('exports/download', [ExportController::class, 'download'])
             ->middleware('signed')
             ->name('exports.download');
         Route::post('exports/{resource}', [ExportController::class, 'store'])->name('exports.store');
 
-        // Bulk routes come first so "posts/bulk" is not captured by "posts/{post}".
         Route::delete('posts/bulk', [PostController::class, 'bulkDestroy'])->name('posts.bulk-destroy');
         Route::resource('posts', PostController::class)->except(['show']);
 
@@ -83,7 +80,6 @@ Route::middleware(['auth', 'can:access-admin'])
         Route::put('tasks/{task}', [TaskBoardController::class, 'update'])->name('tasks.update');
         Route::delete('tasks/{task}', [TaskBoardController::class, 'destroy'])->name('tasks.destroy');
 
-        // Read only: synced from the WakaTime API, never authored by hand.
         Route::get('waka-time-summaries', [WakaTimeSummaryController::class, 'index'])->name('waka-time-summaries.index');
         Route::get('waka-time-summaries/{wakaTimeSummary}', [WakaTimeSummaryController::class, 'show'])->name('waka-time-summaries.show');
 

@@ -96,7 +96,6 @@ final class DashboardData
 
         $aiCost = $this->grandTotalSum('ai_agent_total_cost');
 
-        // Only shown when WakaTime actually reported AI activity.
         if ($aiCost > 0.0) {
             $tiles[] = [
                 'label' => 'AI spend',
@@ -159,7 +158,6 @@ final class DashboardData
         return [
             'labels' => ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
             'data' => array_values($totals),
-            // Weekend bars are drawn in the neutral hairline colour.
             'weekendIndexes' => [5, 6],
             'weekdayAverage' => $this->formatDuration((int) round($weekdayTotal / $weekdayDays)),
             'weekendAverage' => $this->formatDuration((int) round($weekendTotal / $weekendDays)),

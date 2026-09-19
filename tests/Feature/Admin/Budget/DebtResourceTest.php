@@ -16,7 +16,6 @@ beforeEach(function (): void {
     $this->actingAs(User::factory()->create(['email' => 'admin@example.test']));
     Storage::fake('public');
 
-    // Doubling rate, so conversions are obvious in assertions.
     $exchange = Mockery::mock(ExchangeRateService::class);
     $exchange->shouldReceive('convert')->andReturnUsing(
         fn (float $amount, string $from, string $to): float => $amount * 2,
@@ -159,8 +158,6 @@ it('creates a debt', function (): void {
     $this->assertDatabaseHas('debts', ['creditor_name' => 'Bank']);
 });
 
-// ---------------------------------------------------------------- Pay a debt
-
 it('records a full payment and settles the debt', function (): void {
     $debt = Debt::factory()->create(['amount' => 1000.00, 'currency' => 'TRY', 'status' => 'pending']);
 
@@ -199,8 +196,6 @@ it('creates one expense for the payment, not two', function (): void {
 
     $expenses = Expense::where('debt_id', $debt->id)->get();
 
-    // The observer also reacts to the status flip; the controller creates the
-    // expense first so the observer's guard finds it.
     expect($expenses)->toHaveCount(1);
     expect((float) $expenses->first()->amount)->toBe(200.0)
         ->and($expenses->first()->currency->value)->toBe('USD');

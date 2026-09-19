@@ -140,8 +140,6 @@ abstract class ResourceTable
         $page = $request->integer('page');
 
         return $query
-            // Page and query string come from the injected request, not the
-            // global resolver, so the table is testable in isolation.
             ->paginate(
                 perPage: $this->resolvePerPage($request),
                 page: $page > 0 ? $page : 1,

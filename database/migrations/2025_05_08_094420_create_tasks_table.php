@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('status');
             $table->integer('sort_order')->nullable();
 
-            // GitHub issue related columns
             $table->string('github_issue_number')->nullable();
             $table->string('github_issue_url')->nullable();
             $table->string('github_issue_state')->nullable(); // open, closed

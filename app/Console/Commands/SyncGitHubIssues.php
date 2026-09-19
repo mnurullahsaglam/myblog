@@ -111,7 +111,6 @@ class SyncGitHubIssues extends Command
                 }
             }
 
-            // Update repository sync timestamp
             $repository->update([
                 'last_synced_at' => now(),
                 'issues_count' => count($issues),
@@ -154,7 +153,6 @@ class SyncGitHubIssues extends Command
             /** @var array<int, array<string, mixed>> $issues */
             $issues = $response->json();
 
-            // Filter out pull requests (GitHub API includes PRs in issues endpoint)
             $issuesOnly = array_filter($issues, fn (array $issue): bool => ! isset($issue['pull_request']));
 
             $allIssues = array_merge($allIssues, $issuesOnly);

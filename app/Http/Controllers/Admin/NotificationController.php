@@ -12,8 +12,6 @@ class NotificationController extends Controller
 {
     public function read(Request $request, string $notification): RedirectResponse
     {
-        // Scoped to the user's own notifications, so one account cannot mark
-        // another's as read.
         $record = $request->user()?->notifications()->whereKey($notification)->first();
 
         abort_if($record === null, 404);

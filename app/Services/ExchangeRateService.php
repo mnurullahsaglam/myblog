@@ -92,7 +92,6 @@ class ExchangeRateService
 
         $rates = $this->getAllRates();
 
-        // Convert both currencies to USD first, then calculate cross rate
         $fromRate = $rates[$fromCurrency] ?? 1;
         $toRate = $rates[$toCurrency] ?? 1;
 
@@ -119,19 +118,15 @@ class ExchangeRateService
         $rates = ['USD' => 1.0]; // Base rate for USD
 
         try {
-            // Fetch currency rates from OpenExchangeRates
             if ($this->openExchangeApiKey) {
                 $currencyRates = $this->fetchCurrencyRates();
                 $rates = array_merge($rates, $currencyRates);
             }
 
-            // Fetch precious metals rates (if API key available)
             if ($this->metalsApiKey) {
                 $metalRates = $this->fetchMetalRates();
                 $rates = array_merge($rates, $metalRates);
             } else {
-                // Fallback metal prices (converted to grams)
-                // 1 troy ounce = 31.1035 grams
                 $rates['XAU'] = 0.01555175; // Gold per gram in USD
                 $rates['XAG'] = 0.99531;    // Silver per gram in USD
             }
@@ -141,7 +136,6 @@ class ExchangeRateService
         } catch (Exception $exception) {
             Log::error('Failed to fetch exchange rates: '.$exception->getMessage());
 
-            // Return fallback rates
             return $this->getFallbackRates();
         }
 
@@ -181,8 +175,6 @@ class ExchangeRateService
      */
     private function fetchMetalRates(): array
     {
-        // Placeholder for metals API integration
-        // Rates converted from ounces to grams (1 troy ounce = 31.1035 grams)
         return [
             'XAU' => 0.01555175, // Gold per gram in USD (0.0005 oz * 31.1035)
             'XAG' => 0.99531,    // Silver per gram in USD (0.032 oz * 31.1035)

@@ -210,7 +210,6 @@ it('eager loads the declared relations rather than querying per row', function (
     $queries = count(DB::getQueryLog());
     DB::disableQueryLog();
 
-    // Count, page of rows, and the eager load. Nowhere near one per row.
     expect($queries)->toBeLessThanOrEqual(4);
 });
 

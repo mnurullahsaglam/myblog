@@ -27,9 +27,5 @@ return new class extends Migration
         }
     }
 
-    public function down(): void
-    {
-        // These tables belonged to packages that have been removed. Restoring
-        // them means reinstalling those packages and running their migrations.
-    }
+    public function down(): void {}
 };

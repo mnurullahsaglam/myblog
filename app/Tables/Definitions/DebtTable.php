@@ -69,7 +69,6 @@ final class DebtTable extends ResourceTable
                 $target->value,
             );
         } catch (Throwable) {
-            // A rate lookup failure must not take the whole table down.
             return '—';
         }
 

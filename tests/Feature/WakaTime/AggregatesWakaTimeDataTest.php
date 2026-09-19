@@ -107,7 +107,6 @@ it('buckets everything past the limit into Other', function (): void {
 
     expect($result)->toHaveCount(9)
         ->toHaveKey('Other');
-    // The four smallest (100 + 200 + 300 + 400) fall into Other.
     expect($result['Other'])->toBe(1000);
 });
 

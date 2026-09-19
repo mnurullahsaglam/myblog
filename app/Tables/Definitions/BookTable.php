@@ -29,8 +29,6 @@ final class BookTable extends ResourceTable
         return [
             Column::image('image')->label('')->size(28),
             Column::text('name')->sortable(),
-            // Relationship columns are not sortable: ordering happens on real
-            // database columns, and a dotted key would need a join.
             Column::text('writer.name')->label('Writer'),
             Column::text('publisher.name')->label('Publisher'),
             Column::count('page_count')->label('Pages')->sortable(),

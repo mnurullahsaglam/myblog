@@ -158,7 +158,6 @@ it('does not call github when only reordering siblings', function (): void {
     $a = Task::factory()->githubIssue()->create(['status' => 'todo', 'sort_order' => 1, 'project_id' => null]);
     $b = Task::factory()->githubIssue()->create(['status' => 'todo', 'sort_order' => 2, 'project_id' => null]);
 
-    // Only the moved task talks to GitHub; the sibling is reindexed quietly.
     $this->github->shouldReceive('updateIssue')->atMost()->once();
 
     $this->patch(route('admin.tasks.move', $b), ['status' => 'todo', 'position' => 0]);

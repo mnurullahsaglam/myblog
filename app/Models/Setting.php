@@ -46,7 +46,6 @@ class Setting extends Model
             ['value' => $value, 'type' => $type]
         );
 
-        // Clear cache
         Cache::forget("setting_{$group}_{$name}");
 
         return $setting;

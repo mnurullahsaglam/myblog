@@ -47,9 +47,6 @@ final class IncomeTable extends ResourceTable
             Filter::enum('currency', Currencies::class)->multiple(),
             Filter::relationship('client_id', 'client', 'title')->label('Client')->multiple(),
             Filter::dateRange('date'),
-            // The original resource branched four ways inside one select, which
-            // the generic contract cannot express. Three independent flags do
-            // the same job with a simpler control.
             Filter::custom('source_invoice', 'From an invoice', fn (Builder $query): Builder => $query->whereNotNull('invoice_id')),
             Filter::custom('source_debt', 'From debt repayment', fn (Builder $query): Builder => $query->whereNotNull('debt_id')),
             Filter::custom('source_client', 'From a client', fn (Builder $query): Builder => $query

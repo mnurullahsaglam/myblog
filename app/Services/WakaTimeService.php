@@ -155,8 +155,6 @@ class WakaTimeService
 
     public function disconnect(): void
     {
-        // Delete model instances (not a bulk query) so the Setting model's `deleted`
-        // event fires and the cached values are forgotten.
         Setting::where('group', self::SETTING_GROUP)
             ->whereIn('name', ['access_token', 'refresh_token', 'expires_at'])
             ->get()
@@ -185,7 +183,6 @@ class WakaTimeService
             Setting::set(self::SETTING_GROUP, 'refresh_token', Crypt::encryptString($refreshToken));
         }
 
-        // WakaTime returns expires_at as an ISO-8601 timestamp; fall back to expires_in seconds.
         $expiresAtRaw = $payload['expires_at'] ?? null;
         $expiresInRaw = $payload['expires_in'] ?? null;
 

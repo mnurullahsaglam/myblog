@@ -43,9 +43,6 @@ abstract class ResourceForm
         $values = [];
 
         foreach ($this->fields() as $field) {
-            // Placeholders are display-only and reported separately. A
-            // readonlyCode field stays in the state so a slugFrom watcher has
-            // somewhere to write on a new record.
             if ($field->type === 'placeholder') {
                 continue;
             }

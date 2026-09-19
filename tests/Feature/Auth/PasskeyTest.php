@@ -60,7 +60,6 @@ it('offers registration options to an authenticated user', function (): void {
     $options = $response->json('options');
 
     expect($options)->toHaveKeys(['challenge', 'rp', 'user', 'pubKeyCredParams']);
-    // Derived from APP_URL, which differs between local and CI.
     expect($options['rp']['id'])->toBe(parse_url((string) config('app.url'), PHP_URL_HOST));
     expect($options['user']['displayName'])->toBe($this->admin->name)
         ->and(session()->has('passkey.registration_options'))->toBeTrue();

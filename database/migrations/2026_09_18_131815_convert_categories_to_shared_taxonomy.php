@@ -23,7 +23,6 @@ return new class extends Migration
             $table->primary(['category_id', 'categoriable_id', 'categoriable_type'], 'categoriables_primary');
         });
 
-        // Carry any existing attachment across before the columns disappear.
         if (Schema::hasColumn('categories', 'categoriable_id')) {
             DB::table('categories')
                 ->whereNotNull('categoriable_id')

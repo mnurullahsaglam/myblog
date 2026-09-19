@@ -16,8 +16,6 @@ use App\Models\Task;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
@@ -28,7 +26,6 @@ class DatabaseSeeder extends Seeder
                 'email' => config('app.admin_email'),
             ]);
 
-        // Create sample projects
         $projects = [
             [
                 'name' => 'Blog Development',
@@ -44,7 +41,6 @@ class DatabaseSeeder extends Seeder
             Project::create($projectData);
         }
 
-        // Create sample repositories
         $firstProject = Project::query()->firstOrFail();
         $secondProject = Project::query()->skip(1)->firstOrFail();
 
@@ -91,7 +87,6 @@ class DatabaseSeeder extends Seeder
             Repository::create($repoData);
         }
 
-        // Create sample tasks for the first repository
         $firstRepo = Repository::first();
         if ($firstRepo) {
             $tasks = [
@@ -156,13 +151,11 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        // Create sample budget data
         $this->createBudgetData();
     }
 
     private function createBudgetData(): void
     {
-        // Create income categories
         $incomeCategories = [
             ['name' => 'Freelance Work', 'description' => 'Income from freelance projects', 'color' => '#10B981'],
             ['name' => 'Client Payments', 'description' => 'Payments from regular clients', 'color' => '#3B82F6'],
@@ -174,7 +167,6 @@ class DatabaseSeeder extends Seeder
             IncomeCategory::create($categoryData);
         }
 
-        // Create expense categories
         $expenseCategories = [
             ['name' => 'Office Supplies', 'description' => 'Office equipment and supplies', 'color' => '#EF4444'],
             ['name' => 'Software & Tools', 'description' => 'Software subscriptions and tools', 'color' => '#F59E0B'],
@@ -188,7 +180,6 @@ class DatabaseSeeder extends Seeder
             ExpenseCategory::create($categoryData);
         }
 
-        // Create sample debts
         $debts = [
             [
                 'creditor_name' => 'Tech Solutions Ltd',
@@ -226,7 +217,6 @@ class DatabaseSeeder extends Seeder
             Debt::create($debtData);
         }
 
-        // Create sample incomes
         $firstClient = Client::first();
         $incomeCategory = IncomeCategory::first();
 
@@ -273,7 +263,6 @@ class DatabaseSeeder extends Seeder
             Income::create($incomeData);
         }
 
-        // Create sample expenses
         $expenseCategory = ExpenseCategory::first();
 
         $expenses = [

@@ -14,8 +14,6 @@ class ProfileController extends Controller
 {
     public function __invoke(Request $request): Response
     {
-        // fresh() so every column is hydrated: Model::shouldBeStrict() throws on
-        // an attribute that was never selected, which a partially built user has.
         $user = $request->user()?->fresh();
 
         return Inertia::render('Profile', [

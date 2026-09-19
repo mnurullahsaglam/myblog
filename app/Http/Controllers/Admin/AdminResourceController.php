@@ -101,8 +101,6 @@ abstract class AdminResourceController extends Controller
 
         $record = $modelClass::query()->where($key, $value)->firstOrFail();
 
-        // Put the model back on the route so FormRequests resolved later see a
-        // record rather than a raw key - unique rules need it to ignore itself.
         $request->route()?->setParameter($this->recordParameter(), $record);
 
         return $record;
@@ -114,8 +112,6 @@ abstract class AdminResourceController extends Controller
 
         return Inertia::render($this->pagePath().'/Index', [
             'schema' => $table->schema(),
-            // Closures, so a partial reload asking only for rows recomputes
-            // nothing else.
             'rows' => fn (): mixed => $table->rows($request),
             'tiles' => fn (): array => [...$this->indexTiles(), ...$table->tiles($request)],
         ]);
@@ -226,7 +222,6 @@ abstract class AdminResourceController extends Controller
 
         foreach ($this->uploads() as $field => $directory) {
             if (! $request->hasFile($field)) {
-                // No new upload: leave whatever path is already stored alone.
                 unset($data[$field]);
 
                 continue;

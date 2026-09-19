@@ -18,12 +18,10 @@ class TaskObserver
      */
     public function updated(Task $task): void
     {
-        // Only sync if this is a GitHub issue
         if (! $task->is_github_issue) {
             return;
         }
 
-        // Check if relevant fields were changed
         $relevantFields = ['title', 'description', 'status'];
         $hasRelevantChanges = collect($relevantFields)
             ->contains(fn ($field) => $task->wasChanged($field));
@@ -32,7 +30,6 @@ class TaskObserver
             return;
         }
 
-        // Sync to GitHub in the background
         try {
             $this->githubService->updateIssue($task);
         } catch (Exception $exception) {
@@ -48,7 +45,6 @@ class TaskObserver
      */
     public function creating(Task $task): void
     {
-        // Set default sort order if not provided
         if (is_null($task->sort_order)) {
             $maxOrder = Task::where('status', $task->status)
                 ->when($task->project_id, fn ($q) => $q->where('project_id', $task->project_id))
@@ -64,7 +60,6 @@ class TaskObserver
      */
     public function created(Task $task): void
     {
-        // Create GitHub issue if task has repository but no GitHub issue
         if ($task->repository && ! $task->github_issue_number) {
             try {
                 $this->githubService->createIssue($task);

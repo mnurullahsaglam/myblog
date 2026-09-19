@@ -108,8 +108,6 @@ it('swallows github failures so the save still succeeds', function (): void {
 });
 
 it('creates a task even when no github token is configured', function (): void {
-    // The real service, not the mock: its constructor used to throw without a
-    // token, which made every Task insert fail before the observer could help.
     app()->forgetInstance(GitHubService::class);
     config(['services.github.token' => null, 'services.github.personal_access_token' => null]);
 

@@ -18,8 +18,6 @@ beforeEach(function (): void {
     Storage::fake('public');
 });
 
-// ---------------------------------------------------------------- Publishers
-
 it('lists publishers with their book counts', function (): void {
     $publisher = Publisher::factory()->create(['name' => 'Ace']);
     Book::factory()->count(4)->create(['publisher_id' => $publisher->id]);
@@ -44,8 +42,6 @@ it('requires a publisher name of at least three characters', function (): void {
         ->post(route('admin.publishers.store'), ['name' => 'ab', 'slug' => 'ab'])
         ->assertSessionHasErrors('name');
 });
-
-// ------------------------------------------------------------------- Writers
 
 it('lists writers and renders years without separators', function (): void {
     Writer::factory()->create(['name' => 'Le Guin', 'birth_year' => 1929, 'death_year' => 2018]);
@@ -123,8 +119,6 @@ it('keeps the stored portrait when no new file is uploaded', function (): void {
     expect($writer->fresh()->image)->toBe('writers/existing.jpg');
 });
 
-// --------------------------------------------------------------------- Books
-
 it('lists books with writer and publisher names', function (): void {
     $writer = Writer::factory()->create(['name' => 'Le Guin']);
     $publisher = Publisher::factory()->create(['name' => 'Ace']);
@@ -139,8 +133,6 @@ it('lists books with writer and publisher names', function (): void {
         ->assertInertia(function (AssertableInertia $page): void {
             $page->component('Library/Books/Index');
 
-            // Dotted relationship keys cannot be addressed through the fluent
-            // dot path, so read the cells array directly.
             $cells = $page->toArray()['props']['rows']['data'][0]['cells'];
 
             expect($cells['name']['display'])->toBe('The Dispossessed')
@@ -219,8 +211,6 @@ it('keeps the public book pages working', function (): void {
 
     $this->get('/books')->assertOk();
 });
-
-// ---------------------------------------------------------------- Navigation
 
 it('lists the library cluster in navigation', function (): void {
     $library = collect(Navigation::clusters())->firstWhere('label', 'Library');

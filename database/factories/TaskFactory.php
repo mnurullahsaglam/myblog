@@ -28,7 +28,6 @@ class TaskFactory extends Factory
             'title' => fake()->sentence(4),
             'description' => fake()->paragraph(),
             'status' => fake()->randomElement(['todo', 'in_progress', 'completed']),
-            // Left null so TaskObserver::creating assigns the next position.
             'sort_order' => null,
         ];
     }

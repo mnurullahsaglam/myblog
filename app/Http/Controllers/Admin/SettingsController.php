@@ -47,7 +47,6 @@ class SettingsController extends Controller
         $settings['appearance']['accent'] ??= AccentRamps::DEFAULT;
         $settings['appearance']['color_scheme'] ??= Appearance::DEFAULT_SCHEME;
 
-        // Stored as JSON, but the tag input wants an array.
         $keywords = $settings['meta']['meta_keywords'] ?? null;
         $settings['meta']['meta_keywords'] = is_string($keywords)
             ? (json_decode($keywords, true) ?: [])
@@ -91,7 +90,6 @@ class SettingsController extends Controller
         if (array_key_exists($key, self::UPLOADS)) {
             $file = $request->file($key);
 
-            // No new file means keep whatever is already stored.
             if (! $file instanceof UploadedFile) {
                 return;
             }

@@ -78,8 +78,6 @@ class DebtController extends AdminResourceController
             : null;
 
         DB::transaction(function () use ($debt, $data, $payment, $remaining, $receiptPath): void {
-            // Created before the status flips so DebtObserver finds it and does
-            // not create a second expense for the same debt.
             Expense::create([
                 'debt_id' => $debt->id,
                 'amount' => $payment,

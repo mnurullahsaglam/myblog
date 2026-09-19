@@ -35,7 +35,6 @@ beforeEach(function (): void {
     $exchange->shouldIgnoreMissing();
     app()->instance(ExchangeRateService::class, $exchange);
 
-    // Enough of everything that tables, charts and the board render real rows.
     $writer = Writer::factory()->create();
     Book::factory()->count(3)->create(['writer_id' => $writer->id]);
     Post::factory()->count(3)->create();

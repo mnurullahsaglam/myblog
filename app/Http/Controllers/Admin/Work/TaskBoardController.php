@@ -131,7 +131,6 @@ class TaskBoardController extends Controller
         $data = $request->validated();
 
         DB::transaction(function () use ($task, $data): void {
-            // Take the task out of the ordering first so reindexing is simple.
             $task->updateQuietly(['sort_order' => null]);
 
             /** @var Collection<int, Task> $siblings */
@@ -146,14 +145,11 @@ class TaskBoardController extends Controller
 
             foreach ($ordered as $index => $sibling) {
                 if ($sibling->is($task)) {
-                    // Through the model, so TaskObserver sees the status change
-                    // and syncs it to GitHub.
                     $task->update(['status' => $data['status'], 'sort_order' => $index + 1]);
 
                     continue;
                 }
 
-                // Pure reordering: no observer, no GitHub call.
                 $sibling->updateQuietly(['sort_order' => $index + 1]);
             }
         });

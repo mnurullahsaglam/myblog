@@ -15,7 +15,6 @@ return new class extends Migration
             $table->foreignId('waka_time_summary_id')
                 ->constrained()
                 ->cascadeOnDelete();
-            // project | language | editor | os | category
             $table->string('type')->index();
             $table->string('name');
             $table->unsignedBigInteger('seconds')->default(0);

@@ -90,7 +90,6 @@ it('renders placeholder values separately', function (): void {
     $post = Post::factory()->create();
 
     expect((new FixturePostForm)->placeholders($post))->toHaveKey('created_at');
-    // Locale-dependent wording, so only assert it rendered something.
     expect((new FixturePostForm)->placeholders($post)['created_at'])->toBeString()->not->toBeEmpty();
 });
 

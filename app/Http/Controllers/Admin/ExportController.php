@@ -22,8 +22,6 @@ class ExportController extends Controller
     {
         abort_unless(array_key_exists($resource, RunResourceExport::EXPORTS), 404);
 
-        // Run inline so the download link can be handed over straight away. On a
-        // personal-scale dataset this is fast; dispatch it if it stops being so.
         $path = new RunResourceExport($resource)->handle();
 
         $this->notifier->success(
@@ -38,8 +36,6 @@ class ExportController extends Controller
     {
         $path = $request->string('path')->toString();
 
-        // A signed URL proves intent, not innocence: without this, any file on
-        // the private disk could be fetched by editing the path.
         throw_if(! str_starts_with($path, 'exports/') || str_contains($path, '..'), AccessDeniedHttpException::class, 'That file is not downloadable.');
 
         abort_unless(Storage::disk('local')->exists($path), 404);

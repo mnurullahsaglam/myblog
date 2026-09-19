@@ -31,7 +31,6 @@ class InvoiceRequest extends FormRequest
             'currency' => ['required', Rule::enum(Currencies::class)],
             'amount' => ['required', 'integer', 'min:0'],
             'tax_rate' => ['required', 'integer', 'min:0', 'max:100'],
-            // tax_amount and total_amount are computed, never trusted from input.
             'invoice' => [$invoiceId === null ? 'required' : 'nullable', 'file', 'mimes:zip', 'max:20480'],
         ];
     }
