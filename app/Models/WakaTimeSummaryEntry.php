@@ -8,7 +8,6 @@ use Database\Factories\WakaTimeSummaryEntryFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Override;
 
 /**
  * @property int $id
@@ -33,15 +32,6 @@ final class WakaTimeSummaryEntry extends Model
     public const string TYPE_OS = 'os';
 
     public const string TYPE_CATEGORY = 'category';
-
-    #[Override]
-    protected $fillable = [
-        'waka_time_summary_id',
-        'type',
-        'name',
-        'seconds',
-        'percent',
-    ];
 
     protected function casts(): array
     {

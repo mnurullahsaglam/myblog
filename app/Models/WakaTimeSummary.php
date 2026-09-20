@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
-use Override;
 
 /**
  * @property int $id
@@ -24,13 +23,6 @@ final class WakaTimeSummary extends Model
 {
     /** @use HasFactory<WakaTimeSummaryFactory> */
     use HasFactory;
-
-    #[Override]
-    protected $fillable = [
-        'date',
-        'total_seconds',
-        'raw',
-    ];
 
     protected function casts(): array
     {

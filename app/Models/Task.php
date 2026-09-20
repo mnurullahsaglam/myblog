@@ -41,14 +41,6 @@ final class Task extends Model
     use HasFactory;
 
     #[Override]
-    protected $fillable = [
-        'project_id', 'repository_id', 'title', 'description', 'status', 'sort_order',
-        'github_issue_number', 'github_issue_url', 'github_issue_state',
-        'github_issue_labels', 'github_assignee', 'github_created_at',
-        'github_updated_at', 'github_closed_at',
-    ];
-
-    #[Override]
     protected $casts = [
         'github_issue_labels' => 'array',
         'github_created_at' => 'datetime',

@@ -28,13 +28,6 @@ final class Project extends Model
     use HasFactory;
 
     #[Override]
-    protected $fillable = [
-        'client_id',
-        'name',
-        'due_date',
-    ];
-
-    #[Override]
     protected $casts = [
         'due_date' => 'date',
     ];

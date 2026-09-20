@@ -37,18 +37,6 @@ final class Income extends Model
     use HasFactory;
 
     #[Override]
-    protected $fillable = [
-        'client_id',
-        'income_category_id',
-        'invoice_id',
-        'debt_id',
-        'amount',
-        'currency',
-        'description',
-        'date',
-    ];
-
-    #[Override]
     protected $casts = [
         'amount' => 'decimal:2',
         'currency' => Currencies::class,

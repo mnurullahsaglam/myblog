@@ -8,7 +8,6 @@ use Database\Factories\ExpenseCategoryFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Override;
 
 /**
  * @property int $id
@@ -20,13 +19,6 @@ final class ExpenseCategory extends Model
 {
     /** @use HasFactory<ExpenseCategoryFactory> */
     use HasFactory;
-
-    #[Override]
-    protected $fillable = [
-        'name',
-        'description',
-        'color',
-    ];
 
     /**
      * @return HasMany<Expense, $this>

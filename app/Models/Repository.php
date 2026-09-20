@@ -43,27 +43,6 @@ final class Repository extends Model
     use HasFactory;
 
     #[Override]
-    protected $fillable = [
-        'project_id',
-        'name',
-        'full_name',
-        'owner',
-        'description',
-        'visibility',
-        'github_url',
-        'github_id',
-        'default_branch',
-        'language',
-        'stars_count',
-        'forks_count',
-        'issues_count',
-        'is_active',
-        'github_created_at',
-        'github_updated_at',
-        'last_synced_at',
-    ];
-
-    #[Override]
     protected $casts = [
         'is_active' => 'boolean',
         'github_created_at' => 'datetime',

@@ -33,17 +33,6 @@ final class Expense extends Model
     use HasFactory;
 
     #[Override]
-    protected $fillable = [
-        'expense_category_id',
-        'debt_id',
-        'amount',
-        'currency',
-        'description',
-        'receipt_path',
-        'date',
-    ];
-
-    #[Override]
     protected $casts = [
         'amount' => 'decimal:2',
         'currency' => Currencies::class,

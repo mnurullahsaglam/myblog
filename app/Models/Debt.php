@@ -36,18 +36,6 @@ final class Debt extends Model
     use HasFactory;
 
     #[Override]
-    protected $fillable = [
-        'creditor_name',
-        'creditor_type',
-        'amount',
-        'currency',
-        'due_date',
-        'status',
-        'description',
-        'date',
-    ];
-
-    #[Override]
     protected $casts = [
         'amount' => 'decimal:2',
         'currency' => Currencies::class,
