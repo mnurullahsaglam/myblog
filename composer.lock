@@ -4,7 +4,7 @@
     "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
     "This file is @generated automatically"
   ],
-  "content-hash": "b104b5ec59700bf992739b886f257bd6",
+  "content-hash": "b95b69c1c96fb33c8e789db75ace5b8e",
   "packages": [
     {
       "name": "bacon/bacon-qr-code",
@@ -2906,94 +2906,6 @@
         }
       ],
       "time": "2026-02-16T23:10:27+00:00"
-    },
-    {
-      "name": "panphp/pan",
-      "version": "v0.1.10",
-      "source": {
-        "type": "git",
-        "url": "https://github.com/panphp/pan.git",
-        "reference": "a0464238f2749c927734583353962e72c391d736"
-      },
-      "dist": {
-        "type": "zip",
-        "url": "https://api.github.com/repos/panphp/pan/zipball/a0464238f2749c927734583353962e72c391d736",
-        "reference": "a0464238f2749c927734583353962e72c391d736",
-        "shasum": ""
-      },
-      "require": {
-        "php": "^8.3.0"
-      },
-      "conflict": {
-        "laravel/framework": "<11.0.0"
-      },
-      "require-dev": {
-        "laravel/pint": "^1.18.1",
-        "orchestra/testbench": "^9.5.2",
-        "pestphp/pest": "^3.5.1",
-        "pestphp/pest-plugin-type-coverage": "^3.1.0",
-        "phpstan/phpstan": "^1.12.7",
-        "rector/rector": "^1.2.8",
-        "symfony/var-dumper": "^7.1.6"
-      },
-      "type": "library",
-      "extra": {
-        "laravel": {
-          "providers": [
-            "Pan\\Adapters\\Laravel\\Providers\\PanServiceProvider"
-          ]
-        }
-      },
-      "autoload": {
-        "psr-4": {
-          "Pan\\": "src/"
-        }
-      },
-      "notification-url": "https://packagist.org/downloads/",
-      "license": [
-        "MIT"
-      ],
-      "authors": [
-        {
-          "name": "Nuno Maduro",
-          "email": "enunomaduro@gmail.com"
-        },
-        {
-          "name": "David Hill",
-          "email": "david@laravel.com"
-        }
-      ],
-      "description": "A simple, lightweight, and privacy-focused product analytics php package.",
-      "keywords": [
-        "analytics",
-        "laravel",
-        "library",
-        "pan",
-        "php"
-      ],
-      "support": {
-        "issues": "https://github.com/panphp/pan/issues",
-        "source": "https://github.com/panphp/pan/tree/v0.1.10"
-      },
-      "funding": [
-        {
-          "url": "https://www.paypal.com/paypalme/enunomaduro",
-          "type": "custom"
-        },
-        {
-          "url": "https://github.com/iamdavidhill",
-          "type": "github"
-        },
-        {
-          "url": "https://github.com/nunomaduro",
-          "type": "github"
-        },
-        {
-          "url": "https://www.patreon.com/nunomaduro",
-          "type": "patreon"
-        }
-      ],
-      "time": "2026-04-07T08:31:06+00:00"
     },
     {
       "name": "paragonie/constant_time_encoding",

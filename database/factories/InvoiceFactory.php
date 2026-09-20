@@ -40,7 +40,6 @@ class InvoiceFactory extends Factory
             'total_amount' => $amount + $taxAmount,
             'currency' => $currencies[random_int(0, count($currencies) - 1)]->value,
             'invoice' => 'invoices/'.fake()->uuid().'.zip',
-            'invoice_pdf' => null,
         ];
     }
 }

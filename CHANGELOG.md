@@ -17,6 +17,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   ordered in three, so those are indexed together; the three references now
   null out on delete instead of leaving rows pointing at nothing.
 
+### Removed
+
+- `panphp/pan`. Nothing ever called `Pan::`, the table held no rows, and the
+  package registered a public `POST pan/events` endpoint for events that were
+  never recorded. Its table is dropped; its create migration stays so existing
+  histories still replay.
+- `App\Services\ConvertZipHtmlToPdfService`, an empty class body with no
+  references.
+- The `invoices.invoice_pdf` column, never written or read. It belonged to an
+  invoice PDF feature that was not built.
+
 ### Changed
 
 - Inertia pages load lazily, so each is its own chunk. The initial bundle drops

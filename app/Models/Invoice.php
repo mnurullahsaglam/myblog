@@ -23,7 +23,6 @@ use Illuminate\Support\Carbon;
  * @property int $total_amount
  * @property Currencies $currency
  * @property string $invoice
- * @property string|null $invoice_pdf
  * @property-read string $amount_with_currency_symbol
  * @property-read Client|null $client
  */
