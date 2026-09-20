@@ -19,6 +19,11 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            // A plain string, not a database enum: App\Enums\UserRole is the only
+            // list, so adding a role never needs a migration. Defaults to the less
+            // privileged value, so a row created without one cannot accidentally be
+            // an admin.
+            $table->string('role')->default('member');
             $table->text('two_factor_secret')->nullable();
             $table->text('two_factor_recovery_codes')->nullable();
             $table->timestamp('two_factor_confirmed_at')->nullable();
