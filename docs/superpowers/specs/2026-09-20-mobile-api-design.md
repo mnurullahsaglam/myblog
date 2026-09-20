@@ -126,8 +126,10 @@ specs avoiding.
 `EnsureAreaAccess` middleware the web routes use**. Not a parallel
 implementation — the same class, so a change to one cannot miss the other.
 
-All thirteen resources, each with index, show, store, update and destroy where
-the panel has them.
+All fifteen resources: the fourteen that extend `AdminResourceController` with
+index, show, store, update and destroy where the panel has them, plus the
+read-only WakaTime summaries. An earlier draft said thirteen, which was
+`ParityTest`'s count from before utilities existed.
 
 ### The serialisation risk, which is the important part of this spec
 
