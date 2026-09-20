@@ -13,8 +13,12 @@ final class SearchController extends Controller
 {
     public function __invoke(Request $request): JsonResponse
     {
+        $user = $request->user();
+
+        abort_if($user === null, 401);
+
         return response()->json([
-            'results' => GlobalSearch::query($request->string('q')->toString()),
+            'results' => GlobalSearch::query($request->string('q')->toString(), $user),
         ]);
     }
 }

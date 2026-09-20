@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Exports;
 
+use App\Enums\Area;
 use App\Exports\BookExport;
 use App\Exports\PublisherExport;
 use App\Exports\ResourceExport;
@@ -25,6 +26,22 @@ final class ExportResource
         'publishers' => PublisherExport::class,
         'writers' => WriterExport::class,
     ];
+
+    /**
+     * Which area each export belongs to.
+     *
+     * Separate from EXPORTS so the class-string map keeps its narrow type. Every
+     * export is Library today; a new one in another area returns null here,
+     * which fails the mapping test and has to be written down before the
+     * controller will let it through.
+     */
+    public static function areaFor(string $resource): ?Area
+    {
+        return match ($resource) {
+            'books', 'publishers', 'writers' => Area::Library,
+            default => null,
+        };
+    }
 
     /**
      * Streams through the rows so memory stays flat however many there are.

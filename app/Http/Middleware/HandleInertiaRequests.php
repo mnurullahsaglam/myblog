@@ -40,7 +40,7 @@ final class HandleInertiaRequests extends Middleware
                 ],
             ],
 
-            'navigation' => Navigation::clusters(...),
+            'navigation' => fn (): array => $user === null ? [] : Navigation::forUser($user),
 
             'appearance' => Appearance::toArray(...),
 

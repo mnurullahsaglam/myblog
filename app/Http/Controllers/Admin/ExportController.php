@@ -18,9 +18,15 @@ final class ExportController extends Controller
 {
     public function __construct(private readonly NotifiesAdmin $notifier) {}
 
-    public function store(string $resource, ExportResource $exportResource): RedirectResponse
+    public function store(Request $request, string $resource, ExportResource $exportResource): RedirectResponse
     {
-        abort_unless(array_key_exists($resource, ExportResource::EXPORTS), 404);
+        $area = ExportResource::areaFor($resource);
+
+        // One route serves several resources, so the route group cannot guard
+        // this; the area is resolved per resource instead. Unknown and forbidden
+        // both 404, which is also what the gate returns.
+        abort_if($area === null, 404);
+        abort_unless($request->user()?->can('access-area', $area) ?? false, 404);
 
         $path = $exportResource->handle($resource);
 

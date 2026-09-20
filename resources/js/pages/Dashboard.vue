@@ -1,21 +1,27 @@
 <script setup>
+import { computed } from 'vue'
 import { Link } from '@inertiajs/vue3'
 import AdminLayout from '@/Layouts/AdminLayout.vue'
 import StatTile from '@/Components/Stats/StatTile.vue'
 
-defineProps({
-  budget: { type: Array, default: () => [] },
-  work: { type: Array, default: () => [] },
-  library: { type: Array, default: () => [] },
-  recentPosts: { type: Array, default: () => [] },
-  openTasks: { type: Array, default: () => [] },
+// Deliberately undefined rather than [] by default. The controller omits the
+// props for areas this user cannot reach, and an absent panel has to be
+// distinguishable from a panel whose area simply has nothing in it yet.
+const props = defineProps({
+  budget: { type: Array, required: false, default: undefined },
+  work: { type: Array, required: false, default: undefined },
+  library: { type: Array, required: false, default: undefined },
+  recentPosts: { type: Array, required: false, default: undefined },
+  openTasks: { type: Array, required: false, default: undefined },
 })
 
-const SECTIONS = [
+const ALL_SECTIONS = [
   ['budget', 'Budget', 'admin.expenses.index'],
   ['work', 'Work', 'admin.tasks.board'],
   ['library', 'Library', 'admin.books.index'],
 ]
+
+const sections = computed(() => ALL_SECTIONS.filter(([key]) => props[key] !== undefined))
 
 const STATUS_LABEL = { todo: 'To do', in_progress: 'In progress' }
 </script>
@@ -23,7 +29,7 @@ const STATUS_LABEL = { todo: 'To do', in_progress: 'In progress' }
 <template>
   <AdminLayout title="Dashboard">
     <div class="flex flex-col gap-8">
-      <section v-for="[key, title, routeName] in SECTIONS" :key="key">
+      <section v-for="[key, title, routeName] in sections" :key="key">
         <header class="mb-3 flex items-center justify-between">
           <h2 class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase">
             {{ title }}
@@ -46,7 +52,10 @@ const STATUS_LABEL = { todo: 'To do', in_progress: 'In progress' }
       </section>
 
       <div class="grid gap-4 lg:grid-cols-2">
-        <section class="border-surface-200 bg-surface-0 rounded-lg border p-4 dark:border-[#272B35] dark:bg-[#15171C]">
+        <section
+          v-if="recentPosts"
+          class="border-surface-200 bg-surface-0 rounded-lg border p-4 dark:border-[#272B35] dark:bg-[#15171C]"
+        >
           <header class="mb-3 flex items-center justify-between">
             <h2 class="text-lg font-medium tracking-[-0.01em]">Recent posts</h2>
             <Link :href="route('admin.posts.index')" class="text-surface-500 hover:text-primary font-mono text-[11px]">
@@ -69,7 +78,10 @@ const STATUS_LABEL = { todo: 'To do', in_progress: 'In progress' }
           </ul>
         </section>
 
-        <section class="border-surface-200 bg-surface-0 rounded-lg border p-4 dark:border-[#272B35] dark:bg-[#15171C]">
+        <section
+          v-if="openTasks"
+          class="border-surface-200 bg-surface-0 rounded-lg border p-4 dark:border-[#272B35] dark:bg-[#15171C]"
+        >
           <header class="mb-3 flex items-center justify-between">
             <h2 class="text-lg font-medium tracking-[-0.01em]">Open tasks</h2>
             <Link :href="route('admin.tasks.board')" class="text-surface-500 hover:text-primary font-mono text-[11px]">
