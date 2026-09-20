@@ -5,15 +5,13 @@ declare(strict_types=1);
 namespace App\Http\Resources\Api\V1;
 
 use App\Models\Debt;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Override;
 
 /**
  * @mixin Debt
  */
-final class DebtResource extends JsonResource
+final class DebtResource extends ApiResource
 {
     /**
      * @return array<string, mixed>
@@ -21,9 +19,6 @@ final class DebtResource extends JsonResource
     #[Override]
     public function toArray(Request $request): array
     {
-        /** @var Model $model */
-        $model = $this->resource;
-
-        return $model->attributesToArray();
+        return $this->normalisedAttributes();
     }
 }

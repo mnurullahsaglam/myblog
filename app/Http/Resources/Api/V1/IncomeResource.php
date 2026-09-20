@@ -8,13 +8,12 @@ use App\Enums\Ability;
 use App\Models\Income;
 use App\Support\Access\AccessProfile;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Override;
 
 /**
  * @mixin Income
  */
-final class IncomeResource extends JsonResource
+final class IncomeResource extends ApiResource
 {
     /**
      * client_id is gated on the same ability the panel's column is, because this
@@ -43,6 +42,7 @@ final class IncomeResource extends JsonResource
             'client_id' => $this->when($profile->allows(Ability::SeeClientIdentity), fn (): mixed => $this->client_id),
             'editable' => $this->client_id === null || $profile->allows(Ability::SeeClientIdentity),
             'created_at' => $this->created_at?->toIso8601String(),
+            'updated_at' => $this->updated_at?->toIso8601String(),
         ];
     }
 }

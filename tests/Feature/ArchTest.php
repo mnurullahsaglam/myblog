@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\AdminResourceController;
 use App\Http\Controllers\Api\V1\ApiResourceController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdminRequest;
+use App\Http\Resources\Api\V1\ApiResource;
 use App\Tables\ResourceTable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Queue;
@@ -33,7 +34,7 @@ arch('actions expose a single entry point')
     ->ignoring(['App\Actions\Fortify', 'App\Actions\Resources\Concerns']);
 
 /**
- * Everything is final except six base classes that exist to be extended.
+ * Everything is final except seven base classes that exist to be extended.
  * PHP forbids `abstract final`, so those are asserted abstract instead — which
  * is the same guarantee from the other direction: they cannot be instantiated,
  * and nothing else in the application may be subclassed at all.
@@ -50,9 +51,10 @@ arch('every class is final')
         AdminResourceController::class,
         AdminRequest::class,
         ApiResourceController::class,
+        ApiResource::class,
     ]);
 
-arch('the six base classes stay abstract')
+arch('the seven base classes stay abstract')
     ->expect([
         ResourceTable::class,
         ResourceForm::class,
@@ -61,6 +63,7 @@ arch('the six base classes stay abstract')
         AdminResourceController::class,
         AdminRequest::class,
         ApiResourceController::class,
+        ApiResource::class,
     ])
     ->toBeAbstract();
 
