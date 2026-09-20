@@ -7,10 +7,12 @@ namespace App\Tables\Definitions;
 use App\Enums\Ability;
 use App\Enums\Currencies;
 use App\Models\Income;
+use App\Support\Access\AccessProfile;
 use App\Tables\Column;
 use App\Tables\Filter;
 use App\Tables\ResourceTable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Override;
 
 final class IncomeTable extends ResourceTable
@@ -67,5 +69,12 @@ final class IncomeTable extends ResourceTable
     protected function titleColumn(): string
     {
         return 'description';
+    }
+
+    #[Override]
+    protected function isRowEditable(Model $record): bool
+    {
+        return app(AccessProfile::class)->allows(Ability::SeeClientIdentity)
+            || $record->getAttribute('client_id') === null;
     }
 }

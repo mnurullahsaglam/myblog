@@ -284,7 +284,7 @@ function runExport() {
                 @click="visit('show', data.id)"
               />
               <Button
-                v-if="rowActions.includes('edit')"
+                v-if="rowActions.includes('edit') && data.editable !== false"
                 icon="pi pi-pencil"
                 text
                 rounded
@@ -294,7 +294,7 @@ function runExport() {
                 @click="visit('edit', data.id)"
               />
               <Button
-                v-if="rowActions.includes('delete')"
+                v-if="rowActions.includes('delete') && data.editable !== false"
                 icon="pi pi-trash"
                 text
                 rounded

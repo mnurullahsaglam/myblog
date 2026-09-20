@@ -150,7 +150,7 @@ abstract class ResourceTable
     }
 
     /**
-     * @return LengthAwarePaginator<int, array{id: mixed, cells: array<string, array<string, mixed>>}>
+     * @return LengthAwarePaginator<int, array{id: mixed, editable: bool, cells: array<string, array<string, mixed>>}>
      */
     public function rows(Request $request): LengthAwarePaginator
     {
@@ -180,8 +180,21 @@ abstract class ResourceTable
             ->appends(Arr::except($request->query(), 'page'))
             ->through(fn (Model $record): array => [
                 'id' => $record->getKey(),
+                'editable' => $this->isRowEditable($record),
                 'cells' => $this->resolveCells($columns, $record),
             ]);
+    }
+
+    /**
+     * Whether the table should offer write actions on this row.
+     *
+     * Deliberately separate from the controller's own check: the table decides
+     * what to draw and the controller decides what to allow, so a mistake in one
+     * cannot become a hole in the other.
+     */
+    protected function isRowEditable(Model $record): bool
+    {
+        return true;
     }
 
     /**

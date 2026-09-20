@@ -191,6 +191,9 @@ abstract class AdminResourceController extends Controller
     public function edit(Request $request): Response
     {
         $record = $this->resolveRecord($request);
+
+        abort_unless($this->isRecordEditable($record), 404);
+
         $form = $this->form();
 
         return Inertia::render($this->pagePath().'/Edit', [
@@ -203,8 +206,12 @@ abstract class AdminResourceController extends Controller
 
     public function update(Request $request): RedirectResponse
     {
+        $record = $this->resolveRecord($request);
+
+        abort_unless($this->isRecordEditable($record), 404);
+
         $this->updateRecord->handle(
-            $this->resolveRecord($request),
+            $record,
             $this->form()->partition($this->validated()),
         );
 
@@ -215,7 +222,11 @@ abstract class AdminResourceController extends Controller
 
     public function destroy(Request $request): RedirectResponse
     {
-        $this->deleteRecord->handle($this->resolveRecord($request));
+        $record = $this->resolveRecord($request);
+
+        abort_unless($this->isRecordEditable($record), 404);
+
+        $this->deleteRecord->handle($record);
 
         $this->notifier->success(Str::ucfirst($this->label()).' deleted');
 
@@ -233,7 +244,7 @@ abstract class AdminResourceController extends Controller
             'ids.*' => ['integer', 'exists:'.$table.',id'],
         ]);
 
-        $deleted = $this->bulkDeleteRecords->handle($model, $validated['ids']);
+        $deleted = $this->bulkDeleteRecords->handle($model, $this->editableIds($model, $validated['ids']));
 
         $this->notifier->success($deleted.' '.Str::plural($this->label(), $deleted).' deleted');
 
@@ -270,13 +281,48 @@ abstract class AdminResourceController extends Controller
 
         $updated = $this->bulkEditRecords->handle(
             $model,
-            $validated['ids'],
+            $this->editableIds($model, $validated['ids']),
             $form->partition([$field => $value['value']]),
         );
 
         $this->notifier->success($updated.' '.Str::plural($this->label(), $updated).' updated');
 
         return to_route($this->indexRoute());
+    }
+
+    /**
+     * Whether this record may be written by the current request.
+     *
+     * A resource overrides this when some of its rows are readable but not
+     * writable, which is not the same as a hidden field: the row still has to
+     * appear and still has to count towards totals.
+     */
+    protected function isRecordEditable(Model $record): bool
+    {
+        return true;
+    }
+
+    /**
+     * Narrow a bulk selection to the records this request may write.
+     *
+     * Skipping rather than refusing the whole operation, so a selection that
+     * happens to include one protected row still does what was asked of the
+     * rest. The notifier reports the count actually acted on.
+     *
+     * @param  class-string<Model>  $model
+     * @param  array<int, int>  $ids
+     * @return array<int, int>
+     */
+    private function editableIds(string $model, array $ids): array
+    {
+        return array_values(array_filter(
+            $ids,
+            function (int $id) use ($model): bool {
+                $record = $model::query()->find($id);
+
+                return $record instanceof Model && $this->isRecordEditable($record);
+            },
+        ));
     }
 
     /**
