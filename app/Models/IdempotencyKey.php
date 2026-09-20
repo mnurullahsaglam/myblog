@@ -24,7 +24,7 @@ final class IdempotencyKey extends Model
      * @param  Builder<IdempotencyKey>  $query
      * @return Builder<IdempotencyKey>
      */
-    public function scopeLive(Builder $query): Builder
+    protected function scopeLive(Builder $query): Builder
     {
         return $query->where('expires_at', '>', now());
     }

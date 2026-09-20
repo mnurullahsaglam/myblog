@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\Expense;
+use App\Models\IdempotencyKey;
 use App\Models\User;
 
 beforeEach(function (): void {
@@ -143,11 +144,11 @@ it('prunes expired keys', function (): void {
         ->withHeader('Idempotency-Key', 'abc-123')
         ->postJson(route('api.v1.expenses.store'), expensePayload());
 
-    expect(App\Models\IdempotencyKey::query()->count())->toBe(1);
+    expect(IdempotencyKey::query()->count())->toBe(1);
 
     $this->travel(25)->hours();
 
     $this->artisan('idempotency:prune')->assertSuccessful();
 
-    expect(App\Models\IdempotencyKey::query()->count())->toBe(0);
+    expect(IdempotencyKey::query()->count())->toBe(0);
 });

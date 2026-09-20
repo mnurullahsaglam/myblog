@@ -75,7 +75,7 @@ abstract class ApiResourceController extends Controller
 
         $resource = $this->resourceClass();
 
-        return (new $resource($record->fresh()))->response()->setStatusCode(201);
+        return new $resource($record->fresh())->response()->setStatusCode(201);
     }
 
     public function update(Request $request): JsonResource

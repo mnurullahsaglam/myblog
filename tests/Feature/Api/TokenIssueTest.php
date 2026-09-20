@@ -22,7 +22,7 @@ beforeEach(function (): void {
 
 function enableTwoFactor(User $user): void
 {
-    $provider = app(TwoFactorAuthenticationProvider::class);
+    $provider = resolve(TwoFactorAuthenticationProvider::class);
 
     $user->forceFill([
         'two_factor_secret' => encrypt($provider->generateSecretKey()),

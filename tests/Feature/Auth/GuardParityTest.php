@@ -40,13 +40,13 @@ it('resolves the same areas and abilities under both guards', function (string $
     $user = User::factory()->{$state}()->create(['email' => $email]);
 
     $this->actingAs($user)->getJson(route('api.v1.incomes.index'));
-    $viaSession = app(AccessProfile::class);
+    $viaSession = resolve(AccessProfile::class);
 
     $sessionAreas = $viaSession->areas();
     $sessionAllows = $viaSession->allows(Ability::SeeClientIdentity);
 
     apiAs($user)->get(route('api.v1.incomes.index'));
-    $viaToken = app(AccessProfile::class);
+    $viaToken = resolve(AccessProfile::class);
 
     expect($viaToken->areas())->toEqualCanonicalizing($sessionAreas)
         ->and($viaToken->allows(Ability::SeeClientIdentity))->toBe($sessionAllows);

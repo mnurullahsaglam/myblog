@@ -5,6 +5,44 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.13.0] - 2026-09-20
+
+### Added
+
+- **A versioned API at `/api/v1`**, exposing every resource the panel exposes:
+  fourteen with full CRUD and WakaTime summaries read-only. It reuses the
+  panel's own area middleware, FormRequests and query filters rather than
+  reimplementing them, so the two clients cannot drift apart.
+- **Device tokens**, through Sanctum. One per device, issued by
+  `POST /api/v1/tokens`, listed and revocable per device from the People screen.
+  Revocation bites immediately.
+- **Two-factor is honoured at token issue.** An account with 2FA on gets 423 and
+  no token until it supplies a TOTP or a recovery code. A token outlives a
+  session and lives on the most easily stolen device in the house, so trading a
+  password for one without the second factor would have removed it.
+- **Idempotent writes.** An `Idempotency-Key` header makes a repeated write
+  return the first response, byte for byte, for 24 hours — so a phone that
+  queued an expense offline cannot record it twice. Keys are scoped per user and
+  pruned daily.
+- `ResourceTable::records()`, the models behind a page of rows. The panel renders
+  cells from the same query; the API serialises models from it.
+
+### Security
+
+- API Resources consult the access profile, because they are a third
+  serialisation path that the table and form field-hiding does not reach. A test
+  searches whole payloads for a client's name rather than named fields.
+- A member's token reaches her three areas and 404s on the rest, asserted by a
+  matrix generated from the router across all 72 routes.
+- The token endpoint is throttled to five attempts a minute, and an unknown
+  address fails identically to a wrong password.
+
+### Fixed
+
+- Dismissing a notification and pruning idempotency keys both went through the
+  query builder. The second was caught by `BulkWriteSafetyTest`, which is a
+  scanner over `app/` and not merely a demonstration.
+
 ## [0.12.0] - 2026-09-20
 
 ### Changed

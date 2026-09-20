@@ -110,7 +110,7 @@ it('gives a member what the admin gets inside her areas, and nothing outside the
 it('turns away a request with no token', function (string $method, string $name, array $parameterNames): void {
     $owner = User::factory()->admin()->create(['email' => 'owner@example.test']);
 
-    app('auth')->forgetGuards();
+    resolve('auth')->forgetGuards();
 
     $this->json($method, route($name, routeParameters($parameterNames, $owner)))
         ->assertUnauthorized();

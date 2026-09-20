@@ -59,7 +59,7 @@ function userWithoutRole(string $email): User
  */
 function apiAs(User $user): PendingApiRequest
 {
-    app('auth')->forgetGuards();
+    resolve('auth')->forgetGuards();
 
     return new PendingApiRequest($user);
 }

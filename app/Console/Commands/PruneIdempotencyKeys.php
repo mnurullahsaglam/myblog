@@ -6,6 +6,7 @@ namespace App\Console\Commands;
 
 use App\Models\IdempotencyKey;
 use Illuminate\Console\Command;
+use Override;
 
 /**
  * Remove keys past their window.
@@ -20,8 +21,10 @@ use Illuminate\Console\Command;
  */
 final class PruneIdempotencyKeys extends Command
 {
+    #[Override]
     protected $signature = 'idempotency:prune';
 
+    #[Override]
     protected $description = 'Delete idempotency keys that have expired';
 
     public function handle(): int

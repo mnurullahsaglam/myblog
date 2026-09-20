@@ -28,7 +28,7 @@ final class IncomeResource extends JsonResource
     #[Override]
     public function toArray(Request $request): array
     {
-        $profile = app(AccessProfile::class);
+        $profile = resolve(AccessProfile::class);
 
         return [
             'id' => $this->id,
