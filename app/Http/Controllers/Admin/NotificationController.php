@@ -8,11 +8,19 @@ use App\Actions\Notifications\DismissNotification;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 final class NotificationController extends Controller
 {
+    /**
+     * Notifications are keyed by UUID, and PostgreSQL rejects a malformed value
+     * with a QueryException rather than matching nothing. Checking the shape
+     * first keeps a bad id a 404 rather than a 500.
+     */
     public function read(Request $request, string $notification): RedirectResponse
     {
+        abort_if(! Str::isUuid($notification), 404);
+
         $record = $request->user()?->notifications()->whereKey($notification)->first();
 
         abort_if($record === null, 404);

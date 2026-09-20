@@ -5,6 +5,26 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.12.0] - 2026-09-20
+
+### Changed
+
+- **PostgreSQL everywhere.** Development, testing and CI now run the same
+  database. CI previously ran SQLite while development ran MySQL, and that gap
+  had already hidden two real defects: the passkey flake behind the 0.7.1
+  intermittent, and an income search that returned a 500 in development while CI
+  stayed green.
+- Search uses `whereLike` rather than a `like` operator. `LIKE` is
+  case-insensitive on MySQL and case-sensitive on PostgreSQL, so every search box
+  would have quietly stopped matching "Zafón" for "zafon".
+
+### Fixed
+
+- Dismissing or reading a notification whose id is not a UUID returned a 500
+  instead of a 404. PostgreSQL rejects a malformed UUID at the driver rather than
+  matching nothing; MySQL and SQLite compared it as text and never noticed. Found
+  by the first full suite run against PostgreSQL.
+
 ## [0.11.1] - 2026-09-20
 
 ### Security

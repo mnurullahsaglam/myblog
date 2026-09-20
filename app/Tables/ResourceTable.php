@@ -269,6 +269,10 @@ abstract class ResourceTable
     }
 
     /**
+     * whereLike rather than a like operator, because LIKE is case-insensitive on
+     * MySQL and case-sensitive on PostgreSQL. The helper asks the driver, so a
+     * search for "zafon" keeps finding "Zafón" on both.
+     *
      * @param  Builder<covariant Model>  $query
      */
     private function applySearchTerm(Builder $query, string $term): void
@@ -278,14 +282,14 @@ abstract class ResourceTable
         $query->where(function (Builder $builder) use ($paths, $term): void {
             foreach ($paths as $path) {
                 if (! str_contains($path, '.')) {
-                    $builder->orWhere($path, 'like', '%'.$term.'%');
+                    $builder->orWhereLike($path, '%'.$term.'%');
 
                     continue;
                 }
 
                 $builder->orWhereHas(
                     Str::beforeLast($path, '.'),
-                    fn (Builder $related): Builder => $related->where(Str::afterLast($path, '.'), 'like', '%'.$term.'%'),
+                    fn (Builder $related): Builder => $related->whereLike(Str::afterLast($path, '.'), '%'.$term.'%'),
                 );
             }
         });

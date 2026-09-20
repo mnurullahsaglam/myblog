@@ -53,8 +53,8 @@ final class TaskBoardController extends Controller
             ->when(
                 $request->string('search')->trim()->toString(),
                 fn (Builder $query, string $term) => $query->where(function (Builder $builder) use ($term): void {
-                    $builder->where('title', 'like', '%'.$term.'%')
-                        ->orWhere('description', 'like', '%'.$term.'%');
+                    $builder->whereLike('title', '%'.$term.'%')
+                        ->orWhereLike('description', '%'.$term.'%');
                 })
             )
             ->orderBy('sort_order')
