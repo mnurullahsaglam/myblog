@@ -12,13 +12,6 @@ use App\Support\BookMetadata;
 use App\Support\Isbn;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * One lookup, reported in the shape the book form consumes.
- *
- * Nothing is written here beyond a downloaded cover file. Writers and
- * publishers are matched, never created: the form offers the name and the user
- * decides, so a misspelling in Open Library cannot quietly populate the library.
- */
 final readonly class ResolveIsbn
 {
     public function __construct(
@@ -76,10 +69,6 @@ final readonly class ResolveIsbn
     }
 
     /**
-     * A record's id and name, or null when it is absent or not the shape the
-     * form needs. Eloquent types both as mixed, and casting mixed is exactly the
-     * guess static analysis is right to reject.
-     *
      * @return array{id: int, name: string}|null
      */
     private function identify(?Model $record): ?array
@@ -95,9 +84,6 @@ final readonly class ResolveIsbn
     }
 
     /**
-     * Lowercases both sides rather than trusting the database collation, for the
-     * same reason FindOrCreateNamedRecord does: MySQL and SQLite disagree.
-     *
      * @param  class-string<Model>  $modelClass
      * @return array{id: int, name: string}|array{suggestion: string}|null
      */

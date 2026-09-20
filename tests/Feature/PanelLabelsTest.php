@@ -5,8 +5,6 @@ declare(strict_types=1);
 use Symfony\Component\Finder\Finder;
 
 /**
- * Every opening tag in the panel, as source text.
- *
  * @return array<int, array{file: string, tag: string}>
  */
 function openingTags(): array
@@ -60,16 +58,6 @@ function openingTags(): array
     return $tags;
 }
 
-/**
- * CSS uppercasing is language-sensitive and this application runs in Turkish,
- * where "i" uppercases to "İ". Every label wearing the panel's mono uppercase
- * recipe is English copy — the Vue panel has no translations at all — so each
- * one has to say so, or the browser renders "ACTİVE FİLTERS".
- *
- * The check reads whole opening tags rather than lines, because the formatter
- * wraps a long attribute list and would otherwise hide the attribute it is
- * looking for.
- */
 it('marks every uppercase label as English', function (): void {
     $offenders = [];
 
@@ -85,11 +73,6 @@ it('marks every uppercase label as English', function (): void {
     expect($offenders)->toBeEmpty('Uppercase labels missing lang="en": '.implode('; ', $offenders));
 });
 
-/**
- * The shared recipe is what the check above keys on for the four files that
- * hoist it into a constant. If it stops carrying the class, those bindings stop
- * being labels and the rule quietly covers nothing.
- */
 it('keeps the shared label recipe uppercase', function (): void {
     $files = [
         'Components/Form/FormField.vue',
@@ -104,10 +87,6 @@ it('keeps the shared label recipe uppercase', function (): void {
     }
 });
 
-/**
- * The panel renders no Turkish, so nothing should start reaching for the
- * translation file that the locale would otherwise pull in.
- */
 it('has no translation layer in the panel', function (): void {
     foreach (Finder::create()->files()->in(resource_path('js'))->name('*.vue') as $file) {
         expect($file->getContents())->not->toContain('$t(');

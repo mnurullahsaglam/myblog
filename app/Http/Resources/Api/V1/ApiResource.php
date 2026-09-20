@@ -9,14 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Date;
 
-/**
- * One date format for the whole API.
- *
- * Eloquent serialises a date-cast column and a datetime-cast column differently,
- * and a hand-written resource differs again. A client decoding JSON has one date
- * strategy, so three formats mean three special cases forever. Dates are Y-m-d
- * and datetimes are ISO 8601 with an offset, everywhere.
- */
 abstract class ApiResource extends JsonResource
 {
     /**

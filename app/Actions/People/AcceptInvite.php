@@ -12,14 +12,6 @@ use RuntimeException;
 
 final class AcceptInvite
 {
-    /**
-     * Spend an invite and create the account it was for.
-     *
-     * The invite is re-read under a row lock rather than trusted as passed: two
-     * requests arriving together must produce one user, and the lock is what
-     * makes that true rather than merely likely. The unique index on
-     * users.email is the backstop if the lock is ever lost to a refactor.
-     */
     public function handle(Invite $invite, string $name, string $password): User
     {
         return DB::transaction(function () use ($invite, $name, $password): User {
@@ -38,8 +30,6 @@ final class AcceptInvite
                 'email' => $locked->email,
                 'password' => Hash::make($password),
                 'role' => $locked->role->value,
-                // Opening a link sent to an address proves control of it at
-                // least as well as a second mail would.
                 'email_verified_at' => now(),
             ]);
 

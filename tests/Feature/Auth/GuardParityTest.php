@@ -12,17 +12,6 @@ beforeEach(function (): void {
     Income::factory()->count(3)->create();
 });
 
-/**
- * The assertion this whole feature rests on.
- *
- * The same person must get the same answers whether they arrive with a session
- * cookie or a device token. Laravel's Authenticate middleware calls
- * shouldUse(), which makes the authenticating guard the default for the rest of
- * the request, so AccessProfile resolves correctly for both without any special
- * handling. That is a framework detail which could change under us, and the
- * consequence would be silent: the API would 404 everything, or resolve the
- * wrong person.
- */
 it('returns the same payload for a session and a token', function (string $email, string $state): void {
     $user = User::factory()->{$state}()->create(['email' => $email]);
 

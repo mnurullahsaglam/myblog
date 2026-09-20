@@ -7,13 +7,6 @@ namespace App\Http\Requests\Admin;
 use App\Enums\Area;
 use Illuminate\Foundation\Http\FormRequest;
 
-/**
- * The inner fence.
- *
- * Route groups are the outer one; neither depends on the other being right.
- * area() is abstract on purpose: a new request cannot be written without saying
- * where it belongs, so the check stops being something to remember.
- */
 abstract class AdminRequest extends FormRequest
 {
     abstract protected function area(): Area;

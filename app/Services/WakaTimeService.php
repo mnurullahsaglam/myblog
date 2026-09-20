@@ -23,7 +23,6 @@ final readonly class WakaTimeService
 
     private const string SETTING_GROUP = 'wakatime';
 
-    /** Scope required to read summaries (incl. project/language/editor/os/category breakdowns). */
     public const string SCOPE = 'read_summaries';
 
     private string $appId;
@@ -39,9 +38,6 @@ final readonly class WakaTimeService
         $this->redirectUri = $this->stringConfig('services.wakatime.redirect');
     }
 
-    /**
-     * Build the consent URL the user is redirected to (one-time bootstrap).
-     */
     public function getAuthorizationUrl(string $state): string
     {
         return self::AUTHORIZE_URL.'?'.http_build_query([
@@ -53,9 +49,6 @@ final readonly class WakaTimeService
         ]);
     }
 
-    /**
-     * Exchange the authorization code from the callback for tokens and persist them.
-     */
     public function exchangeCodeForToken(string $code): void
     {
         $response = Http::asForm()
@@ -75,9 +68,6 @@ final readonly class WakaTimeService
         $this->storeTokens($this->jsonArray($response->json()));
     }
 
-    /**
-     * Return a valid access token, refreshing first if it is expired or about to expire.
-     */
     public function getValidAccessToken(): string
     {
         throw_unless($this->isConnected(), RuntimeException::class, 'WakaTime is not connected. Visit the admin panel and click "Connect WakaTime".');
@@ -91,9 +81,6 @@ final readonly class WakaTimeService
         return $this->decrypt($this->setting('access_token'));
     }
 
-    /**
-     * Refresh the access token using the stored refresh token.
-     */
     public function refreshToken(): void
     {
         $refreshToken = $this->decrypt($this->setting('refresh_token'));
@@ -118,9 +105,6 @@ final readonly class WakaTimeService
     }
 
     /**
-     * Fetch daily summaries between two dates (inclusive). Returns the API "data" array,
-     * one element per day, each containing grand_total + breakdowns.
-     *
      * @return array<int, array<string, mixed>>
      */
     public function fetchSummaries(CarbonInterface $start, CarbonInterface $end): array
@@ -163,8 +147,6 @@ final readonly class WakaTimeService
     }
 
     /**
-     * Persist the token payload returned by WakaTime's token endpoint.
-     *
      * @param  array<string, mixed>  $payload
      */
     private function storeTokens(array $payload): void
@@ -204,9 +186,6 @@ final readonly class WakaTimeService
         return ($value !== null && $value !== '') ? Date::parse($value) : null;
     }
 
-    /**
-     * Read a stored WakaTime setting as a string (or null when absent/non-scalar).
-     */
     private function setting(string $name): ?string
     {
         $value = Setting::get(self::SETTING_GROUP, $name);
@@ -222,8 +201,6 @@ final readonly class WakaTimeService
     }
 
     /**
-     * Coerce a decoded JSON payload to a string-keyed array.
-     *
      * @return array<string, mixed>
      */
     private function jsonArray(mixed $value): array

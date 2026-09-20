@@ -12,10 +12,6 @@ beforeEach(function (): void {
     config(['app.admin_email' => 'owner@example.test']);
 });
 
-/**
- * The gates read the request's profile rather than the user they are handed, so
- * a test that asks about someone has to bind that someone's profile first.
- */
 function bindProfile(User $user): User
 {
     app()->instance(AccessProfile::class, AccessProfile::forUser($user));
@@ -35,10 +31,6 @@ it('denies an area the user does not reach', function (): void {
     expect(Gate::forUser(bindProfile($user))->allows('access-area', Area::Work))->toBeFalse();
 });
 
-/**
- * The refusal has to be a 404 rather than a 403, and it has to come from
- * Laravel's own deny mechanism so the exception handler renders it properly.
- */
 it('denies as not found rather than forbidden', function (): void {
     $user = User::factory()->member()->create(['email' => 'her@example.test']);
 

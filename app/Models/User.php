@@ -48,25 +48,12 @@ final class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
         return is_string($adminEmail) && $adminEmail !== '' && $this->email === $adminEmail;
     }
 
-    /**
-     * Whether this user reaches an area.
-     *
-     * ADMIN_EMAIL is checked first and unconditionally: a bad migration, an empty
-     * column or a fat-fingered seed must never lock the owner out of their own
-     * panel.
-     */
     public function canAccess(Area $area): bool
     {
         return in_array($area, $this->areas(), true);
     }
 
     /**
-     * Every ability this user holds.
-     *
-     * The column is read raw for the same reason areas() reads it raw: the cast
-     * throws on a value the enum does not know, and an unreadable role must mean
-     * no access rather than a 500 on every page.
-     *
      * @return array<int, Ability>
      */
     public function abilities(): array
@@ -81,13 +68,6 @@ final class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     }
 
     /**
-     * Every area this user reaches. Empty means they do not belong in the panel
-     * at all.
-     *
-     * The column is read raw rather than through the cast: the cast throws on a
-     * value the enum does not know, and an unreadable role must mean no access
-     * rather than a 500 on every page.
-     *
      * @return array<int, Area>
      */
     public function areas(): array

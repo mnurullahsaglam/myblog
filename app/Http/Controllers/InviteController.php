@@ -14,12 +14,6 @@ use Inertia\Inertia;
 use Inertia\Response;
 use RuntimeException;
 
-/**
- * The one public flow in this application that creates an account.
- *
- * Every refusal is a 404: expired, revoked, already spent, tampered with and
- * never issued are indistinguishable from outside, exactly as a hidden area is.
- */
 final class InviteController extends Controller
 {
     public function __construct(private readonly NotifiesAdmin $notifier) {}
@@ -59,10 +53,6 @@ final class InviteController extends Controller
         return to_route('admin.profile');
     }
 
-    /**
-     * The lookup is by the hash of the supplied token, so the database compares
-     * two hex strings and no plaintext secret is ever stored to compare against.
-     */
     private function usableInvite(string $token): Invite
     {
         $invite = Invite::query()

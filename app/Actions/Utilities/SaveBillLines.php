@@ -7,14 +7,6 @@ namespace App\Actions\Utilities;
 use App\Models\UtilityBill;
 use Illuminate\Support\Facades\DB;
 
-/**
- * Replace a bill's breakdown with the rows the form submitted.
- *
- * Delete and recreate rather than diffing: the rows have no identity worth
- * preserving, and diffing would be more code for the same result. One
- * transaction, because a half-written breakdown is worse than the old one -
- * you would not know which rows were yours.
- */
 final class SaveBillLines
 {
     /**

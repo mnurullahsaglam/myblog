@@ -30,12 +30,6 @@ final class Appearance
     }
 
     /**
-     * This user's appearance, falling back to the global setting and then to the
-     * built-in default.
-     *
-     * The global rows stay as they are: they are what the public site, every
-     * signed-out page and any user without a preference use.
-     *
      * @return array{accent: string, colorScheme: string}
      */
     public static function forUser(?User $user): array

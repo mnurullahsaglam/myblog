@@ -10,11 +10,6 @@ beforeEach(function (): void {
     $this->owner = User::factory()->admin()->create(['email' => 'owner@example.test']);
 });
 
-/**
- * Notifications are keyed by UUID. PostgreSQL rejects a malformed value at the
- * driver rather than matching nothing, so an id that is not a UUID has to be
- * turned away before it reaches a query or the user gets a 500 instead of a 404.
- */
 it('answers 404 rather than erroring on an id that is not a uuid', function (string $verb, string $id): void {
     $route = $verb === 'read' ? 'admin.notifications.read' : 'admin.notifications.destroy';
 

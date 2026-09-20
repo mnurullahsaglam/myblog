@@ -15,9 +15,6 @@ final class WakaTimeOAuthController extends Controller
 {
     public function __construct(private readonly WakaTimeService $wakatime) {}
 
-    /**
-     * Kick off the OAuth consent flow: store an anti-CSRF state and redirect to WakaTime.
-     */
     public function connect(Request $request): RedirectResponse
     {
         $state = Str::random(40);
@@ -26,9 +23,6 @@ final class WakaTimeOAuthController extends Controller
         return redirect()->away($this->wakatime->getAuthorizationUrl($state));
     }
 
-    /**
-     * Handle WakaTime's redirect back: validate state, exchange the code, store tokens.
-     */
     public function callback(Request $request): RedirectResponse
     {
         $panel = route('admin.coding-dashboard');

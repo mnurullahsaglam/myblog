@@ -17,16 +17,6 @@ use Laravel\Sanctum\PersonalAccessToken;
 
 final class TokenController extends Controller
 {
-    /**
-     * Issue a token for one device.
-     *
-     * Two-factor is enforced here rather than skipped: a token outlives a
-     * session and lives on the most easily stolen device in the house, so
-     * trading a password for one without the second factor would remove it.
-     *
-     * An unknown address and a wrong password fail identically, so the endpoint
-     * cannot be used to discover who has an account.
-     */
     public function store(TokenRequest $request, TwoFactorAuthenticationProvider $provider): JsonResponse
     {
         /** @var array{email: string, password: string, device_name: string, code?: string|null} $data */
@@ -59,13 +49,6 @@ final class TokenController extends Controller
         return response()->noContent();
     }
 
-    /**
-     * A recovery code is checked against the stored list before it is replaced.
-     *
-     * Fortify's replaceRecoveryCode() returns void and performs a blind
-     * str_replace, so calling it without checking first would accept any string
-     * at all as a valid second factor.
-     */
     private function passesTwoFactor(User $user, ?string $code, TwoFactorAuthenticationProvider $provider): bool
     {
         if ($code === null || $code === '') {

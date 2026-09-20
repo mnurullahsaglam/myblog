@@ -72,10 +72,6 @@ final class UtilityBill extends Model
     }
 
     /**
-     * Never stored: a saved copy drifts from the readings it claims to
-     * summarise. Negative when a meter was replaced mid-period, which is
-     * information rather than an error.
-     *
      * @return Attribute<float|null, never>
      */
     protected function consumption(): Attribute
@@ -90,10 +86,6 @@ final class UtilityBill extends Model
         return $this->paid_at !== null;
     }
 
-    /**
-     * What the breakdown adds up to, which may differ from the stated total by
-     * rounding. The form warns on a real difference; nothing blocks on it.
-     */
     public function lineTotal(): float
     {
         $total = $this->lines->sum(fn (UtilityBillLine $line): float => $line->amount);

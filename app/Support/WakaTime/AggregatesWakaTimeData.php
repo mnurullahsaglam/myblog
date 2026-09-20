@@ -7,29 +7,17 @@ namespace App\Support\WakaTime;
 use App\Models\WakaTimeSummary;
 use Illuminate\Support\Collection;
 
-/**
- * Shared WakaTime aggregation. When $record is set the host reports on that single
- * day; otherwise it aggregates the range returned by rangeFilter(), defaulting to a
- * trailing 7 days.
- *
- * The host supplies the range by overriding rangeFilter(), which keeps this free of
- * any dependency on where the filter came from.
- */
 trait AggregatesWakaTimeData
 {
     public ?WakaTimeSummary $record = null;
 
     public int $defaultTrailingDays = 7;
 
-    /**
-     * The selected range: a number of days as a string, 'all', or null for the default.
-     */
     protected function rangeFilter(): ?string
     {
         return null;
     }
 
-    /** Number of trailing days to aggregate, or null for "all time". */
     protected function rangeDays(): ?int
     {
         $range = $this->rangeFilter();
@@ -74,9 +62,6 @@ trait AggregatesWakaTimeData
     }
 
     /**
-     * Sum entry seconds by name for a breakdown type across the active summaries,
-     * keeping the top $limit and bucketing the remainder into "Other".
-     *
      * @return array<string, int>
      */
     protected function breakdownSeconds(string $type, int $limit = 8): array
@@ -102,7 +87,6 @@ trait AggregatesWakaTimeData
         return $top;
     }
 
-    /** Sum a numeric field from each day's grand_total payload. */
     protected function grandTotalSum(string $key): float
     {
         return (float) $this->summaries()->sum(function (WakaTimeSummary $s) use ($key): float {
@@ -143,22 +127,20 @@ trait AggregatesWakaTimeData
     protected function palette(): array
     {
         return [
-            '#8b5cf6', // violet
-            '#3b82f6', // blue
-            '#22c55e', // green
-            '#f59e0b', // amber
-            '#ef4444', // red
-            '#06b6d4', // cyan
-            '#ec4899', // pink
-            '#84cc16', // lime
-            '#a855f7', // purple
-            '#64748b', // slate (often "Other")
+            '#8b5cf6',
+            '#3b82f6',
+            '#22c55e',
+            '#f59e0b',
+            '#ef4444',
+            '#06b6d4',
+            '#ec4899',
+            '#84cc16',
+            '#a855f7',
+            '#64748b',
         ];
     }
 
     /**
-     * Build a Chart.js doughnut dataset (values rendered in hours) from a name=>seconds map.
-     *
      * @param  array<string, int>  $secondsByName
      * @return array{datasets: array<int, mixed>, labels: array<int, string>}
      */

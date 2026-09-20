@@ -13,13 +13,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
-/**
- * A resource table: columns and filters declared once in PHP, rendered by a
- * single Vue component.
- *
- * Subclasses declare what the table contains; this base turns a request into a
- * page of rendered rows and describes the shape to the browser.
- */
 abstract class ResourceTable
 {
     private const int MAX_PER_PAGE = 100;
@@ -43,12 +36,6 @@ abstract class ResourceTable
     abstract protected function columns(): array;
 
     /**
-     * The columns this request may see.
-     *
-     * Every other method reads this rather than columns(), so a hidden column is
-     * absent from the schema, from the serialised cells, from what may be sorted
-     * by and from what may be filtered by, all at once.
-     *
      * @return array<int, Column>
      */
     final protected function visibleColumns(): array
@@ -83,9 +70,6 @@ abstract class ResourceTable
     }
 
     /**
-     * Column paths the search box and global search look through. A dotted path
-     * searches the relation.
-     *
      * @return array<int, string>
      */
     protected function searchable(): array
@@ -93,9 +77,6 @@ abstract class ResourceTable
         return [];
     }
 
-    /**
-     * The attribute used as the human label in global search results.
-     */
     protected function titleColumn(): string
     {
         return 'name';
@@ -110,8 +91,6 @@ abstract class ResourceTable
     }
 
     /**
-     * Summary tiles shown above the table, computed over the filtered set.
-     *
      * @return array<int, array{label: string, value: string, caption?: string|null, icon?: string|null}>
      */
     public function tiles(Request $request): array
@@ -120,9 +99,6 @@ abstract class ResourceTable
     }
 
     /**
-     * The query with search and filters applied but no sort or pagination, for
-     * summarising exactly what the table is showing.
-     *
      * @return Builder<covariant Model>
      */
     protected function filteredQuery(Request $request): Builder
@@ -150,13 +126,6 @@ abstract class ResourceTable
     }
 
     /**
-     * The models behind a page of rows, filtered and sorted exactly as the table
-     * would, but not rendered.
-     *
-     * The API serialises models; the panel renders cells. Both go through this
-     * one query so a filter added for one applies to the other, and neither can
-     * quietly see a different set of records.
-     *
      * @return \Illuminate\Pagination\LengthAwarePaginator<int, Model>
      */
     public function records(Request $request): \Illuminate\Pagination\LengthAwarePaginator
@@ -200,21 +169,12 @@ abstract class ResourceTable
             ]);
     }
 
-    /**
-     * Whether the table should offer write actions on this row.
-     *
-     * Deliberately separate from the controller's own check: the table decides
-     * what to draw and the controller decides what to allow, so a mistake in one
-     * cannot become a hole in the other.
-     */
     protected function isRowEditable(Model $record): bool
     {
         return true;
     }
 
     /**
-     * Lightweight rows for the command palette.
-     *
      * @return Collection<int, array{id: mixed, label: string}>
      */
     public function search(string $term, int $limit): Collection
@@ -284,10 +244,6 @@ abstract class ResourceTable
     }
 
     /**
-     * whereLike rather than a like operator, because LIKE is case-insensitive on
-     * MySQL and case-sensitive on PostgreSQL. The helper asks the driver, so a
-     * search for "zafon" keeps finding "Zafón" on both.
-     *
      * @param  Builder<covariant Model>  $query
      */
     private function applySearchTerm(Builder $query, string $term): void

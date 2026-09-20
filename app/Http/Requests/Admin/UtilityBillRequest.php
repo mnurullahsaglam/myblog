@@ -40,10 +40,6 @@ final class UtilityBillRequest extends AdminRequest
         ];
     }
 
-    /**
-     * The form has no conditional visibility, so the rule that readings belong
-     * only to metered utilities is enforced here, where the account is known.
-     */
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator): void {

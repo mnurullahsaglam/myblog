@@ -26,9 +26,6 @@ it('prefers the user over the global setting', function (): void {
     expect(Appearance::forUser($this->member->fresh())['accent'])->toBe('rose');
 });
 
-/**
- * The whole point: two people, two accents, at the same time.
- */
 it('keeps two users on different accents', function (): void {
     $this->owner->update(['preferences' => ['accent' => 'emerald']]);
     $this->member->update(['preferences' => ['accent' => 'rose']]);
@@ -58,10 +55,6 @@ it('ignores a colour scheme the application does not have', function (): void {
         ->toBe(Appearance::DEFAULT_SCHEME);
 });
 
-/**
- * The accent CSS is written into the Blade shell before Inertia boots, so her
- * first paint is already her colour rather than the owner's.
- */
 it('carries her accent in the first paint', function (): void {
     $this->member->update(['preferences' => ['accent' => 'rose']]);
     Setting::set('appearance', 'accent', 'emerald');

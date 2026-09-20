@@ -135,14 +135,6 @@ it('cannot be spent twice', function (): void {
     expect(User::query()->where('email', 'her@example.test')->count())->toBe(1);
 });
 
-/**
- * The concurrency case, as close as a single test process can get to it.
- *
- * Two simultaneous accepts are prevented by the row lock inside AcceptInvite,
- * and a lock cannot be observed from here. What can be observed is the re-check
- * the lock exists to protect: an invite that was spent after this request
- * loaded it must not produce a second account.
- */
 it('refuses an invite that was spent between loading and accepting', function (): void {
     [$invite] = issueInvite();
 

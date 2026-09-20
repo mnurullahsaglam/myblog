@@ -47,10 +47,6 @@ final class IncomeController extends ApiResourceController
         return IncomeResource::class;
     }
 
-    /**
-     * The same rule the panel applies: an income that names a client is readable
-     * but not writable by anyone who may not see which client it is.
-     */
     #[Override]
     protected function isRecordEditable(Model $record): bool
     {

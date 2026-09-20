@@ -25,17 +25,8 @@ use Laravel\Fortify\Fortify;
 
 final class FortifyServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void {}
 
-    /**
-     * Fortify leans on Illuminate's stock reset notification, which renders the
-     * framework's own markdown. Replacing the message keeps every email this
-     * application sends on one design, and lets the reset carry the recipient's
-     * own scheme and accent rather than a fixed one.
-     */
     private function sendPasswordResetsThroughOurOwnTemplate(): void
     {
         ResetPassword::toMailUsing(function (mixed $notifiable, string $token): MailMessage {
@@ -61,9 +52,6 @@ final class FortifyServiceProvider extends ServiceProvider
         return is_numeric($expiry) ? (int) $expiry : 60;
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         Fortify::loginView(fn (): InertiaResponse => Inertia::render('Auth/Login', [

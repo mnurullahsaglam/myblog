@@ -44,8 +44,6 @@ final class BookController extends AdminResourceController
     }
 
     /**
-     * The library summary sits above the books table.
-     *
      * @return array<int, array{label: string, value: string, caption: string|null, icon: string|null}>
      */
     protected function indexTiles(): array

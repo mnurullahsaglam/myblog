@@ -7,12 +7,6 @@ namespace App\Actions\Settings;
 use App\Models\Setting;
 use Illuminate\Http\UploadedFile;
 
-/**
- * Persist a screen's worth of grouped settings.
- *
- * Files arrive already separated from the plain values so the action never
- * touches a request; an upload field with no file keeps whatever is stored.
- */
 final class SaveSettings
 {
     /**

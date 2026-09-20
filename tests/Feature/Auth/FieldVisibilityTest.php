@@ -34,10 +34,6 @@ it('keeps it in the schema for the admin', function (): void {
     expect(array_column((new IncomeTable)->schema()['columns'], 'key'))->toContain('client.title');
 });
 
-/**
- * The assertion that matters. A column removed only in Vue still travels in the
- * Inertia payload, where anyone can read it from devtools.
- */
 it('never serialises the hidden value into the payload', function (): void {
     $client = Client::factory()->create(['title' => 'Zzsecret Client']);
     Income::factory()->create(['client_id' => $client->id]);
@@ -61,10 +57,6 @@ it('keeps a hidden filter out of the schema', function (): void {
     expect(array_column((new IncomeTable)->schema()['filters'], 'key'))->not->toContain('client_id');
 });
 
-/**
- * A filter she cannot see but can still apply would let her binary-search which
- * incomes belong to a client, which is the thing being prevented.
- */
 it('ignores a hidden filter applied by hand', function (): void {
     $client = Client::factory()->create();
     Income::factory()->count(2)->create(['client_id' => $client->id]);
@@ -155,13 +147,6 @@ it('covers every ability', function (Ability $ability): void {
         ->and(AccessProfile::forUser($this->member)->allows($ability))->toBeFalse();
 })->with(fn (): array => array_map(fn (Ability $a): array => [$a], Ability::cases()));
 
-/**
- * The leak that hiding the client column alone did not close.
- *
- * `source` is a derived label, not a column, and it returned the client's title.
- * A test that only checked `client.title` passed while the name was on screen in
- * the next column along.
- */
 it('degrades the derived source label rather than naming the client', function (): void {
     $client = Client::factory()->create(['title' => 'Zzderived Client']);
     $income = Income::factory()->create(['client_id' => $client->id]);

@@ -95,12 +95,6 @@ it('sends the admin the whole dashboard', function (): void {
             ->has('openTasks'));
 });
 
-/**
- * Every export is Library today, so the member-refusal case has no subject.
- * The moment a Work export is added, areaFor() returns null for it and this
- * fails; fixing that failure means writing the area down, and once it is
- * written down the controller enforces it.
- */
 it('gives every export an area', function (string $resource): void {
     expect(ExportResource::areaFor($resource))->toBeInstanceOf(Area::class);
 })->with(array_keys(ExportResource::EXPORTS));
@@ -123,13 +117,6 @@ it('refuses an export nobody has registered', function (): void {
         ->assertNotFound();
 });
 
-/**
- * The fifth surface, whatever it turns out to be.
- *
- * The matrix test only knows about routes. This walks the navigation the member
- * is actually shown and opens every item in it, so a cluster that lists a screen
- * she cannot reach — or hides one she can — fails here.
- */
 it('gives every navigation item a route inside its cluster area', function (): void {
     $shown = Navigation::forProfile(AccessProfile::forUser($this->member));
 
@@ -147,10 +134,6 @@ it('gives every navigation item a route inside its cluster area', function (): v
     }
 });
 
-/**
- * The other direction: anything the navigation does not show her must also be
- * unreachable, whether it is hidden by its area or by a feature flag.
- */
 it('makes every navigation item it hides from her unreachable', function (): void {
     $shownRoutes = collect(Navigation::forProfile(AccessProfile::forUser($this->member)))
         ->flatMap(fn (array $cluster): array => $cluster['items'])
@@ -169,10 +152,6 @@ it('makes every navigation item it hides from her unreachable', function (): voi
     }
 });
 
-/**
- * Categories are General, but the books form needs them. She must be able to
- * pick one from inside Library without the Categories screen ever being hers.
- */
 it('lets the member use categories from inside the books form', function (): void {
     Category::factory()->create(['name' => 'Zzshared']);
 
@@ -186,10 +165,6 @@ it('lets the member use categories from inside the books form', function (): voi
         ->assertNotFound();
 });
 
-/**
- * Reading is not the point of her account. These are the two writes she does
- * most, and they have to work end to end.
- */
 it('lets the member pay a utility bill', function (): void {
     $bill = UtilityBill::factory()->create();
 

@@ -9,19 +9,6 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Replay a stored response for a repeated Idempotency-Key.
- *
- * The phone queues writes while offline, so a retry after a dropped connection
- * must not record the expense twice. Keys are scoped to the user, so one account
- * cannot read back a response that was never theirs, and a key replayed against
- * a different payload is refused rather than answered: silently returning the
- * answer to a different question is worse than refusing.
- *
- * The body is stored as raw text rather than as jsonb, because PostgreSQL's
- * jsonb normalises and reorders keys — a replay would then differ from the
- * response it is supposed to repeat.
- */
 final class EnforceIdempotency
 {
     private const int HOURS = 24;

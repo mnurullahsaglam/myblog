@@ -158,7 +158,7 @@ final class SyncGitHubIssues extends Command
             $allIssues = array_merge($allIssues, $issuesOnly);
             $page++;
 
-        } while (count($issues) === 100); // Continue if full page returned
+        } while (count($issues) === 100);
 
         return $allIssues;
     }
@@ -194,12 +194,12 @@ final class SyncGitHubIssues extends Command
         if ($existingTask) {
             $existingTask->update($taskData);
 
-            return false; // Updated existing
-        } else {
-            Task::create($taskData);
-
-            return true; // Created new
+            return false;
         }
+
+        Task::create($taskData);
+
+        return true;
     }
 
     private function mapGitHubStateToStatus(string $githubState): string

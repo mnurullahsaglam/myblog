@@ -14,10 +14,6 @@ const listEl = ref(null)
 const remote = ref([])
 const searching = ref(false)
 
-/**
- * Built from the same navigation array that drives the top bar, so the two can
- * never drift apart.
- */
 const navTargets = computed(() =>
   (page.props.navigation ?? []).flatMap((cluster) =>
     cluster.items.map((item) => ({
@@ -36,7 +32,6 @@ const staticTargets = computed(() =>
     { label: 'Settings', route: 'admin.settings', icon: 'pi pi-cog' },
     { label: 'Profile', route: 'admin.profile', icon: 'pi pi-user' },
   ]
-    // Routes arrive over the life of the migration; skip any not yet defined.
     .filter((target) => {
       try {
         route(target.route)
@@ -126,7 +121,6 @@ watch(query, (term) => {
 
       const data = await response.json()
 
-      // Ignore a slow reply that a newer keystroke has superseded.
       if (token !== requestToken) {
         return
       }

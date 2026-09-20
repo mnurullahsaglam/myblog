@@ -1,16 +1,6 @@
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 
-/**
- * WebAuthn ceremonies against laravel/passkeys.
- *
- * Uses the browser's native credential JSON API (Safari 17.4+, Chrome 119+) so
- * no WebAuthn helper library is needed. Options come from the server as JSON,
- * the browser turns them into buffers, and the credential goes back as JSON.
- *
- * WebAuthn only runs in a secure context, so the site must be served over
- * HTTPS. On plain HTTP `navigator.credentials` is undefined.
- */
 export function usePasskeys() {
   const busy = ref(false)
   const error = ref(null)
@@ -40,7 +30,6 @@ export function usePasskeys() {
     return 'This browser is too old for passkeys. Update it to sign in with Touch ID.'
   }
 
-  /** Raised when the server wants the password re-confirmed first. */
   class PasswordConfirmationRequired extends Error {}
 
   async function fetchOptions(url) {
@@ -49,7 +38,6 @@ export function usePasskeys() {
       credentials: 'same-origin',
     })
 
-    // Managing passkeys sits behind Fortify's password confirmation.
     if (response.status === 423) {
       throw new PasswordConfirmationRequired()
     }
@@ -63,7 +51,6 @@ export function usePasskeys() {
     return options
   }
 
-  /** Translate the browser's errors into something worth reading. */
   function describe(exception) {
     if (exception?.name === 'NotAllowedError') {
       return 'Cancelled, or the request timed out.'

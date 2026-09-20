@@ -22,10 +22,6 @@ use App\Tables\Definitions\WriterTable;
 use App\Tables\ResourceTable;
 use Throwable;
 
-/**
- * Searches every resource at once, reusing the searchable columns each table
- * already declares so the two can never drift apart.
- */
 final class GlobalSearch
 {
     private const int MINIMUM_TERM_LENGTH = 2;
@@ -33,8 +29,6 @@ final class GlobalSearch
     private const int PER_RESOURCE = 5;
 
     /**
-     * Group label => [table factory, route name for a single record, area].
-     *
      * @return array<string, array{table: callable(): ResourceTable, route: string, area: Area}>
      */
     private static function registry(): array
@@ -57,9 +51,6 @@ final class GlobalSearch
     }
 
     /**
-     * The profile is required rather than nullable: a call site that forgets it
-     * will not compile, instead of quietly searching everything.
-     *
      * @return array<int, array{label: string, group: string, url: string}>
      */
     public static function query(string $term, AccessProfile $profile, int $perResource = self::PER_RESOURCE): array
@@ -73,8 +64,6 @@ final class GlobalSearch
         $results = [];
 
         foreach (self::registry() as $group => $entry) {
-            // The palette reaches every resource at once, so it is the surface
-            // most likely to name something the user cannot open.
             if (! $profile->canAccess($entry['area'])) {
                 continue;
             }

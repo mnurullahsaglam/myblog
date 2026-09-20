@@ -10,7 +10,6 @@ export default definePreset(Aura, {
   semantic: {
     primary: RAMPS.khaki,
 
-    // Base 4px for controls, 8px for containers. No pill buttons.
     borderRadius: {
       none: '0',
       xs: '2px',
@@ -106,7 +105,6 @@ export default definePreset(Aura, {
   },
 
   components: {
-    // Dense tables: 32px header, 36px rows, no zebra striping.
     datatable: {
       headerCell: {
         padding: '0.5rem 0.75rem',

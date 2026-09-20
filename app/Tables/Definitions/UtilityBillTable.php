@@ -17,9 +17,6 @@ final class UtilityBillTable extends ResourceTable
     #[Override]
     protected string $model = UtilityBill::class;
 
-    // Every row reads account.type and account.label. Model::shouldBeStrict()
-    // turns a lazy load into an exception outside production, so this is not an
-    // optimisation, it is what stops the page throwing.
     #[Override]
     protected array $with = ['account'];
 

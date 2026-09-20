@@ -11,13 +11,6 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
 
-/**
- * Record that a utility bill was paid.
- *
- * Refusing an already-paid bill is what stops a double click double-counting
- * the month's spending, which is the whole reason the expense is created here
- * rather than left to the user to enter twice.
- */
 final class PayBill
 {
     public function handle(UtilityBill $bill): Expense
@@ -41,9 +34,6 @@ final class PayBill
 
     private function describe(UtilityBill $bill): string
     {
-        // loadMissing, not a bare access: the controller hands over a
-        // route-bound bill, and Model::shouldBeStrict() turns a lazy load into
-        // an exception outside production.
         $account = $bill->loadMissing('account')->account;
         $label = $account instanceof UtilityAccount ? trim($account->label) : '';
 

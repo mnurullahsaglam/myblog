@@ -18,10 +18,6 @@ final class InviteTable extends ResourceTable
     protected array $with = ['invitedBy'];
 
     /**
-     * status is an accessor rather than a column, so it is deliberately neither
-     * sortable nor filterable: either would generate SQL against a column that
-     * does not exist.
-     *
      * @return array<int, Column>
      */
     protected function columns(): array

@@ -13,13 +13,6 @@ function invite(): string
     return new InviteMail('https://myblog.test/invite/abc', 'Nurullah')->render();
 }
 
-/**
- * The plain text alternative as a mail client would receive it.
- *
- * Rendered by sending through the array transport rather than by calling the
- * renderer directly, so the assertion covers the message that actually leaves
- * the application rather than a view rendered with hand-assembled data.
- */
 function inviteTextBody(): string
 {
     Mail::to('invitee@example.test')->sendNow(new InviteMail('https://myblog.test/invite/abc', 'Nurullah'));
@@ -48,10 +41,6 @@ it('paints the panel rather than the framework default', function (): void {
         ->and($html)->not->toContain('#3869d4');
 });
 
-/**
- * Blade escapes quotes by default, which truncated every font stack at the first
- * quoted family name and left the mail in Times New Roman.
- */
 it('keeps quoted font names intact', function (): void {
     expect(invite())->toContain("'Segoe UI'")
         ->and(invite())->not->toContain('&#039;');
@@ -124,11 +113,6 @@ it('subjects the reset with the application name', function (): void {
     expect($message->subject)->toBe('Reset your '.config('app.name').' password');
 });
 
-/**
- * CSS uppercasing is language-sensitive, and this application runs in Turkish,
- * where "i" uppercases to "İ". The footer said "ASKED FOR İT" until the rule
- * came off. Only the app name — which is Turkish — is still transformed.
- */
 it('never lets a Turkish locale uppercase English copy', function (): void {
     app()->setLocale('tr');
 

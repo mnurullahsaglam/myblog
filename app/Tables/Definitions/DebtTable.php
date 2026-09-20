@@ -24,11 +24,6 @@ final class DebtTable extends ResourceTable
     #[Override]
     protected string $defaultSort = '-date';
 
-    /**
-     * The conversion currency comes from a filter, but it changes how a column
-     * renders rather than which rows come back, so it is passed in and the
-     * filter itself is display-only.
-     */
     public function __construct(private readonly string $conversionCurrency = 'TRY') {}
 
     protected function columns(): array

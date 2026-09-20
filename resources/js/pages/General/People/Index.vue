@@ -20,8 +20,6 @@ defineProps({
 
 const page = usePage()
 
-// Flashed, not a prop: the link is shown once and a refresh must not bring it
-// back. The plaintext token exists nowhere else by the time this renders.
 const inviteUrl = computed(() => page.props.flash?.invite_url ?? null)
 
 const dialogOpen = ref(false)

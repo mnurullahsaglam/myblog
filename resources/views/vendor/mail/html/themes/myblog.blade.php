@@ -5,7 +5,6 @@
     $sans = \App\Support\Theme\Palette::FONT_SANS;
     $mono = \App\Support\Theme\Palette::FONT_MONO;
 @endphp
-/* Terminal Horizon, flattened for email. Mirrors the panel; see docs/superpowers/design-system.md. */
 
 body {
     background-color: {{ $palette->canvas }};
@@ -30,8 +29,6 @@ body {
     width: 100%;
 }
 
-/* Header */
-
 .header {
     padding: 32px 0 20px;
     text-align: center;
@@ -46,8 +43,6 @@ body {
     text-decoration: none;
     text-transform: uppercase;
 }
-
-/* Body */
 
 .body {
     background-color: {{ $palette->canvas }};
@@ -71,8 +66,6 @@ body {
     max-width: 100vw;
     padding: 36px 40px;
 }
-
-/* Type */
 
 h1 {
     color: {{ $palette->text }};
@@ -136,8 +129,6 @@ blockquote {
     padding: 2px 0 2px 16px;
 }
 
-/* Buttons */
-
 .action {
     margin: 28px 0;
     padding: 0;
@@ -175,8 +166,6 @@ blockquote {
     color: #FFFFFF;
 }
 
-/* Panel */
-
 .panel {
     border-left: 2px solid {{ $palette->accent }};
     margin: 24px 0;
@@ -201,8 +190,6 @@ blockquote {
     margin-bottom: 0;
     padding-bottom: 0;
 }
-
-/* Tables */
 
 .table table {
     margin: 24px auto;
@@ -233,8 +220,6 @@ blockquote {
     max-width: 100%;
 }
 
-/* Subcopy */
-
 .subcopy {
     border-top: 1px solid {{ $palette->borderSubtle }};
     margin-top: 28px;
@@ -250,8 +235,6 @@ blockquote {
 .subcopy a {
     color: {{ $palette->textMuted }};
 }
-
-/* Footer */
 
 .footer {
     margin: 0 auto;

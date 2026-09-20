@@ -44,8 +44,6 @@ final class AppServiceProvider extends ServiceProvider
 
         Model::unguard();
 
-        // Strict mode turns a lazy load into an exception, which is a useful
-        // nudge in development and a 500 for the visitor in production.
         Model::shouldBeStrict(! app()->isProduction());
 
         URL::forceHttps(app()->isProduction());
@@ -54,16 +52,6 @@ final class AppServiceProvider extends ServiceProvider
 
         RedirectIfAuthenticated::redirectUsing(fn (): string => route('admin.dashboard'));
 
-        // denyAsNotFound() is Laravel's own mechanism, so a refusal becomes a
-        // genuine 404 rather than a faked exception. A forbidden URL and a
-        // nonexistent one are indistinguishable, which is what was asked for.
-        /**
-         * Every access question is answered by the request's AccessProfile
-         * rather than by the user these closures are handed, so that view-as
-         * substitutes all of them at once. The route middleware passes the area
-         * as a string while callers in PHP pass the enum, so both are accepted,
-         * and an area the enum does not know denies rather than throws.
-         */
         Gate::define('access-area', function (User $user, Area|string $area): Response {
             $area = $area instanceof Area ? $area : Area::tryFrom($area);
 

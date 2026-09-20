@@ -12,14 +12,6 @@ use App\Support\Features;
 use InvalidArgumentException;
 use Laravel\Pennant\Feature;
 
-/**
- * Everything the panel is allowed to show this request, in one place.
- *
- * Areas, abilities and feature flags are asked of this object rather than of the
- * user, so that view-as can substitute all three at once. A preview that swapped
- * only some of them would report a screen as hidden while its route stayed open,
- * which is worse than having no preview at all.
- */
 final readonly class AccessProfile
 {
     /**
@@ -54,12 +46,6 @@ final readonly class AccessProfile
         );
     }
 
-    /**
-     * Render as a narrower role would see it.
-     *
-     * The role must grant strictly less than the viewer already has, so this can
-     * only ever be used to look down.
-     */
     public static function preview(User $user, UserRole $role): self
     {
         $areas = $role->areas();
@@ -87,10 +73,6 @@ final readonly class AccessProfile
         return in_array($ability, $this->abilities, true);
     }
 
-    /**
-     * An admin sees every flag. A member sees one only once it is turned on for
-     * her, and a flag nobody declared is always off.
-     */
     public function feature(string $flag): bool
     {
         if (! in_array($flag, Features::ALL, true)) {
@@ -105,9 +87,6 @@ final readonly class AccessProfile
     }
 
     /**
-     * Resolved once per profile, so a page that checks several flags makes one
-     * round trip rather than one per check.
-     *
      * @return array<string, bool>
      */
     private static function resolveFlags(User $user): array

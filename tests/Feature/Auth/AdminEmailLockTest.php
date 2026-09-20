@@ -15,14 +15,6 @@ beforeEach(function (): void {
     Mail::fake();
 });
 
-/**
- * The configured admin address is the lockout guarantee: whoever holds it
- * reaches every area whatever the role column says. That makes it a privilege,
- * and a privilege must not be claimable by editing your own profile.
- *
- * Before this was closed, a member could PUT her own email to ADMIN_EMAIL and
- * become an admin, held back only by the unique index happening to be occupied.
- */
 it('refuses to let a member take the configured admin address', function (): void {
     $member = User::factory()->member()->create(['email' => 'her@example.test']);
 
@@ -94,9 +86,6 @@ it('lets anyone change to an ordinary address', function (): void {
     expect($member->fresh()->email)->toBe('her-new@example.test');
 });
 
-/**
- * The same address must not be reachable through the other door either.
- */
 it('refuses to invite the configured admin address', function (): void {
     $owner = User::factory()->admin()->create(['email' => 'owner@example.test']);
 

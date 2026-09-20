@@ -32,10 +32,6 @@ it('paints the panel surfaces exactly', function (): void {
         ->and($light->textMuted)->toBe('#8B909B');
 });
 
-/**
- * The stops come from resources/js/theme/preset.js: 500 on light, 400 on dark.
- * Taking the same stop in both schemes would put a washed-out khaki on white.
- */
 it('takes the accent stop each scheme uses', function (): void {
     expect(Palette::of('light', 'khaki')->accent)->toBe('#B3A651')
         ->and(Palette::of('dark', 'khaki')->accent)->toBe('#C9BE6E')
@@ -54,10 +50,6 @@ it('falls back to khaki for an accent that does not exist', function (): void {
     expect(Palette::of('dark', 'chartreuse')->accent)->toBe(Palette::of('dark', 'khaki')->accent);
 });
 
-/**
- * Neither email nor a pre-script response can ask the client what it prefers,
- * so anything that is not an explicit "dark" resolves to light.
- */
 it('collapses system and nonsense to light', function (): void {
     expect(Palette::of('system', 'khaki')->scheme)->toBe('light')
         ->and(Palette::of('', 'khaki')->scheme)->toBe('light')
@@ -87,10 +79,6 @@ it('falls back to the household for a reader with no preference', function (): v
         ->and($palette->accent)->toBe('#38BDF8');
 });
 
-/**
- * An invitee has no account and so no scheme. The instruction is light, but the
- * household's accent still applies so the message looks like it came from here.
- */
 it('renders light for a recipient nobody knows, in the household accent', function (): void {
     Setting::set('appearance', 'color_scheme', 'dark');
     Setting::set('appearance', 'accent', 'rose');

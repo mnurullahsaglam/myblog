@@ -15,8 +15,6 @@ use Laravel\Fortify\Features;
 final class UpdateUserProfileInformation implements UpdatesUserProfileInformation
 {
     /**
-     * Validate and update the given user's profile information.
-     *
      * @param  array<string, string>  $input
      *
      * @throws ValidationException
@@ -47,13 +45,6 @@ final class UpdateUserProfileInformation implements UpdatesUserProfileInformatio
     }
 
     /**
-     * Update a user whose email address has changed.
-     *
-     * The verification mail is only sent when the feature is enabled. It is not,
-     * and sending it regardless asked Laravel to build a URL for the
-     * verification.verify route, which does not exist without the feature: the
-     * address changed, the row saved, and the request then died with a 500.
-     *
      * @param  array<string, string>  $input
      */
     private function updateChangedEmail(User $user, array $input): void

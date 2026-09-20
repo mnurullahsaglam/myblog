@@ -25,10 +25,6 @@ function expensePayload(string $description = 'Coffee'): array
     ];
 }
 
-/**
- * The case this exists for: a phone queues a write, the connection drops after
- * the server handled it, and the phone retries.
- */
 it('creates one record for a repeated key and returns the first response', function (): void {
     $token = $this->owner->createToken('phone')->plainTextToken;
 
@@ -45,10 +41,6 @@ it('creates one record for a repeated key and returns the first response', funct
         ->and($second->json())->toBe($first->json());
 });
 
-/**
- * Silently answering a different question with a stored answer is worse than
- * refusing.
- */
 it('refuses a key replayed against a different payload', function (): void {
     $token = $this->owner->createToken('phone')->plainTextToken;
 
@@ -94,10 +86,6 @@ it('stops replaying after twenty-four hours', function (): void {
     expect(Expense::query()->where('description', 'Coffee')->count())->toBe(2);
 });
 
-/**
- * Keys are scoped per account, so one person cannot use another's key to read
- * back a response that was never theirs.
- */
 it('scopes keys per user', function (): void {
     apiAs($this->owner)
         ->json('POST', route('api.v1.expenses.store'), expensePayload('His'));

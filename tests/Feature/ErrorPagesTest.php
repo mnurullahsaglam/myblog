@@ -13,10 +13,6 @@ beforeEach(function (): void {
     Route::get('/__abort/{code}', fn (string $code) => abort((int) $code));
 });
 
-/**
- * Every status the application publishes a page for. The list is the directory,
- * so a page added later without a test fails this rather than going unnoticed.
- */
 dataset('statuses', [401, 402, 403, 404, 419, 429, 500, 503]);
 
 it('renders a page for every published status', function (int $code): void {
@@ -70,10 +66,6 @@ it('follows the signed-in reader rather than the household', function (): void {
         ->and($html)->not->toContain('prefers-color-scheme');
 });
 
-/**
- * A reader who has not chosen gets both schemes, because the page renders before
- * any script could ask the browser which one it wants.
- */
 it('ships both schemes when the reader follows the system', function (): void {
     Setting::set('appearance', 'color_scheme', 'system');
 
@@ -89,10 +81,6 @@ it('sends the reader back to the panel', function (): void {
     $this->get('/__abort/404')->assertSee(url('/'), escape: false);
 });
 
-/**
- * An error page renders when the session, the database or both are already gone.
- * Resolving the reader must not be able to turn one failure into two.
- */
 it('falls back to the built-in theme when the reader cannot be resolved', function (): void {
     Setting::set('appearance', 'color_scheme', 'dark');
 
@@ -114,11 +102,6 @@ it('says something specific rather than repeating the status name', function ():
     $this->get('/__abort/503')->assertSee('Down for maintenance', escape: false);
 });
 
-/**
- * The uppercase labels are English copy on a page the browser is told is Turkish,
- * where CSS would render "Service Unavailable" as "SERVİCE UNAVAİLABLE". Marking
- * those two elements English is what keeps the transform honest.
- */
 it('marks its uppercase labels English so Turkish casing leaves them alone', function (): void {
     app()->setLocale('tr');
 

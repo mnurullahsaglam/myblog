@@ -13,7 +13,6 @@ const props = defineProps({
 
 const form = useForm(props.values)
 
-/** Cheap reading stats, matching the design's meta row. */
 const stats = computed(() => {
   const words = String(form.content ?? '')
     .trim()
@@ -27,7 +26,6 @@ const stats = computed(() => {
 })
 
 function submit() {
-  // PUT cannot carry a file upload, so spoof the method.
   form
     .transform((data) => ({ ...data, _method: 'put' }))
     .post(route('admin.posts.update', props.recordId), { forceFormData: true })

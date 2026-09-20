@@ -11,11 +11,6 @@ beforeEach(function (): void {
     config(['app.admin_email' => 'owner@example.test']);
 });
 
-/**
- * Asserted through a raw insert, because the factory names the role explicitly.
- * What is proved here is the column's own default: a row written by anything
- * that does not know about roles is a member, never an admin.
- */
 it('defaults a new row to the least privileged role', function (): void {
     DB::table('users')->insert([
         'name' => 'No Role',
@@ -65,10 +60,6 @@ it('gives a role-admin every area', function (): void {
     }
 });
 
-/**
- * The lockout guarantee. A wrong migration, a bad seed or an empty column must
- * never lock the owner out, so ADMIN_EMAIL is checked before the role is.
- */
 it('lets the configured owner reach everything whatever the column says', function (): void {
     $owner = User::factory()->member()->create(['email' => 'owner@example.test']);
 

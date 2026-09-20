@@ -1,11 +1,6 @@
 import { reactive, watch } from 'vue'
 import { router } from '@inertiajs/vue3'
 
-/**
- * Keeps sort, search, filters and pagination in the URL, so the back button,
- * bookmarks and shared links all work. Reloads ask only for `rows`, which the
- * controller exposes as a closure, so nothing else is recomputed.
- */
 export function useTableState(schema, resource) {
   const params = new URLSearchParams(window.location.search)
 
@@ -114,7 +109,6 @@ export function useTableState(schema, resource) {
     { deep: true },
   )
 
-  // Let the initial values settle before watchers start firing reloads.
   queueMicrotask(() => {
     hydrating = false
   })

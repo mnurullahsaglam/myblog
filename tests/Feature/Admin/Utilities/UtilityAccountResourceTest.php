@@ -72,11 +72,6 @@ it('turns a guest away', function (): void {
     $this->get(route('admin.utility-accounts.index'))->assertRedirect(route('login'));
 });
 
-/**
- * Route::resource names the parameter {utility_account} while the resource is
- * "utility-accounts", so the base controller has to convert the hyphen. This is
- * the first hyphenated resource with an edit route; the bug was latent until now.
- */
 it('resolves a hyphenated resource record from the route', function (): void {
     $account = UtilityAccount::factory()->create();
 

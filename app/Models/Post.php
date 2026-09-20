@@ -22,9 +22,6 @@ final class Post extends Model
     use HasSlug;
     use SlugAsRouteKeyName;
 
-    /**
-     * Posts have a title, not a name, so the default options do not apply.
-     */
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()

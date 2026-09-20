@@ -31,11 +31,6 @@ it('sends a reset link to a known address', function (): void {
     Notification::assertSentTo($user, ResetPassword::class);
 });
 
-/**
- * The response must not reveal whether an address has an account. A different
- * status, a different redirect or a different session message would turn this
- * form into a way to enumerate the household.
- */
 it('answers an unknown address exactly as it answers a known one', function (): void {
     User::factory()->create(['email' => 'known@example.test']);
 

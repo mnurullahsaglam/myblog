@@ -56,7 +56,6 @@ it('shares auth, appearance, navigation and env with every inertia response', fu
             ->where('auth.user.email', 'admin@example.test')
             ->where('appearance.accent', 'sky')
             ->where('appearance.colorScheme', 'system')
-            // Structure, not a count: pinning the number forbids ever adding a cluster.
             ->has('navigation.0.items.0.route')
             ->where('env.isProduction', false)
         );

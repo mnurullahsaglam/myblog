@@ -9,13 +9,6 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * A preview reads; it never writes.
- *
- * Applied to every route rather than only the admin ones, so a preview cannot
- * write through the public site either. Leaving the preview is the one write it
- * has to allow.
- */
 final class RefuseWritesWhilePreviewing
 {
     /**

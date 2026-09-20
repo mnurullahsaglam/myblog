@@ -9,13 +9,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Throwable;
 
-/**
- * Fetch a cover from Open Library and store it like a manual upload.
- *
- * default=false is not optional: without it a missing cover comes back as
- * HTTP 200 carrying a blank placeholder, and the library fills up with empty
- * images that look like successful downloads.
- */
 final class DownloadCover
 {
     private const string BASE_URL = 'https://covers.openlibrary.org/b/id/';

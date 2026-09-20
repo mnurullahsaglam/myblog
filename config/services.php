@@ -4,18 +4,6 @@ declare(strict_types=1);
 
 return [
 
-    /*
-    |--------------------------------------------------------------------------
-    | Third Party Services
-    |--------------------------------------------------------------------------
-    |
-    | This file is for storing the credentials for third party services such
-    | as Mailgun, Postmark, AWS and more. This file provides the de facto
-    | location for this type of information, allowing packages to have
-    | a conventional file to locate the various service credentials.
-    |
-    */
-
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],
@@ -44,8 +32,6 @@ return [
     'wakatime' => [
         'app_id' => env('WAKATIME_APP_ID'),
         'app_secret' => env('WAKATIME_APP_SECRET'),
-        // Derives from APP_URL so it works in both local (myblog.test) and production.
-        // Register every environment's value as a Redirect URI in your WakaTime app.
         'redirect' => env('WAKATIME_REDIRECT_URI', rtrim((string) env('APP_URL'), '/').'/wakatime/callback'),
     ],
 
@@ -58,8 +44,6 @@ return [
     ],
 
     'open_library' => [
-        // Identifying the caller raises Open Library's limit from 1 to 3 requests
-        // a second. It is a courtesy, not a credential.
         'contact' => env('OPEN_LIBRARY_CONTACT', env('ADMIN_EMAIL', '')),
     ],
 ];

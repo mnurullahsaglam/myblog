@@ -16,12 +16,6 @@ use Override;
 final class IncomeResource extends ApiResource
 {
     /**
-     * client_id is gated on the same ability the panel's column is, because this
-     * is a serialisation path that the table and form filtering does not reach.
-     *
-     * source needs no guard: the model's accessor already degrades it, which is
-     * why the check was put there rather than in the table.
-     *
      * @return array<string, mixed>
      */
     #[Override]

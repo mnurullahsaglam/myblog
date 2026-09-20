@@ -4,12 +4,6 @@ declare(strict_types=1);
 
 namespace App\Support;
 
-/**
- * A validated ISBN, held in its thirteen digit form.
- *
- * Construction verifies the check digit, so a typo is rejected here rather
- * than spending a request to find out Open Library has never heard of it.
- */
 final readonly class Isbn
 {
     private function __construct(public string $digits) {}

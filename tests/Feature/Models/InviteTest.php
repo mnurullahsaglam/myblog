@@ -22,11 +22,6 @@ it('is expired once its moment has passed', function (): void {
     expect(Invite::factory()->expired()->create()->status)->toBe(InviteStatus::Expired);
 });
 
-/**
- * Acceptance outranks expiry. An invite that was accepted and then sat around
- * until its window closed is still accepted — reporting it as expired would
- * suggest it can be reissued, and it cannot.
- */
 it('reports an accepted invite as accepted even after its window closes', function (): void {
     $invite = Invite::factory()->accepted()->expired()->create();
 

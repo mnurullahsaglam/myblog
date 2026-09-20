@@ -30,10 +30,6 @@ it('lets the owner revoke any device', function (): void {
     expect($this->member->fresh()->tokens()->count())->toBe(0);
 });
 
-/**
- * Revocation has to bite immediately, or a stolen phone keeps working until the
- * token would have expired anyway.
- */
 it('stops the revoked token working at once', function (): void {
     $plain = $this->member->createToken('Her iPhone');
 
@@ -57,10 +53,6 @@ it('hides device revocation from a member', function (): void {
     expect($this->owner->fresh()->tokens()->count())->toBe(1);
 });
 
-/**
- * The panel lists devices; it must never hand back anything that could be used
- * as one.
- */
 it('never sends a token value to the browser', function (): void {
     $plain = $this->member->createToken('Her iPhone');
 

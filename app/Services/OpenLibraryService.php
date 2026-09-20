@@ -12,14 +12,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Throwable;
 
-/**
- * The only class that knows how to talk to Open Library.
- *
- * Two requests per lookup, deliberately. The edition record holds the facts
- * about this ISBN but no dependable author name; the search endpoint resolves
- * the author but reports publisher and year aggregated across every edition of
- * the work. Taking each from the wrong place fills the form with the wrong book.
- */
 final class OpenLibraryService implements ResolvesIsbn
 {
     private const string EDITION_URL = 'https://openlibrary.org/isbn/';
@@ -87,10 +79,6 @@ final class OpenLibraryService implements ResolvesIsbn
         }
     }
 
-    /**
-     * The edition record does not reliably carry an author name; the search
-     * endpoint resolves it inline, and nothing else it returns is used.
-     */
     private function author(Isbn $isbn): ?string
     {
         $response = $this->client()->get(self::SEARCH_URL, [
@@ -136,19 +124,12 @@ final class OpenLibraryService implements ResolvesIsbn
         return is_string($value) && trim($value) !== '' ? trim($value) : null;
     }
 
-    /**
-     * publish_date is free text: "1993", "1993?", "c1993", "March 1993".
-     * Take the first plausible four digit year and otherwise give up, because
-     * books.publication_date is a YEAR column and a blank beats a wrong guess.
-     */
     private function year(mixed $value): ?int
     {
         if (! is_string($value)) {
             return null;
         }
 
-        // Digit lookarounds, not \b: in "c1993" there is no word boundary between
-        // the c and the 1, and \b would also let "1234" match out of "12345".
         if (preg_match('/(?<!\d)(1\d{3}|20\d{2})(?!\d)/', $value, $matches) !== 1) {
             return null;
         }

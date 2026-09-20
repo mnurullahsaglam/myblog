@@ -12,20 +12,6 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-/**
- * The only message this application sends.
- *
- * The plaintext token is passed in rather than read from the invite, because
- * the invite does not have it — it stores a hash.
- *
- * The invitee has no account yet and so no scheme of their own, so the message
- * renders light — the fallback for an unknown reader.
- *
- * ShouldQueue because this application's architecture test requires it of every
- * mailable. With QUEUE_CONNECTION=sync it still sends inside the request, so
- * nothing about today's behaviour changes; the day a real queue exists, issuing
- * an invite stops waiting on a mail server it cannot control.
- */
 final class InviteMail extends Mailable implements ShouldQueue
 {
     use Queueable;

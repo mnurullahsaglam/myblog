@@ -6,9 +6,6 @@ use App\Models\WakaTimeSummary;
 use App\Models\WakaTimeSummaryEntry;
 use App\Support\WakaTime\AggregatesWakaTimeData;
 
-/**
- * Minimal host so the trait can be exercised without a Filament widget.
- */
 function wakaTimeAggregator(?string $range = null, ?WakaTimeSummary $record = null): object
 {
     return new class($range, $record)

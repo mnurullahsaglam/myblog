@@ -5,10 +5,6 @@ declare(strict_types=1);
 use App\Models\Post;
 use App\Models\Writer;
 
-/**
- * The factories set an explicit slug and spatie keeps a custom slug rather than
- * regenerating it, so these pass null to exercise generation itself.
- */
 it('keeps generating the slug format the site already publishes', function (string $title, string $expected): void {
     $post = Post::factory()->create(['title' => $title, 'slug' => null]);
 

@@ -27,10 +27,6 @@ it('keeps blog, work and general away from a member', function (Area $area): voi
     'general' => [Area::General],
 ]);
 
-/**
- * A new role that forgets its areas would silently grant nothing, which looks
- * like a permissions bug rather than an incomplete enum.
- */
 it('gives every role at least one area', function (): void {
     foreach (UserRole::cases() as $role) {
         expect($role->areas())->not->toBeEmpty();

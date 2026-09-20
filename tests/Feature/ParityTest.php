@@ -8,10 +8,6 @@ use App\Models\User;
 use App\Support\Navigation;
 use Illuminate\Support\Facades\Route;
 
-/**
- * Fails if any Filament feature lacks a replacement. This is the gate that has
- * to pass before the old panel is deleted.
- */
 beforeEach(function (): void {
     config(['app.admin_email' => 'admin@example.test']);
     $this->actingAs(User::factory()->create(['email' => 'admin@example.test']));

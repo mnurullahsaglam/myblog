@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 use App\Http\Requests\Admin\AdminRequest;
 
-/**
- * The guarantee: a new request in this namespace cannot exist without declaring
- * an area, because AdminRequest::area() is abstract. This test is what notices
- * if someone sidesteps the base class.
- */
 it('routes every admin request through the base class', function (): void {
     $offenders = [];
 

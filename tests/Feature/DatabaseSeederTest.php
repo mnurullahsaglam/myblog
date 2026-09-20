@@ -27,11 +27,6 @@ it('seeds only the owner when no member address is configured', function (): voi
     expect(User::query()->count())->toBe(1);
 });
 
-/**
- * The seeded owner carries the role outright rather than leaning on the
- * ADMIN_EMAIL bypass, so the database is still correct if that variable is
- * later changed.
- */
 it('seeds the owner as an admin in the column, not only by address', function (): void {
     config(['app.admin_email' => 'owner@example.test', 'app.member_email' => null]);
 

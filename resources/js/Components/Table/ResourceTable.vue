@@ -43,7 +43,6 @@ function loadVisibleKeys() {
 
     return stored ? JSON.parse(stored) : defaultVisibleKeys()
   } catch {
-    // Storage can be unavailable; column visibility is a convenience only.
     return defaultVisibleKeys()
   }
 }
@@ -53,9 +52,7 @@ const visibleKeys = ref(loadVisibleKeys())
 watch(visibleKeys, (keys) => {
   try {
     window.localStorage.setItem(storageKey, JSON.stringify(keys))
-  } catch {
-    // Ignored, see above.
-  }
+  } catch {}
 })
 
 const visibleColumns = computed(() => props.schema.columns.filter((column) => visibleKeys.value.includes(column.key)))

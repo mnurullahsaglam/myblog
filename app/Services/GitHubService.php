@@ -15,13 +15,6 @@ final class GitHubService implements SyncsGitHubIssues
 {
     private string $baseUrl = 'https://api.github.com';
 
-    /**
-     * Resolved when a request is actually made, not at construction.
-     *
-     * TaskObserver injects this service, so throwing in the constructor made
-     * every Task insert fail outright when no token was configured, before the
-     * observer's own error handling could see it.
-     */
     private function token(): string
     {
         $token = config('services.github.token', config('services.github.personal_access_token'));
@@ -31,9 +24,6 @@ final class GitHubService implements SyncsGitHubIssues
         return $token;
     }
 
-    /**
-     * Update a GitHub issue with task data
-     */
     public function updateIssue(Task $task): bool
     {
         if (! $task->repository || ! $task->github_issue_number) {
@@ -81,9 +71,6 @@ final class GitHubService implements SyncsGitHubIssues
         }
     }
 
-    /**
-     * Map task status to GitHub issue state
-     */
     private function mapStatusToGitHubState(string $status): string
     {
         return match ($status) {
@@ -94,8 +81,6 @@ final class GitHubService implements SyncsGitHubIssues
     }
 
     /**
-     * Get GitHub API headers
-     *
      * @return array<string, string>
      */
     private function getHeaders(): array
@@ -110,8 +95,6 @@ final class GitHubService implements SyncsGitHubIssues
     }
 
     /**
-     * Create a new GitHub issue from task
-     *
      * @return array<string, mixed>|null
      */
     public function createIssue(Task $task): ?array
@@ -171,9 +154,6 @@ final class GitHubService implements SyncsGitHubIssues
         }
     }
 
-    /**
-     * Close a GitHub issue
-     */
     public function closeIssue(Task $task): bool
     {
         if (! $task->repository || ! $task->github_issue_number) {
@@ -208,9 +188,6 @@ final class GitHubService implements SyncsGitHubIssues
         }
     }
 
-    /**
-     * Reopen a GitHub issue
-     */
     public function reopenIssue(Task $task): bool
     {
         if (! $task->repository || ! $task->github_issue_number) {
@@ -245,9 +222,6 @@ final class GitHubService implements SyncsGitHubIssues
         }
     }
 
-    /**
-     * Add comment to GitHub issue
-     */
     public function addComment(Task $task, string $comment): bool
     {
         if (! $task->repository || ! $task->github_issue_number) {
@@ -274,8 +248,6 @@ final class GitHubService implements SyncsGitHubIssues
     }
 
     /**
-     * Get repository information
-     *
      * @return array<string, mixed>|null
      */
     public function getRepository(string $fullName): ?array

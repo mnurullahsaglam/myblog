@@ -40,7 +40,6 @@ class InviteFactory extends Factory
         return $this->state(fn (array $attributes): array => ['revoked_at' => now()]);
     }
 
-    /** Past its window, whatever else is true of it. */
     public function expired(): static
     {
         return $this->state(fn (array $attributes): array => ['expires_at' => now()->subMinute()]);

@@ -31,8 +31,6 @@ it('sets the window to 48 hours', function (): void {
     ['invite' => $invite] = resolve(CreateInvite::class)
         ->handle('her@example.test', UserRole::Member, $this->owner);
 
-    // To the second: the column stores whole seconds, and now() carries
-    // microseconds that never survive the round trip.
     expect($invite->expires_at->toDateTimeString())->toBe(now()->addHours(48)->toDateTimeString());
 });
 
@@ -51,10 +49,6 @@ it('sends exactly one mail, to the invited address', function (): void {
     Mail::assertQueued(InviteMail::class, fn (InviteMail $mail): bool => $mail->hasTo('her@example.test'));
 });
 
-/**
- * The mail must carry the usable secret and the database must not. If these two
- * ever hold the same string, the hashing has been undone by a refactor.
- */
 it('puts the plaintext token in the mail and the hash in the database', function (): void {
     ['invite' => $invite, 'token' => $token] = resolve(CreateInvite::class)
         ->handle('her@example.test', UserRole::Member, $this->owner);
@@ -63,10 +57,6 @@ it('puts the plaintext token in the mail and the hash in the database', function
         && ! str_contains($mail->url, $invite->token_hash));
 });
 
-/**
- * Re-inviting is a normal thing to do when the first link went stale. It must
- * not error, and the old link must stop working.
- */
 it('supersedes a live invite rather than refusing', function (): void {
     ['invite' => $first] = resolve(CreateInvite::class)
         ->handle('her@example.test', UserRole::Member, $this->owner);

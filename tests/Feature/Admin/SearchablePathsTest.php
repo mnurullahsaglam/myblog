@@ -8,14 +8,6 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 /**
- * Every searchable path must be something the database can actually search.
- *
- * IncomeTable listed `source`, which is an accessor rather than a column. MySQL
- * answered "Unknown column 'source'" and SQLite quietly matched nothing, so the
- * Incomes search box was broken in development while CI stayed green and global
- * search silently dropped the whole resource. This walks every table definition
- * so the next one cannot repeat it.
- *
  * @return array<string, array{class-string<ResourceTable>}>
  */
 function tableDefinitions(): array

@@ -57,8 +57,6 @@ it('belongs to an account which has many bills', function (): void {
     $account = UtilityAccount::factory()->create();
     UtilityBill::factory()->count(3)->for($account, 'account')->create();
 
-    // Loaded explicitly: Model::shouldBeStrict() turns a lazy load into an
-    // exception, which is exactly why UtilityBillTable eager loads the account.
     $bill = UtilityBill::with('account')->firstOrFail();
 
     expect($account->bills)->toHaveCount(3)

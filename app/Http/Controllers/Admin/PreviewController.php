@@ -10,12 +10,6 @@ use App\Support\Access\AccessProfile;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
-/**
- * Render the panel as a narrower role would see it.
- *
- * Only a real admin may start one, and never from inside another, so this can
- * only ever be used to look down rather than to climb.
- */
 final class PreviewController extends Controller
 {
     public function store(Request $request): RedirectResponse

@@ -25,8 +25,6 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
-            // Named rather than left to the column default, so a factory-made user
-            // has a role in memory and not only once reloaded.
             'role' => UserRole::Member->value,
         ];
     }

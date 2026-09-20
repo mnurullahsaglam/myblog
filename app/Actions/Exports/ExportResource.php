@@ -13,9 +13,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use RuntimeException;
 
-/**
- * Build a resource's CSV on the private disk.
- */
 final class ExportResource
 {
     /**
@@ -27,14 +24,6 @@ final class ExportResource
         'writers' => WriterExport::class,
     ];
 
-    /**
-     * Which area each export belongs to.
-     *
-     * Separate from EXPORTS so the class-string map keeps its narrow type. Every
-     * export is Library today; a new one in another area returns null here,
-     * which fails the mapping test and has to be written down before the
-     * controller will let it through.
-     */
     public static function areaFor(string $resource): ?Area
     {
         return match ($resource) {
@@ -43,13 +32,6 @@ final class ExportResource
         };
     }
 
-    /**
-     * Stop a spreadsheet treating a cell as a formula.
-     *
-     * A value beginning =, +, - or @ is executed by Excel and Sheets when the
-     * file is opened. Prefixing a single quote makes it text, which is what a
-     * book title starting with a minus sign was always meant to be.
-     */
     private function neutralise(bool|float|int|string|null $value): bool|float|int|string|null
     {
         if (! is_string($value) || $value === '') {
@@ -60,8 +42,6 @@ final class ExportResource
     }
 
     /**
-     * Streams through the rows so memory stays flat however many there are.
-     *
      * @return string the stored path on the private disk
      */
     public function handle(string $resource): string

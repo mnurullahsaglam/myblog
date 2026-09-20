@@ -8,13 +8,6 @@ use App\Models\Task;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-/**
- * Move a task to a column and a position within it.
- *
- * The moved task is saved through update() so TaskObserver sees the status
- * change and syncs GitHub; its siblings are reordered with updateQuietly() so a
- * pure drag makes no API calls.
- */
 final class MoveTask
 {
     public function handle(Task $task, string $status, int $position): void

@@ -21,10 +21,6 @@ final class DebtController extends AdminResourceController
         return new DebtTable($this->conversionCurrency());
     }
 
-    /**
-     * The table's converted-amount column reports in this currency. It arrives
-     * through a display-only filter, so it never constrains the query.
-     */
     private function conversionCurrency(): string
     {
         $requested = request()->input('filter.conversion_currency');
@@ -59,9 +55,6 @@ final class DebtController extends AdminResourceController
         return DebtRequest::class;
     }
 
-    /**
-     * Record a payment against a debt, in full or in part.
-     */
     public function pay(PayDebtRequest $request, Debt $debt, PayDebt $payDebt): RedirectResponse
     {
         /** @var array{payment_amount: numeric-string|float|int, payment_description: string} $data */

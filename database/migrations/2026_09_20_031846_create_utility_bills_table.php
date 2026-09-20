@@ -7,13 +7,6 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-/**
- * One bill against one account.
- *
- * No tax rate and no levy columns: the breakdown lives in utility_bill_lines
- * exactly as the bill prints it, because rates and levies change and a stored
- * rule would silently recompute old bills.
- */
 return new class extends Migration
 {
     public function up(): void

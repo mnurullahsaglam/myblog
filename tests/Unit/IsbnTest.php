@@ -31,14 +31,6 @@ it('rejects anything that is not a valid ISBN', function (string $input): void {
     'thirteen digits with a bad prefix' => ['1230451524935'],
 ]);
 
-/**
- * Recorded because it is a real property of the format, not an oversight here:
- * ISBN-13 uses a mod-10 checksum, which cannot detect a transposition of two
- * digits that differ by 5. Swapping the 9 and the 4 of 9780451524935 yields
- * 9780451529435, which is a genuinely valid ISBN-13. ISBN-10's mod-11 checksum
- * would have caught it. Nothing here can do better, so the behaviour is pinned
- * rather than wished away.
- */
 it('cannot detect a transposition of digits differing by five, as the format allows', function (): void {
     expect(Isbn::tryFrom('9780451529435'))->not->toBeNull();
 });

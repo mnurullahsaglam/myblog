@@ -15,7 +15,6 @@ const data = computed(() => {
     datasets: [
       {
         data: props.series.data,
-        // Weekends drop to the hairline colour, as the design specifies.
         backgroundColor: props.series.data.map((_, index) =>
           props.series.weekendIndexes.includes(index) ? NEUTRAL : accent,
         ),

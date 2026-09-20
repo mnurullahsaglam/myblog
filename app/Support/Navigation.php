@@ -10,11 +10,6 @@ use App\Support\Access\AccessProfile;
 final class Navigation
 {
     /**
-     * Single source of truth for the top navigation and the command palette.
-     *
-     * Each resource task adds its entry in the same commit that defines the
-     * route, so a cluster never points at a route that does not exist yet.
-     *
      * @return array<int, array{label: string, icon: string, area: Area, items: array<int, array{label: string, route: string, icon: string, feature?: string}>}>
      */
     public static function clusters(): array
@@ -56,11 +51,6 @@ final class Navigation
     }
 
     /**
-     * The clusters this user may actually open.
-     *
-     * The bar is the first thing that gives a resource away, so it is filtered
-     * at the source rather than hidden in the component.
-     *
      * @return array<int, array{label: string, icon: string, area: Area, items: array<int, array{label: string, route: string, icon: string, feature?: string}>}>
      */
     public static function forProfile(AccessProfile $profile): array

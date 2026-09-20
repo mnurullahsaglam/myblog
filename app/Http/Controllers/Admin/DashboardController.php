@@ -17,12 +17,6 @@ use Inertia\Response;
 
 final class DashboardController extends Controller
 {
-    /**
-     * Panels are omitted rather than emptied.
-     *
-     * An empty panel still names the area and links into it, which is the thing
-     * a user without that area should not learn exists.
-     */
     public function __invoke(): Response
     {
         $profile = resolve(AccessProfile::class);

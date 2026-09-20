@@ -45,9 +45,6 @@ final class ExpenseTable extends ResourceTable
     }
 
     /**
-     * Summarises exactly what the current filters are showing. Amounts are in
-     * mixed currencies, so they are grouped rather than naively summed.
-     *
      * @return array<int, array{label: string, value: string, caption?: string|null, icon?: string|null}>
      */
     public function tiles(Request $request): array

@@ -8,13 +8,6 @@ use App\Models\Debt;
 use App\Models\Expense;
 use Illuminate\Support\Facades\DB;
 
-/**
- * Record a payment against a debt, in full or in part.
- *
- * The expense is created before the status flips because DebtObserver creates
- * one of its own when a debt becomes paid; writing ours first means the
- * observer finds it and does not double-count the settlement.
- */
 final class PayDebt
 {
     /**

@@ -24,8 +24,6 @@ final class SettingsController extends Controller
     private const array GROUPS = ['appearance', 'site_info', 'meta', 'branding', 'social', 'contact'];
 
     /**
-     * Fields stored as an uploaded file rather than a plain value.
-     *
      * @var array<string, string>
      */
     private const array UPLOADS = [

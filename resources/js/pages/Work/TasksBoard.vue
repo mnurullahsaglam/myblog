@@ -29,7 +29,6 @@ const dialogOpen = ref(false)
 const search = ref(props.filters.search ?? '')
 const project = ref(props.filters.project ?? null)
 
-/** Local copy so drag-and-drop can reorder optimistically. */
 const local = ref(cloneColumns(props.columns))
 
 function cloneColumns(columns) {
@@ -72,7 +71,6 @@ function onChange(column, event) {
     { status: column.key, position: moved.newIndex },
     {
       preserveScroll: true,
-      // The server is authoritative; re-sync if it refuses the move.
       onError: () => (local.value = cloneColumns(props.columns)),
     },
   )

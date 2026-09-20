@@ -7,10 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 
-/**
- * Booting the provider as production also flips forceHttps and the destructive
- * command guard, so everything it touches is put back for the rest of the suite.
- */
 afterEach(function (): void {
     app()->detectEnvironment(fn (): string => 'testing');
 

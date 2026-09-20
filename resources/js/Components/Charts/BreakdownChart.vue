@@ -29,7 +29,6 @@ const options = {
   responsive: true,
   maintainAspectRatio: false,
   cutout: '68%',
-  // The legend is rendered as a list beside the chart instead.
   plugins: { legend: { display: false }, tooltip: { enabled: false } },
 }
 </script>

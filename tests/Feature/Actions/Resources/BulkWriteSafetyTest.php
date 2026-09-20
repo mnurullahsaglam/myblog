@@ -6,17 +6,6 @@ use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Support\Facades\DB;
 
-/**
- * Guards the trap that orphaned pivot rows once already.
- *
- * A write issued through the query builder never loads the models, so no
- * Eloquent event fires. Post and Book detach their categoriables pivot on
- * deleting, and anything similar added later will hang off events too, so any
- * bulk action - delete, edit, archive - has to go through the models.
- *
- * BulkDeleteRecords loops for exactly this reason. These tests demonstrate why
- * and fail if a bulk write is ever added that bypasses the models.
- */
 it('fires no model events for a query-builder delete, which is why bulk delete loops', function (): void {
     $post = Post::factory()->create();
     $post->categories()->sync(Category::factory()->count(2)->create()->modelKeys());

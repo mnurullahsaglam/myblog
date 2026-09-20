@@ -55,13 +55,6 @@ final class UtilityBillController extends AdminResourceController
         return ['document_path' => 'utility-bills'];
     }
 
-    /**
-     * Overridden because the breakdown is neither a column nor a relation sync,
-     * so it has to leave the data before partition() mass assigns it.
-     *
-     * SaveBillLines is resolved inside rather than injected: adding a required
-     * parameter to an overridden method is a signature violation in PHP.
-     */
     public function store(): RedirectResponse
     {
         $form = $this->form();
@@ -70,8 +63,6 @@ final class UtilityBillController extends AdminResourceController
 
         $bill = $this->storeRecord->handle(UtilityBill::class, $form->partition($data));
 
-        // StoreRecord is declared to return Model; narrowing here is what lets
-        // SaveBillLines take a UtilityBill without a cast.
         abort_unless($bill instanceof UtilityBill, 500);
 
         resolve(SaveBillLines::class)->handle($bill, $lines);

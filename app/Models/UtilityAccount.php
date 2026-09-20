@@ -11,8 +11,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * One subscription: a meter, a phone line, a connection.
- *
  * @property UtilityType $type
  * @property string $label
  */

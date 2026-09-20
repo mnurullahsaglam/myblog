@@ -41,10 +41,6 @@ it('implements the contracts the table reads badges from', function (): void {
         ->and(UtilityType::Electricity)->toBeInstanceOf(HasLabel::class);
 });
 
-/**
- * The point of these three: adding a case without extending every match arm
- * should fail here rather than render a blank badge or an unlabelled option.
- */
 it('gives every case a non-empty label', function (): void {
     foreach (UtilityType::cases() as $type) {
         expect($type->getLabel())->not->toBeEmpty();

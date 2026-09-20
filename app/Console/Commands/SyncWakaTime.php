@@ -18,8 +18,6 @@ use Throwable;
 final class SyncWakaTime extends Command
 {
     /**
-     * Maps the WakaTime summary payload keys to our entry "type" values.
-     *
      * @var array<string, string>
      */
     private const array BREAKDOWNS = [

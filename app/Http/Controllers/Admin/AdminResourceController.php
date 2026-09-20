@@ -23,12 +23,6 @@ use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
-/**
- * Shared CRUD for a resource declared through a ResourceTable and ResourceForm.
- *
- * Subclasses name their definitions; everything else is handled here, so adding
- * a resource is a table, a form, a FormRequest and a five-line controller.
- */
 abstract class AdminResourceController extends Controller
 {
     public function __construct(
@@ -49,10 +43,8 @@ abstract class AdminResourceController extends Controller
      */
     abstract protected function modelClass(): string;
 
-    /** The route segment and route-name prefix, e.g. "posts". */
     abstract protected function resourceName(): string;
 
-    /** The Vue page directory, e.g. "Blog/Posts". */
     abstract protected function pagePath(): string;
 
     /**
@@ -61,8 +53,6 @@ abstract class AdminResourceController extends Controller
     abstract protected function requestClass(): string;
 
     /**
-     * Tiles contributed by the controller, merged ahead of the table's own.
-     *
      * @return array<int, array{label: string, value: string, caption: string|null, icon: string|null}>
      */
     protected function indexTiles(): array
@@ -71,8 +61,6 @@ abstract class AdminResourceController extends Controller
     }
 
     /**
-     * Upload fields mapped to their storage directory.
-     *
      * @return array<string, string>
      */
     protected function uploads(): array
@@ -90,19 +78,11 @@ abstract class AdminResourceController extends Controller
         return 'admin.'.$this->resourceName().'.index';
     }
 
-    /** The route parameter holding the record, e.g. "post". */
     protected function recordParameter(): string
     {
-        // Route::resource turns "utility-accounts" into the parameter
-        // {utility_account}, so the hyphen has to become an underscore or the
-        // record is never found and every edit returns 404.
         return Str::singular(str_replace('-', '_', $this->resourceName()));
     }
 
-    /**
-     * Implicit route-model binding cannot resolve an abstract Model type hint,
-     * so the record is resolved here by its own route key.
-     */
     protected function resolveRecord(Request $request): Model
     {
         $value = $request->route($this->recordParameter());
@@ -133,11 +113,6 @@ abstract class AdminResourceController extends Controller
     }
 
     /**
-     * The form schema for each field the table may bulk edit.
-     *
-     * Carried on the table schema rather than as its own prop so the thirteen
-     * index pages do not each have to thread it through.
-     *
      * @return array<int, array<string, mixed>>
      */
     protected function bulkFieldSchemas(): array
@@ -251,13 +226,6 @@ abstract class AdminResourceController extends Controller
         return to_route($this->indexRoute());
     }
 
-    /**
-     * Set one field to one value across a selection.
-     *
-     * The field must be one the form declares bulk editable, and the value is
-     * validated against that field's own options. Models are unguarded, so this
-     * whitelist is what stops an arbitrary column being written in bulk.
-     */
     public function bulkUpdate(Request $request): RedirectResponse
     {
         $model = $this->modelClass();
@@ -290,25 +258,12 @@ abstract class AdminResourceController extends Controller
         return to_route($this->indexRoute());
     }
 
-    /**
-     * Whether this record may be written by the current request.
-     *
-     * A resource overrides this when some of its rows are readable but not
-     * writable, which is not the same as a hidden field: the row still has to
-     * appear and still has to count towards totals.
-     */
     protected function isRecordEditable(Model $record): bool
     {
         return true;
     }
 
     /**
-     * Narrow a bulk selection to the records this request may write.
-     *
-     * Skipping rather than refusing the whole operation, so a selection that
-     * happens to include one protected row still does what was asked of the
-     * rest. The notifier reports the count actually acted on.
-     *
      * @param  class-string<Model>  $model
      * @param  array<int, int>  $ids
      * @return array<int, int>
@@ -326,8 +281,6 @@ abstract class AdminResourceController extends Controller
     }
 
     /**
-     * Resolving a FormRequest from the container runs its validation.
-     *
      * @return array<string, mixed>
      */
     protected function validated(): array

@@ -53,11 +53,6 @@ it('lets the owner edit it', function (): void {
     $this->actingAs($this->owner)->get(route('admin.incomes.edit', $income))->assertOk();
 });
 
-/**
- * Her totals must agree with the owner's, so the row stays and only the actions
- * are removed. Hiding the row would make the household's two views of its own
- * money disagree, which is a worse problem than the one being solved.
- */
 it('still shows her the row and its amount', function (): void {
     Income::factory()->create(['client_id' => $this->client->id, 'amount' => 4321]);
 

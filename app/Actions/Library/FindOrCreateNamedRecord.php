@@ -6,17 +6,6 @@ namespace App\Actions\Library;
 
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Reuse a writer or publisher by name, or create one carrying just that name.
- *
- * Matching lowercases both sides explicitly rather than leaning on the
- * database's collation. MySQL compares case insensitively by default and SQLite
- * does not, so relying on collation would mean the tests and production
- * disagreed about whether "george orwell" is George Orwell. These tables hold
- * tens of rows, so the lost index is worth the certainty.
- *
- * Neither table has a unique index on name, so a tie goes to the lowest id.
- */
 final class FindOrCreateNamedRecord
 {
     /**

@@ -7,10 +7,6 @@ use App\Models\Book;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 
-/**
- * The name cell of the first data row, read as a spreadsheet would read it
- * rather than as a substring, so CSV quoting does not confuse the assertion.
- */
 function nameCell(string $csv): string
 {
     $lines = array_values(array_filter(explode("\n", trim($csv))));
@@ -27,11 +23,6 @@ beforeEach(function (): void {
     $this->owner = User::factory()->admin()->create(['email' => 'owner@example.test']);
 });
 
-/**
- * A cell beginning =, +, - or @ is executed as a formula when the file is
- * opened in Excel or Sheets. The export is the one artefact that leaves this
- * application, so it is the one place that matters.
- */
 it('does not let a title become a spreadsheet formula', function (string $title): void {
     Book::factory()->create(['name' => $title]);
 

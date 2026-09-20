@@ -19,11 +19,6 @@ use Illuminate\Validation\ValidationException;
 final class IsbnLookupController extends Controller
 {
     /**
-     * The two model classes this endpoint may create.
-     *
-     * Models are unguarded, so without this map the relation endpoint would be
-     * a way to create any record in the application.
-     *
      * @var array<string, class-string<Model>>
      */
     private const array RELATIONS = [

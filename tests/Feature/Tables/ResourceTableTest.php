@@ -10,9 +10,6 @@ use App\Tables\ResourceTable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-/**
- * A fixture so the base class is tested independently of any real definition.
- */
 final class FixtureExpenseTable extends ResourceTable
 {
     #[Override]

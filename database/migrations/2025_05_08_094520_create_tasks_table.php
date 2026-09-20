@@ -22,7 +22,7 @@ return new class extends Migration
 
             $table->string('github_issue_number')->nullable();
             $table->string('github_issue_url')->nullable();
-            $table->string('github_issue_state')->nullable(); // open, closed
+            $table->string('github_issue_state')->nullable();
             $table->json('github_issue_labels')->nullable();
             $table->string('github_assignee')->nullable();
             $table->timestamp('github_created_at')->nullable();

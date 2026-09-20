@@ -13,14 +13,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-/**
- * One filter on a resource table.
- *
- * A filter describes its control to the browser and constrains a query. A
- * display-only filter does neither of the latter: it changes how rows render
- * without touching the query, which is how the Debts table picks the currency
- * its converted-amount column reports in.
- */
 final class Filter
 {
     private ?string $label = null;
@@ -50,11 +42,6 @@ final class Filter
 
     private ?Ability $requires = null;
 
-    /**
-     * Hidden from anyone without this ability, everywhere rather than only in
-     * the header: the definition is what every other method reads, so removing
-     * it removes the value from the payload too.
-     */
     public function hiddenWithout(Ability $ability): self
     {
         $this->requires = $ability;
@@ -81,8 +68,6 @@ final class Filter
     }
 
     /**
-     * Numeric-looking keys are coerced to ints by PHP, so accept either.
-     *
      * @param  array<array-key, string>  $options
      */
     public static function select(string $key, array $options): self
@@ -95,13 +80,11 @@ final class Filter
         return new self($column, 'dateRange');
     }
 
-    /** Matches on whether the column is set. */
     public static function boolean(string $column): self
     {
         return new self($column, 'boolean');
     }
 
-    /** An arbitrary constraint, shown as a yes/no control. */
     public static function custom(string $key, string $label, Closure $query): self
     {
         return new self($key, 'boolean', query: $query)->label($label);
@@ -142,9 +125,6 @@ final class Filter
         return $this;
     }
 
-    /**
-     * Changes how rows render without constraining the query.
-     */
     public function displayOnly(bool $displayOnly = true): self
     {
         $this->displayOnly = $displayOnly;
@@ -315,8 +295,6 @@ final class Filter
     }
 
     /**
-     * Derived from the foreign key: expense_category_id becomes ExpenseCategory.
-     *
      * @return class-string<Model>|null
      */
     private function relatedModelClass(): ?string

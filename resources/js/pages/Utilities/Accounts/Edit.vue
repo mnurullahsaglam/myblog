@@ -13,7 +13,6 @@ const props = defineProps({
 const form = useForm(props.values)
 
 function submit() {
-  // PUT cannot carry a file upload, so spoof the method.
   form
     .transform((data) => ({ ...data, _method: 'put' }))
     .post(route('admin.utility-accounts.update', props.recordId), { forceFormData: true })

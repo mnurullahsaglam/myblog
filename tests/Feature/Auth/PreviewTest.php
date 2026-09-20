@@ -40,10 +40,6 @@ it('hides the same routes from him as from her', function (string $routeName): v
     $this->actingAs($this->owner)->get(route($routeName))->assertNotFound();
 })->with(['admin.posts.index', 'admin.clients.index', 'admin.settings']);
 
-/**
- * The assertion that makes a preview worth having. Comparing the navigation
- * both sessions are handed proves the preview is honest rather than decorative.
- */
 it('shows the owner the navigation her own session shows', function (): void {
     $hers = null;
     $this->actingAs($this->member)
@@ -123,10 +119,6 @@ it('refuses to start a preview for a member', function (): void {
         ->assertNotFound();
 });
 
-/**
- * A preview must not be a way to climb: previewing a role no narrower than the
- * current one, or starting one from inside another, both have to fail.
- */
 it('refuses to preview a role that is not narrower', function (): void {
     $this->actingAs($this->owner)
         ->from(route('admin.dashboard'))

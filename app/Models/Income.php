@@ -80,14 +80,6 @@ final class Income extends Model
         return $this->currency->getSymbol().' '.number_format((float) $this->amount, 2);
     }
 
-    /**
-     * A label for where the money came from.
-     *
-     * Derived rather than stored, which is why the check belongs here: the table,
-     * the form, the show page and anything else that reads it would each have to
-     * remember otherwise, and one of them would not. An income from a client
-     * reads generically for anyone who may not see which client it was.
-     */
     protected function getSourceAttribute(): string
     {
         if ($this->client_id !== null && ! resolve(AccessProfile::class)->allows(Ability::SeeClientIdentity)) {

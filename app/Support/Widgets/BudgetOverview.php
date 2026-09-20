@@ -64,8 +64,6 @@ final class BudgetOverview
     }
 
     /**
-     * Sums this month's rows, converting each into the base currency.
-     *
      * @param  Builder<covariant Model>  $query
      */
     private static function monthlyTotal(Builder $query): float
@@ -91,9 +89,6 @@ final class BudgetOverview
         return $total;
     }
 
-    /**
-     * A rate lookup failure must not take the dashboard down.
-     */
     private static function convert(float $amount, string $from): float
     {
         try {

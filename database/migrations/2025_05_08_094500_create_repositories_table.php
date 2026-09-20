@@ -15,10 +15,10 @@ return new class extends Migration
             $table->foreignId('project_id')->nullable()->constrained()->cascadeOnDelete();
 
             $table->string('name');
-            $table->string('full_name'); // owner/repo-name
+            $table->string('full_name');
             $table->string('owner');
             $table->text('description')->nullable();
-            $table->string('visibility'); // public, private
+            $table->string('visibility');
             $table->string('github_url');
             $table->string('github_id')->unique();
             $table->string('default_branch')->default('main');

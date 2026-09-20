@@ -17,8 +17,6 @@ final class CreateNewUser implements CreatesNewUsers
     use PasswordValidationRules;
 
     /**
-     * Validate and create a newly registered user.
-     *
      * @param  array<string, string>  $input
      *
      * @throws ValidationException
@@ -42,9 +40,6 @@ final class CreateNewUser implements CreatesNewUsers
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
-            // Defaulted here as well as in the column, so this action states the
-            // access decision rather than depending on a schema default to
-            // rescue it.
             'role' => $input['role'] ?? UserRole::Member->value,
         ]);
     }

@@ -6,7 +6,6 @@ defineProps({
   type: { type: String, required: true },
 })
 
-/** Our semantic variants mapped onto PrimeVue severities. */
 const SEVERITY = {
   primary: 'primary',
   secondary: 'secondary',

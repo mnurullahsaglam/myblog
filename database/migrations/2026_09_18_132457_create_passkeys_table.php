@@ -9,9 +9,6 @@ use Laravel\Passkeys\Passkeys;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('passkeys', function (Blueprint $table): void {

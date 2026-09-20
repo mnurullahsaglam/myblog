@@ -11,10 +11,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 
-/**
- * A resource form: fields declared once in PHP, rendered by a single Vue
- * component. Validation lives in a FormRequest, not here.
- */
 abstract class ResourceForm
 {
     protected int $columns = 1;
@@ -25,12 +21,6 @@ abstract class ResourceForm
     abstract protected function fields(): array;
 
     /**
-     * The fields this request may see.
-     *
-     * Every other method reads this rather than fields(), so a hidden field is
-     * absent from the schema, from the values, from the show page, from the bulk
-     * editable whitelist and from the relations that get synced.
-     *
      * @return array<int, Field>
      */
     final protected function visibleFields(): array
@@ -55,8 +45,6 @@ abstract class ResourceForm
     }
 
     /**
-     * The initial form state: a record's values, or the field defaults.
-     *
      * @return array<string, mixed>
      */
     public function values(?Model $record): array
@@ -83,8 +71,6 @@ abstract class ResourceForm
     }
 
     /**
-     * Read-only display values, keyed by field.
-     *
      * @return array<string, string>
      */
     public function placeholders(?Model $record): array
@@ -113,15 +99,6 @@ abstract class ResourceForm
     }
 
     /**
-     * Fields that can safely take one value across a whole selection.
-     *
-     * Restricted to choices, switches, dates and numbers: a title, a slug or an
-     * uploaded file is per-record, and setting one across many rows is never
-     * what was meant. Disabled fields are excluded too - the form marks those
-     * computed on save, so writing them directly would be overwritten anyway.
-     * This list is also the authorisation boundary for bulk editing, because
-     * models are unguarded - anything outside it cannot be written in bulk.
-     *
      * @return array<int, string>
      */
     public function bulkEditableFields(): array
@@ -146,11 +123,6 @@ abstract class ResourceForm
     }
 
     /**
-     * Validation for a bulk value, derived from the field the UI actually offered.
-     *
-     * Choices are checked against their own option list rather than against the
-     * resource's FormRequest, which would demand every other field too.
-     *
      * @return array<string, array<int, mixed>>
      */
     public function bulkValueRules(string $key): array
@@ -200,9 +172,6 @@ abstract class ResourceForm
     }
 
     /**
-     * Field keys that are many-to-many relations, to be synced after save
-     * rather than mass assigned.
-     *
      * @return array<int, string>
      */
     public function relationKeys(): array
@@ -219,8 +188,6 @@ abstract class ResourceForm
     }
 
     /**
-     * Split validated input into attributes and relations to sync.
-     *
      * @param  array<string, mixed>  $data
      * @return array{attributes: array<string, mixed>, relations: array<string, array<int, mixed>>}
      */

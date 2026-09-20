@@ -7,9 +7,6 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
-/**
- * A persisted alert for the admin, surfaced by the notification bell.
- */
 final class AdminAlert extends Notification
 {
     use Queueable;

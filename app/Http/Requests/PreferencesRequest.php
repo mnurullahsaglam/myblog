@@ -9,10 +9,6 @@ use App\Support\Theme\Appearance;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-/**
- * Not an AdminRequest: Profile belongs to no area, because everyone who reaches
- * the panel has to be able to set their own appearance.
- */
 final class PreferencesRequest extends FormRequest
 {
     public function authorize(): bool

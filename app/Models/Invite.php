@@ -14,8 +14,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
- * A pending invitation to join the panel.
- *
  * @property string $email
  * @property string $token_hash
  * @property UserRole $role
@@ -29,10 +27,6 @@ final class Invite extends Model
     /** @use HasFactory<InviteFactory> */
     use HasFactory;
 
-    /**
-     * Usable means: issued, not spent, not withdrawn, not stale. Every refusal
-     * in this feature reduces to the negation of this one method.
-     */
     public function isUsable(): bool
     {
         return $this->accepted_at === null
@@ -40,10 +34,6 @@ final class Invite extends Model
             && $this->expires_at->isFuture();
     }
 
-    /**
-     * Acceptance and revocation outrank expiry: an invite that was spent and
-     * then sat past its window is spent, not stale.
-     */
     protected function getStatusAttribute(): InviteStatus
     {
         return match (true) {

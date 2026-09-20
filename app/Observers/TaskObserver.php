@@ -14,9 +14,6 @@ final readonly class TaskObserver
 {
     public function __construct(private SyncsGitHubIssues $githubService) {}
 
-    /**
-     * Handle the Task "updated" event.
-     */
     public function updated(Task $task): void
     {
         if (! $task->is_github_issue) {
@@ -41,9 +38,6 @@ final readonly class TaskObserver
         }
     }
 
-    /**
-     * Handle the Task "creating" event.
-     */
     public function creating(Task $task): void
     {
         if (is_null($task->sort_order)) {
@@ -56,9 +50,6 @@ final readonly class TaskObserver
         }
     }
 
-    /**
-     * Handle the Task "created" event.
-     */
     public function created(Task $task): void
     {
         if ($task->repository && ! $task->github_issue_number) {

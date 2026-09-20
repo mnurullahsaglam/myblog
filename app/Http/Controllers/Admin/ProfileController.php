@@ -53,10 +53,6 @@ final class ProfileController extends Controller
         ]);
     }
 
-    /**
-     * Nulls are stored rather than dropped, so "clear it" is expressible and
-     * resolves back to the global default on the next read.
-     */
     public function updatePreferences(PreferencesRequest $request): RedirectResponse
     {
         /** @var array{accent: string|null, color_scheme: string|null} $data */

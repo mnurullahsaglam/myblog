@@ -8,12 +8,6 @@ use App\Actions\Resources\Concerns\SyncsRelations;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-/**
- * Create a record and attach its many-to-many relations as one unit.
- *
- * The transaction matters: a rejected relation id would otherwise leave a
- * created row behind carrying none of the relations the form asked for.
- */
 final class StoreRecord
 {
     use SyncsRelations;

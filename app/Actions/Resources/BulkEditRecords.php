@@ -8,17 +8,6 @@ use App\Actions\Resources\Concerns\SyncsRelations;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-/**
- * Apply one set of changes to several records of the same type.
- *
- * Writes through each model rather than issuing a single update query, for the
- * same reason BulkDeleteRecords loops: a query-builder write fires no Eloquent
- * events, so observers and relation hooks would be skipped. One transaction
- * keeps the selection all-or-nothing.
- *
- * The caller needs the real count rather than the requested count, because the
- * success message names a number and ids can disappear between render and submit.
- */
 final class BulkEditRecords
 {
     use SyncsRelations;

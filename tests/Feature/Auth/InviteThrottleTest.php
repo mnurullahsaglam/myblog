@@ -7,10 +7,6 @@ use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 
-/**
- * In a file of its own: the rate limiter is process state that RefreshDatabase
- * does not reset, so a shared file would leak spent attempts between cases.
- */
 it('throttles attempts on the invite link', function (): void {
     Mail::fake();
     config(['app.admin_email' => 'owner@example.test']);

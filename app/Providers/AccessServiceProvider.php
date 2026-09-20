@@ -15,16 +15,6 @@ use Laravel\Pennant\Feature;
 
 final class AccessServiceProvider extends ServiceProvider
 {
-    /**
-     * Bound rather than scoped, deliberately.
-     *
-     * A scoped instance survives for the life of the container, which is one
-     * request under FPM but many requests inside a single test. That made the
-     * access matrix reuse the owner's profile for the member's half of each
-     * case, so every route looked reachable and the suite passed without
-     * testing anything. Correctness in the test that guards this feature is
-     * worth rebuilding a handful of enum arrays per resolution.
-     */
     public function register(): void
     {
         $this->app->bind(AccessProfile::class, function (Application $app): AccessProfile {
@@ -52,11 +42,6 @@ final class AccessServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * Every flag defaults to off. An admin never reaches this: AccessProfile
-     * short-circuits before asking Pennant, so a flag cannot hide a screen from
-     * the person building it.
-     */
     public function boot(): void
     {
         foreach (Features::ALL as $flag) {

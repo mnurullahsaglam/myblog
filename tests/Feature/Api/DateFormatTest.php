@@ -12,11 +12,6 @@ beforeEach(function (): void {
     $this->owner = User::factory()->admin()->create(['email' => 'owner@example.test']);
 });
 
-/**
- * A client decodes JSON with one date strategy. Three formats across one API
- * means three special cases in every client forever, so every resource emits
- * dates as Y-m-d and datetimes as ISO 8601 with an offset.
- */
 it('emits every date-only column as Y-m-d', function (string $routeName, string $field): void {
     Income::factory()->create();
     Expense::factory()->create();
@@ -40,10 +35,6 @@ it('emits every timestamp as ISO 8601 with an offset', function (string $routeNa
     expect($value)->toMatch('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/', "{$routeName} returned {$value}");
 })->with(['api.v1.incomes.index', 'api.v1.expenses.index']);
 
-/**
- * The hand-written resource and the generated ones must agree, because the
- * inconsistency this guards against came from exactly that split.
- */
 it('formats the same column identically whoever wrote the resource', function (): void {
     Income::factory()->create();
     Expense::factory()->create();

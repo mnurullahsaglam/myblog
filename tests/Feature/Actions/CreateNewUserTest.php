@@ -30,10 +30,6 @@ it('creates the role it is given', function (): void {
     expect($user->role)->toBe(UserRole::Admin);
 });
 
-/**
- * The role is the access decision. An unrecognised value must stop the
- * creation, not fall back to something convenient.
- */
 it('refuses a role the enum does not know', function (): void {
     expect(fn (): User => resolve(CreateNewUser::class)->create([
         'name' => 'Someone',

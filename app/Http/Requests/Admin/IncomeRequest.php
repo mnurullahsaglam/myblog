@@ -20,10 +20,6 @@ final class IncomeRequest extends AdminRequest
     }
 
     /**
-     * The client is absent from the rules for anyone who may not see it, so a
-     * hand-made POST carrying one is never validated and never written. Dropping
-     * the field from the form stops it being offered; this stops it being sent.
-     *
      * @return array<string, array<int, mixed>>
      */
     public function rules(): array

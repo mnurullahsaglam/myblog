@@ -21,11 +21,6 @@ it('returns a table and a form schema', function (): void {
         ]);
 });
 
-/**
- * The whole argument for driving the phone from these schemas: the field hiding
- * from the panel arrives on the client for free, because schema() already calls
- * visibleFields() and visibleColumns().
- */
 it('omits a field the member may not see', function (): void {
     $hers = apiAs($this->member)->get(route('api.v1.incomes.schema'))->json();
 
@@ -61,9 +56,6 @@ it('turns away a request with no token', function (): void {
     $this->getJson(route('api.v1.expenses.schema'))->assertUnauthorized();
 });
 
-/**
- * A read-only resource has columns but nothing to fill in.
- */
 it('returns a table schema and no form for waka time summaries', function (): void {
     $response = apiAs($this->owner)->get(route('api.v1.waka-time-summaries.schema'))->assertOk();
 
@@ -71,10 +63,6 @@ it('returns a table schema and no form for waka time summaries', function (): vo
         ->and($response->json('form'))->toBeNull();
 });
 
-/**
- * The schema route must not be swallowed by the show route, which would make it
- * a 404 for a record that does not exist rather than a schema.
- */
 it('is not captured by the show route', function (string $resource): void {
     $body = apiAs($this->owner)->get("/api/v1/{$resource}/schema")->assertOk()->json();
 

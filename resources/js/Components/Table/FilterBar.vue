@@ -22,7 +22,6 @@ function toIsoDate(date) {
     return null
   }
 
-  // Local date, not UTC: toISOString() would shift the day either side of midnight.
   const offset = date.getTimezoneOffset() * 60000
 
   return new Date(date.getTime() - offset).toISOString().slice(0, 10)
@@ -32,7 +31,6 @@ function labelFor(filter, value) {
   return filter.options.find((option) => String(option.value) === String(value))?.label ?? value
 }
 
-/** Only filters that actually constrain the query get a chip. */
 const activeChips = computed(() =>
   props.filters.flatMap((filter) => {
     if (filter.displayOnly) {

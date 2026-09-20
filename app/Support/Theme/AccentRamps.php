@@ -8,17 +8,9 @@ final class AccentRamps
 {
     public const string DEFAULT = 'khaki';
 
-    /**
-     * Text and glyphs on a filled accent. Never white - see the khaki contrast
-     * rule in docs/superpowers/design-system.md.
-     */
     public const string ON_ACCENT = '#141517';
 
     /**
-     * Mirrors resources/js/theme/ramps.js. Keep the two in sync.
-     *
-     * PHP coerces the numeric stop keys to integers.
-     *
      * @var array<string, array<int, string>>
      */
     private const array RAMPS = [
@@ -54,9 +46,6 @@ final class AccentRamps
         return array_key_exists($name, self::RAMPS);
     }
 
-    /**
-     * The stop used as the accent in each scheme: 500 on light, 400 on dark.
-     */
     public static function swatch(string $name): string
     {
         $ramp = self::RAMPS[self::has($name) ? $name : self::DEFAULT];
@@ -64,9 +53,6 @@ final class AccentRamps
         return $ramp['400'];
     }
 
-    /**
-     * Inline CSS custom properties so the correct accent paints before Vue boots.
-     */
     public static function cssVariables(string $name): string
     {
         $ramp = self::RAMPS[self::has($name) ? $name : self::DEFAULT];

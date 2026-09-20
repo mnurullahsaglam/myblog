@@ -72,12 +72,6 @@ it('does not expose a registration route', function (): void {
     $this->get('/register')->assertNotFound();
 });
 
-/**
- * Registration stays closed while password reset opens. The two used to be off
- * together because the panel had one hand-provisioned account; now accounts
- * arrive by invitation, and an invited user has to be able to recover her own
- * without the owner editing the database.
- */
 it('exposes password reset but still not registration', function (): void {
     expect(Route::has('password.request'))->toBeTrue()
         ->and(Route::has('password.reset'))->toBeTrue()

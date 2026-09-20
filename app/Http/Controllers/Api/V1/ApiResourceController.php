@@ -17,13 +17,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 
-/**
- * The API half of AdminResourceController.
- *
- * Deliberately reuses the panel's table, form and FormRequest rather than
- * reimplementing any of them: the filters, the validation and the per-record
- * write guard are the same objects, so the two clients cannot drift apart.
- */
 abstract class ApiResourceController extends Controller
 {
     abstract protected function table(): ResourceTable;
@@ -35,9 +28,6 @@ abstract class ApiResourceController extends Controller
      */
     abstract protected function modelClass(): string;
 
-    /**
-     * The plural, hyphenated name the route is registered under.
-     */
     abstract protected function resourceName(): string;
 
     /**
@@ -51,12 +41,6 @@ abstract class ApiResourceController extends Controller
     abstract protected function resourceClass(): string;
 
     /**
-     * The table and form definitions this request may see.
-     *
-     * The client renders its lists and forms from these, exactly as the panel
-     * does, which means the field hiding arrives on the phone without the phone
-     * knowing abilities exist: schema() already filters through AccessProfile.
-     *
      * @return array<string, mixed>
      */
     public function schema(): array
@@ -123,9 +107,6 @@ abstract class ApiResourceController extends Controller
         return response()->noContent();
     }
 
-    /**
-     * Whether this record may be written by the current request.
-     */
     protected function isRecordEditable(Model $record): bool
     {
         return true;
@@ -145,20 +126,12 @@ abstract class ApiResourceController extends Controller
         return $model::query()->where($instance->getRouteKeyName(), $value)->firstOrFail();
     }
 
-    /**
-     * Laravel names an apiResource parameter after the singular resource with
-     * hyphens replaced, so utility-bills binds {utility_bill}.
-     */
     protected function routeParameter(): string
     {
         return str_replace('-', '_', Str::singular($this->resourceName()));
     }
 
     /**
-     * Resolving a FormRequest from the container runs its validation, which is
-     * how the panel reuses the same rules. The API does the same rather than
-     * revalidating, so a rule added for one protects the other.
-     *
      * @return array<string, mixed>
      */
     private function validated(): array

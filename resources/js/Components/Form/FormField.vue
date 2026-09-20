@@ -100,7 +100,6 @@ const markdownMode = ref('write')
 const renderedMarkdown = computed(() => {
   const source = String(props.modelValue ?? '')
 
-  // Deliberately minimal: a structural preview, not a Markdown engine.
   return source
     .replace(/[&<>]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[char])
     .replace(/^### (.*)$/gm, '<h3>$1</h3>')

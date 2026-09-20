@@ -8,10 +8,6 @@ use App\Models\Repository;
 use App\Models\WakaTimeSummary;
 use App\Models\WakaTimeSummaryEntry;
 
-/**
- * Shapes WakaTime aggregates into the series and tiles the dashboard renders.
- * The aggregation itself lives in AggregatesWakaTimeData; this only arranges it.
- */
 final class DashboardData
 {
     use AggregatesWakaTimeData;

@@ -31,14 +31,6 @@ pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
     ->in('Feature', 'Browser');
 
-/**
- * A user whose role the enum does not recognise.
- *
- * Not a state the application creates, but one a bad migration or a hand edit
- * can leave behind, and the panel must refuse it rather than guess. The column
- * is written directly because assigning an unknown value to an enum-cast
- * attribute throws before it ever reaches the database.
- */
 function userWithoutRole(string $email): User
 {
     $user = User::factory()->create(['email' => $email]);
@@ -48,15 +40,6 @@ function userWithoutRole(string $email): User
     return $user->fresh() ?? $user;
 }
 
-/**
- * Authenticate the next API request as this user, by token.
- *
- * The auth guard caches the user it resolved earlier in the same test, which
- * production never does because each request is its own process. Without
- * forgetting it first, a test that checks one user's payload against another's
- * silently checks the first user twice — and a leak test written that way passes
- * while leaking.
- */
 function apiAs(User $user): PendingApiRequest
 {
     resolve('auth')->forgetGuards();
@@ -108,17 +91,6 @@ final readonly class PendingApiRequest
     }
 }
 
-/**
- * A record for each route parameter, so the matrix does not collapse into
- * special cases for routes that bind a model.
- *
- * Models are returned whole rather than as keys: several of them resolve their
- * route key to a slug, so a raw id would generate a URL that binding cannot
- * resolve and the matrix would read a 404 as a denial.
- *
- * The notification routes bind to the signed-in user's own notifications, so
- * that one is created against $user; everything else is standalone.
- */
 function parameterValue(string $parameter, User $user): Model|string|int
 {
     return match ($parameter) {

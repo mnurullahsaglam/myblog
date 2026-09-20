@@ -6,10 +6,6 @@ use App\Models\User;
 use Illuminate\Contracts\Console\Kernel;
 
 /**
- * Every v1 route, crossed with both roles, authenticated by token rather than by
- * session. Generated from the router for the same reason the panel's matrix is:
- * a route added later is covered the day it appears.
- *
  * @return array<string, array{string, string, array<int, string>}>
  */
 function apiRoutes(): array
@@ -47,9 +43,6 @@ function apiRoutes(): array
     return $cached = $cases;
 }
 
-/**
- * Which area each route belongs to, by name prefix.
- */
 function apiAreaOf(string $routeName): ?string
 {
     $map = [
@@ -83,11 +76,6 @@ beforeEach(function (): void {
     config(['app.admin_email' => 'owner@example.test']);
 });
 
-/**
- * Compared against the owner's answer rather than a fixed status, for the same
- * reason the panel's matrix is: some routes refuse for reasons of their own, and
- * a hand-written list of those exceptions rots.
- */
 it('gives a member what the admin gets inside her areas, and nothing outside them', function (string $method, string $name, array $parameterNames): void {
     $owner = User::factory()->admin()->create(['email' => 'owner@example.test']);
     $ownerStatus = apiAs($owner)

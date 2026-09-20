@@ -25,12 +25,10 @@ final class ExchangeRateService implements ConvertsCurrency
         $this->openExchangeApiKey = is_string($openExchangeApiKey) ? $openExchangeApiKey : '';
 
         $metalsApiKey = config('services.metals.api_key');
-        $this->metalsApiKey = is_string($metalsApiKey) ? $metalsApiKey : ''; // Optional for now
+        $this->metalsApiKey = is_string($metalsApiKey) ? $metalsApiKey : '';
     }
 
     /**
-     * Get converted amount for display in tables
-     *
      * @return array<string, float|string>
      */
     public function getConvertedAmount(float $amount, string $fromCurrency, ?string $displayCurrency = null): array
@@ -57,9 +55,6 @@ final class ExchangeRateService implements ConvertsCurrency
         ];
     }
 
-    /**
-     * Format money with currency symbol
-     */
     public function formatMoney(float $amount, string $currency): string
     {
         $currencyEnum = Currencies::tryFrom($currency);
@@ -68,9 +63,6 @@ final class ExchangeRateService implements ConvertsCurrency
         return $symbol.' '.number_format($amount, 2);
     }
 
-    /**
-     * Convert amount from one currency to another
-     */
     public function convert(float $amount, string $fromCurrency, string $toCurrency): float
     {
         if ($fromCurrency === $toCurrency) {
@@ -82,9 +74,6 @@ final class ExchangeRateService implements ConvertsCurrency
         return round($amount * $rate, 2);
     }
 
-    /**
-     * Get exchange rate between two currencies
-     */
     public function getExchangeRate(string $fromCurrency, string $toCurrency): float
     {
         if ($fromCurrency === $toCurrency) {
@@ -100,8 +89,6 @@ final class ExchangeRateService implements ConvertsCurrency
     }
 
     /**
-     * Get all exchange rates with caching
-     *
      * @return array<string, float>
      */
     public function getAllRates(): array
@@ -110,13 +97,11 @@ final class ExchangeRateService implements ConvertsCurrency
     }
 
     /**
-     * Fetch rates from external APIs
-     *
      * @return array<string, float>
      */
     private function fetchRatesFromApi(): array
     {
-        $rates = ['USD' => 1.0]; // Base rate for USD
+        $rates = ['USD' => 1.0];
 
         try {
             if ($this->openExchangeApiKey) {
@@ -128,8 +113,8 @@ final class ExchangeRateService implements ConvertsCurrency
                 $metalRates = $this->fetchMetalRates();
                 $rates = array_merge($rates, $metalRates);
             } else {
-                $rates['XAU'] = 0.01555175; // Gold per gram in USD
-                $rates['XAG'] = 0.99531;    // Silver per gram in USD
+                $rates['XAU'] = 0.01555175;
+                $rates['XAG'] = 0.99531;
             }
 
             Log::info('Exchange rates fetched successfully', ['rates_count' => count($rates)]);
@@ -144,8 +129,6 @@ final class ExchangeRateService implements ConvertsCurrency
     }
 
     /**
-     * Fetch currency rates from OpenExchangeRates
-     *
      * @return array<string, float>
      */
     private function fetchCurrencyRates(): array
@@ -170,21 +153,17 @@ final class ExchangeRateService implements ConvertsCurrency
     }
 
     /**
-     * Fetch metal rates (placeholder for future implementation)
-     *
      * @return array<string, float>
      */
     private function fetchMetalRates(): array
     {
         return [
-            'XAU' => 0.01555175, // Gold per gram in USD (0.0005 oz * 31.1035)
-            'XAG' => 0.99531,    // Silver per gram in USD (0.032 oz * 31.1035)
+            'XAU' => 0.01555175,
+            'XAG' => 0.99531,
         ];
     }
 
     /**
-     * Get fallback rates when API fails
-     *
      * @return array<string, float>
      */
     private function getFallbackRates(): array
@@ -194,14 +173,12 @@ final class ExchangeRateService implements ConvertsCurrency
             'EUR' => 0.85,
             'GBP' => 0.73,
             'TRY' => 32.50,
-            'XAU' => 0.01555175, // Gold per gram in USD
-            'XAG' => 0.99531,    // Silver per gram in USD
+            'XAU' => 0.01555175,
+            'XAG' => 0.99531,
         ];
     }
 
     /**
-     * Get popular currencies for dropdowns
-     *
      * @return array<string, string>
      */
     public function getPopularCurrencies(): array
@@ -218,9 +195,6 @@ final class ExchangeRateService implements ConvertsCurrency
         return $result;
     }
 
-    /**
-     * Refresh exchange rates cache
-     */
     public function refreshRates(): bool
     {
         try {
@@ -235,17 +209,11 @@ final class ExchangeRateService implements ConvertsCurrency
         }
     }
 
-    /**
-     * Get current base currency
-     */
     public function getBaseCurrency(): string
     {
         return $this->baseCurrency;
     }
 
-    /**
-     * Set base currency for conversions
-     */
     public function setBaseCurrency(string $currency): void
     {
         $this->baseCurrency = $currency;

@@ -133,9 +133,6 @@ final class TaskBoardController extends Controller
         ];
     }
 
-    /**
-     * Move a task to a column and a position within it.
-     */
     public function move(MoveTaskRequest $request, Task $task): RedirectResponse
     {
         /** @var array{status: string, position: int} $data */

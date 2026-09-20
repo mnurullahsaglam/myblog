@@ -10,8 +10,6 @@ import 'primeicons/primeicons.css'
 
 createInertiaApp({
   title: (title) => (title ? `${title} — Admin` : 'Admin'),
-  // Not eager: each page becomes its own chunk, so a visitor downloads the
-  // page they asked for rather than all forty.
   resolve: (name) => {
     const pages = import.meta.glob('./pages/**/*.vue')
 

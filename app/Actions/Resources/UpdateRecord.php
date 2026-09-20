@@ -8,10 +8,6 @@ use App\Actions\Resources\Concerns\SyncsRelations;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-/**
- * Apply an edit and its relation changes as one unit, for the same reason
- * StoreRecord does.
- */
 final class UpdateRecord
 {
     use SyncsRelations;

@@ -44,11 +44,6 @@ final class InvoiceController extends AdminResourceController
     }
 
     /**
-     * Tax and total are recomputed here rather than taken from input, so the
-     * stored figures cannot disagree with the net amount and rate.
-     *
-     * The archive goes to the private disk: invoices are not public files.
-     *
      * @return array<string, mixed>
      */
     protected function validated(): array

@@ -12,7 +12,6 @@ const emit = defineEmits(['update:modelValue'])
 function choose(name) {
   emit('update:modelValue', name)
 
-  // Live preview. What survives a reload is whatever gets saved.
   updatePreset({ semantic: { primary: RAMPS[name] } })
 }
 </script>

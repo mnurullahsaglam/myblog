@@ -16,7 +16,6 @@ use App\Support\GlobalSearch;
 beforeEach(function (): void {
     config(['app.admin_email' => 'admin@example.test']);
 
-    // These assert results across areas, so they have to search as an admin.
     $this->owner = User::factory()->admin()->create(['email' => 'admin@example.test']);
     $this->actingAs($this->owner);
 });

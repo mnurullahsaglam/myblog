@@ -217,7 +217,7 @@ class DatabaseSeeder extends Seeder
                 'creditor_type' => 'institute',
                 'amount' => 2000.00,
                 'currency' => 'TRY',
-                'due_date' => now()->subDays(5), // Overdue
+                'due_date' => now()->subDays(5),
                 'status' => 'pending',
                 'description' => 'Logo design and branding work',
                 'date' => now()->subDays(45),
@@ -326,16 +326,6 @@ class DatabaseSeeder extends Seeder
         }
     }
 
-    /**
-     * The panel reads these on every request, so a fresh database without them
-     * falls back to defaults and looks unconfigured.
-     */
-    /**
-     * The household's second account, seeded only when an address is configured.
-     *
-     * Scaffolding until invites land. The address lives in .env.example so
-     * nothing depends on a value only a local .env carries.
-     */
     private function createMember(): void
     {
         $email = config('app.member_email');
@@ -377,10 +367,6 @@ class DatabaseSeeder extends Seeder
         }
     }
 
-    /**
-     * One account per utility type, each with a current bill and its breakdown,
-     * so a fresh database shows both the metered and unmetered shapes.
-     */
     private function createUtilities(): void
     {
         $accounts = [

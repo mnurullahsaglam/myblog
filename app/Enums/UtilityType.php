@@ -7,13 +7,6 @@ namespace App\Enums;
 use App\Support\Contracts\HasColor;
 use App\Support\Contracts\HasLabel;
 
-/**
- * The kinds of utility bill the panel records.
- *
- * This enum is the only place the list lives. utility_accounts.type is a plain
- * string column, deliberately not a database enum like expenses.currency, so
- * adding a case here needs no migration.
- */
 enum UtilityType: string implements HasColor, HasLabel
 {
     case Electricity = 'electricity';
@@ -44,17 +37,11 @@ enum UtilityType: string implements HasColor, HasLabel
         };
     }
 
-    /**
-     * Whether this utility is billed against a meter reading (sayaç).
-     */
     public function hasMeter(): bool
     {
         return in_array($this, [self::Electricity, self::NaturalGas, self::Water], true);
     }
 
-    /**
-     * What the meter counts, or null when there is no meter.
-     */
     public function unit(): ?string
     {
         return match ($this) {

@@ -17,14 +17,6 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-/**
- * One column of a resource table.
- *
- * A column knows how to describe itself to the browser and how to turn a model
- * into a rendered cell. Presentation resolves here, on the server, because the
- * colour and state closures are PHP and cannot cross to Vue - which is what
- * keeps the Vue layer free of any model knowledge.
- */
 final class Column
 {
     private ?string $label = null;
@@ -60,11 +52,6 @@ final class Column
 
     private ?Ability $requires = null;
 
-    /**
-     * Hidden from anyone without this ability, everywhere rather than only in
-     * the header: the definition is what every other method reads, so removing
-     * it removes the value from the payload too.
-     */
     public function hiddenWithout(Ability $ability): self
     {
         $this->requires = $ability;
@@ -116,13 +103,11 @@ final class Column
         return new self($key, 'boolean');
     }
 
-    /** A quantity, rendered with thousands separators. */
     public static function count(string $key): self
     {
         return new self($key, 'count');
     }
 
-    /** A bare number such as a year or an edition, with no separators. */
     public static function number(string $key): self
     {
         return new self($key, 'number');
@@ -157,7 +142,6 @@ final class Column
         return $this;
     }
 
-    /** Show the untruncated value on hover. Only meaningful alongside limit(). */
     public function tooltip(bool $tooltip = true): self
     {
         $this->tooltip = $tooltip;
@@ -172,9 +156,6 @@ final class Column
         return $this;
     }
 
-    /**
-     * A semantic variant, or a closure receiving the record.
-     */
     public function color(string|Closure $color): self
     {
         $this->color = $color;
@@ -210,7 +191,6 @@ final class Column
         return $this;
     }
 
-    /** Compute the value from the record instead of reading an attribute. */
     public function state(Closure $state): self
     {
         $this->state = $state;
@@ -455,9 +435,6 @@ final class Column
         return is_scalar($value) ? (string) $value : '';
     }
 
-    /**
-     * "created_at" becomes "Created at"; "writer.name" becomes "Writer".
-     */
     private function humanisedLabel(): string
     {
         $segments = explode('.', $this->key);

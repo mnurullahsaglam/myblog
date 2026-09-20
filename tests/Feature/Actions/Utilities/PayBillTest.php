@@ -86,7 +86,6 @@ it('does not double count when called twice', function (): void {
 it('leaves nothing behind when the transaction fails', function (): void {
     $bill = UtilityBill::factory()->create(['total_amount' => 100.0]);
 
-    // Force a failure inside the transaction by hiding the table it writes to.
     Schema::rename('expenses', 'expenses_hidden');
 
     try {

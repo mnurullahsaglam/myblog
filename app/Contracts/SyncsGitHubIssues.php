@@ -6,9 +6,6 @@ namespace App\Contracts;
 
 use App\Models\Task;
 
-/**
- * The GitHub issue operations the task board depends on.
- */
 interface SyncsGitHubIssues
 {
     public function updateIssue(Task $task): bool;

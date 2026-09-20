@@ -36,10 +36,6 @@ it('answers nothing for a guest', function (): void {
         ->and($profile->user())->toBeNull();
 });
 
-/**
- * The lockout guarantee, carried into abilities: the configured owner is an
- * admin whatever the column says.
- */
 it('keeps the configured owner privileged whatever the column says', function (): void {
     $owner = User::factory()->member()->create(['email' => 'owner@example.test']);
 
@@ -56,10 +52,6 @@ it('answers as the previewed role, and says it is previewing', function (): void
         ->and($profile->isPreviewing())->toBeTrue();
 });
 
-/**
- * A preview must not be able to preview an admin: that would be a way to climb
- * out of a restricted session rather than a way to look into one.
- */
 it('refuses to preview a role that is not narrower', function (): void {
     $owner = User::factory()->admin()->create(['email' => 'owner@example.test']);
 
@@ -67,13 +59,6 @@ it('refuses to preview a role that is not narrower', function (): void {
         ->toThrow(InvalidArgumentException::class);
 });
 
-/**
- * Resolved from whoever is authenticated now, not from whoever was first.
- *
- * A cached profile made the access matrix reuse the owner's answers for the
- * member's half of every case, so this asserts the behaviour that bug broke
- * rather than the binding style that caused it.
- */
 it('reflects the user authenticated at the moment it is resolved', function (): void {
     $owner = User::factory()->admin()->create(['email' => 'owner@example.test']);
     $member = User::factory()->member()->create(['email' => 'her@example.test']);
@@ -85,11 +70,6 @@ it('reflects the user authenticated at the moment it is resolved', function (): 
     expect(resolve(AccessProfile::class)->allows(Ability::SeeClientIdentity))->toBeFalse();
 });
 
-/**
- * The point of routing every question through one object: substituting it
- * changes the navigation, the search and the dashboard together, rather than
- * leaving one of them telling the truth while the others lie.
- */
 it('changes navigation and the dashboard together', function (): void {
     $owner = User::factory()->admin()->create(['email' => 'owner@example.test']);
     $narrow = AccessProfile::preview($owner, UserRole::Member);

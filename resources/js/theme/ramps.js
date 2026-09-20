@@ -1,6 +1,3 @@
-/**
- * Accent ramps, mirrored in App\Support\Theme\AccentRamps. Keep the two in sync.
- */
 export const RAMPS = {
   khaki: {
     50: '#FBFAF0',
@@ -121,9 +118,6 @@ export const RAMPS = {
   },
 }
 
-/**
- * Accents light enough at mid-tone that a filled button needs dark text.
- */
 export const LIGHT_ACCENTS = ['khaki', 'amber']
 
 export const DARK_INK = '#2A2613'

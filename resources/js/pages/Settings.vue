@@ -33,7 +33,6 @@ const form = useForm({
   contact: { ...props.settings.contact },
 })
 
-// Apply the scheme immediately, so the choice is visible before saving.
 watch(
   () => form.appearance.color_scheme,
   (scheme) => {

@@ -13,14 +13,6 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
-/**
- * Issue an invitation and send it.
- *
- * At most one invite per address may be usable at a time. That rule lives here
- * rather than in a database index because the index that would express it is a
- * partial unique index, which SQLite supports and MySQL does not — and this
- * application develops on MySQL while its CI runs SQLite.
- */
 final class CreateInvite
 {
     /**
@@ -46,8 +38,6 @@ final class CreateInvite
             ]);
         }
 
-        // Exists only here and in what this method returns. After that, the row
-        // holds a hash and the plaintext is unrecoverable.
         $token = Str::random(64);
 
         $invite = DB::transaction(function () use ($email, $role, $invitedBy, $token): Invite {
@@ -67,9 +57,6 @@ final class CreateInvite
 
         $appName = config('app.name');
 
-        // Sent outside the transaction on purpose: a transport failure must not
-        // roll back an invite whose link the panel is about to display, because
-        // that link is the fallback for exactly this case.
         Mail::to($email)->send(new InviteMail(
             url: route('invite.show', $token),
             invitedByName: $invitedBy->name ?? (is_string($appName) ? $appName : 'The panel'),

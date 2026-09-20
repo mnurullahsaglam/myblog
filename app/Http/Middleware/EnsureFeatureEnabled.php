@@ -9,13 +9,6 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Guards a route with a feature flag.
- *
- * A flagged-off route is a 404 rather than a 403, for the same reason a hidden
- * area is: a screen that is not ready for you should be indistinguishable from
- * one that does not exist.
- */
 final class EnsureFeatureEnabled
 {
     /**

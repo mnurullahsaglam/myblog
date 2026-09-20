@@ -36,9 +36,6 @@ final class Setting extends Model
         });
     }
 
-    /**
-     * Set a setting value
-     */
     public static function set(string $group, string $name, mixed $value, string $type = 'text'): self
     {
         $setting = self::updateOrCreate(
@@ -52,9 +49,6 @@ final class Setting extends Model
     }
 
     /**
-     * Get all settings for a group
-     */
-    /**
      * @return Collection<array-key, mixed>
      */
     public static function getGroup(string $group): Collection
@@ -62,9 +56,6 @@ final class Setting extends Model
         return self::where('group', $group)->pluck('value', 'name');
     }
 
-    /**
-     * Clear cache when model is saved or deleted
-     */
     protected static function booted(): void
     {
         self::saved(function (Setting $setting): void {

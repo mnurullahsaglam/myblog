@@ -1,8 +1,3 @@
-/**
- * Terminal Horizon - the design direction produced in Stitch and pinned down in
- * docs/superpowers/design-system.md. Dark-first, one khaki accent, 1px hairlines,
- * no shadows or gradients, Inter for prose and JetBrains Mono for every number.
- */
 export const TOKENS = {
   dark: {
     canvas: '#0D0E11',
@@ -28,10 +23,8 @@ export const TOKENS = {
   },
 }
 
-/** Text and glyphs on a khaki fill. Never white. */
 export const ON_ACCENT = '#141517'
 
-/** Status colours for pills and badges, outside the accent ramp. */
 export const STATUS = {
   nominal: '#529E72',
   alert: '#D95757',

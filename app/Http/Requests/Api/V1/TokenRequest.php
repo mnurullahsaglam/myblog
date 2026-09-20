@@ -6,9 +6,6 @@ namespace App\Http\Requests\Api\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-/**
- * Credentials for one device, plus an optional second factor.
- */
 final class TokenRequest extends FormRequest
 {
     public function authorize(): bool

@@ -21,7 +21,6 @@ function slugify(value) {
     .replace(/^-+|-+$/g, '')
 }
 
-// Keep slug-derived fields in step with their source as you type.
 props.schema.fields
   .filter((field) => field.meta.slugFrom)
   .forEach((field) => {
@@ -34,7 +33,6 @@ props.schema.fields
   })
 
 function applyResolved(data) {
-  // A fetch fills the blanks; anything already typed is the user's and stays.
   Object.entries(data.values ?? {}).forEach(([key, value]) => {
     const current = props.form[key]
 

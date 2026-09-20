@@ -11,10 +11,6 @@ beforeEach(function (): void {
     $this->member = User::factory()->member()->create(['email' => 'her@example.test']);
 });
 
-/**
- * The client builds its navigation from this. Without it the only way to learn
- * which areas a person has is to try each one and watch for 404s.
- */
 it('tells a member her three areas and no abilities', function (): void {
     $body = apiAs($this->member)->get(route('api.v1.me'))->assertOk()->json('data');
 
@@ -34,10 +30,6 @@ it('turns away a request with no token', function (): void {
     $this->getJson(route('api.v1.me'))->assertUnauthorized();
 });
 
-/**
- * The areas it reports must be the areas that actually answer, or a client
- * builds a tab that 404s the moment it is opened.
- */
 it('reports only areas that really answer', function (): void {
     $areas = apiAs($this->member)->get(route('api.v1.me'))->json('data.areas');
 

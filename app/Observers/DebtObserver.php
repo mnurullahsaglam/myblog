@@ -12,9 +12,6 @@ final readonly class DebtObserver
 {
     public function __construct(private NotifiesAdmin $notifier) {}
 
-    /**
-     * Handle the Debt "updated" event.
-     */
     public function updated(Debt $debt): void
     {
         if ($debt->isDirty('status') && $debt->status === 'paid') {
@@ -22,15 +19,12 @@ final readonly class DebtObserver
         }
     }
 
-    /**
-     * Create expense record when debt is marked as paid
-     */
     private function createExpenseFromDebtPayment(Debt $debt): void
     {
         $existingExpense = Expense::where('debt_id', $debt->id)->first();
 
         if ($existingExpense) {
-            return; // Expense already created
+            return;
         }
 
         Expense::create([

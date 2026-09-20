@@ -17,14 +17,6 @@ arch()->preset()->php();
 
 arch()->preset()->security();
 
-/**
- * The controller namespace is exempt from the preset's RESTful-verb rule: this
- * panel deliberately exposes bulkDestroy, move, pay, syncToGitHub and download,
- * and an ignore list naming each one would rot. The controller rules this
- * project actually cares about are asserted separately below.
- *
- * Console commands are named for what they do rather than with a Command suffix.
- */
 arch()->preset()->laravel()
     ->ignoring(['App\Http\Controllers', 'App\Console\Commands']);
 
@@ -33,12 +25,6 @@ arch('actions expose a single entry point')
     ->toHaveMethod('handle')
     ->ignoring(['App\Actions\Fortify', 'App\Actions\Resources\Concerns']);
 
-/**
- * Everything is final except seven base classes that exist to be extended.
- * PHP forbids `abstract final`, so those are asserted abstract instead — which
- * is the same guarantee from the other direction: they cannot be instantiated,
- * and nothing else in the application may be subclassed at all.
- */
 arch('every class is final')
     ->expect('App')
     ->classes()

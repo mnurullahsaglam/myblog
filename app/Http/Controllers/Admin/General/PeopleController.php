@@ -19,13 +19,6 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Laravel\Sanctum\PersonalAccessToken;
 
-/**
- * Who can reach the panel, and who has been asked to.
- *
- * Not an AdminResourceController: an invite is created and revoked, never
- * edited, so the form contract would bring an edit route that has to be
- * disabled and a schema nothing renders.
- */
 final class PeopleController extends Controller
 {
     public function __construct(private readonly NotifiesAdmin $notifier) {}
@@ -91,11 +84,6 @@ final class PeopleController extends Controller
         return to_route('admin.people.index');
     }
 
-    /**
-     * Reissue rather than resend: only the hash is stored, so the original link
-     * cannot be rebuilt. CreateInvite supersedes the live invite on its own, so
-     * nothing is revoked here.
-     */
     public function reissue(Request $request, Invite $invite, CreateInvite $createInvite): RedirectResponse
     {
         abort_unless($invite->isUsable(), 404);
@@ -107,10 +95,6 @@ final class PeopleController extends Controller
         return $this->backWithLink($token);
     }
 
-    /**
-     * A lost phone cannot revoke its own token, so the decision belongs where you
-     * already are: signed in on something else.
-     */
     public function revokeDevice(PersonalAccessToken $device): RedirectResponse
     {
         $device->delete();
@@ -120,10 +104,6 @@ final class PeopleController extends Controller
         return to_route('admin.people.index');
     }
 
-    /**
-     * The only moment this URL can be shown. Flashed rather than returned as a
-     * prop so a refresh does not put it back on screen.
-     */
     private function backWithLink(string $token): RedirectResponse
     {
         return to_route('admin.people.index')

@@ -23,9 +23,6 @@ final class ExportController extends Controller
     {
         $area = ExportResource::areaFor($resource);
 
-        // One route serves several resources, so the route group cannot guard
-        // this; the area is resolved per resource instead. Unknown and forbidden
-        // both 404, which is also what the gate returns.
         abort_if(! $area instanceof Area, 404);
         abort_unless($request->user()?->can('access-area', $area) ?? false, 404);
 

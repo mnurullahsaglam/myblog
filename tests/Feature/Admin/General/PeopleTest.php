@@ -90,14 +90,6 @@ it('refuses to revoke from a member', function (): void {
     expect($invite->fresh()->revoked_at)->toBeNull();
 });
 
-/**
- * Reissue, not resend.
- *
- * CreateInvite is the only place a token is generated and the plaintext is gone
- * the moment it returns, so nothing can re-send the original link — it no
- * longer exists anywhere but in the recipient's inbox. The button therefore
- * issues a new invite and supersedes the old one, and says so.
- */
 it('reissues rather than resending, because the token cannot be recovered', function (): void {
     $invite = Invite::factory()->create(['email' => 'new@example.test']);
     $hash = $invite->token_hash;

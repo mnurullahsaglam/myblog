@@ -14,15 +14,6 @@ beforeEach(function (): void {
     $this->income = Income::factory()->create(['client_id' => $this->client->id, 'amount' => 4321]);
 });
 
-/**
- * API Resources are a third serialisation path. Field hiding lives in
- * ResourceTable::columns() and ResourceForm::fields(), and neither is involved
- * here, so a resource that returns client_id re-opens the leak in a response
- * nothing else inspects.
- *
- * The whole payload is searched rather than named fields, because a
- * field-by-field assertion only covers what somebody remembered to assert.
- */
 it('never names a client anywhere in a member payload', function (string $routeName): void {
     $url = $routeName === 'api.v1.incomes.show'
         ? route($routeName, $this->income)

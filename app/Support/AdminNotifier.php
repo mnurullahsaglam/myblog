@@ -8,15 +8,6 @@ use App\Contracts\NotifiesAdmin;
 use Illuminate\Session\Store;
 use Illuminate\Support\Facades\Log;
 
-/**
- * Transient admin feedback.
- *
- * During an HTTP request this flashes into the session, where Inertia picks it
- * up as `flash.notification` and the layout renders a toast. Outside a request
- * - scheduled commands, queued jobs - there is nobody to show a toast to, so it
- * falls back to the log. Persisted alerts that must survive the request use
- * {@see \App\Notifications\AdminAlert} instead.
- */
 final readonly class AdminNotifier implements NotifiesAdmin
 {
     public function __construct(private bool $forceLog = false) {}
@@ -53,9 +44,6 @@ final readonly class AdminNotifier implements NotifiesAdmin
         ]);
     }
 
-    /**
-     * The active session, or null when there is no request to flash into.
-     */
     private function session(): ?Store
     {
         if ($this->forceLog || ! app()->bound('session')) {

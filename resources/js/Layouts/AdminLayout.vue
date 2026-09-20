@@ -40,7 +40,6 @@ function clusterItems(cluster) {
   }))
 }
 
-/** A cluster is active when the current URL matches one of its routes. */
 function isActiveCluster(cluster) {
   return cluster.items.some((item) => {
     try {

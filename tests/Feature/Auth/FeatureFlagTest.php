@@ -14,10 +14,6 @@ beforeEach(function (): void {
     $this->member = User::factory()->member()->create(['email' => 'her@example.test']);
 });
 
-/**
- * The rule everything else rests on: a flag means "not ready for her yet", so it
- * can never hide something from the person building it.
- */
 it('is on for an admin whatever the store says', function (string $flag): void {
     Feature::for($this->owner)->deactivate($flag);
 

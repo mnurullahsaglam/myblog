@@ -4,9 +4,6 @@ import { Link } from '@inertiajs/vue3'
 import AdminLayout from '@/Layouts/AdminLayout.vue'
 import StatTile from '@/Components/Stats/StatTile.vue'
 
-// Deliberately undefined rather than [] by default. The controller omits the
-// props for areas this user cannot reach, and an absent panel has to be
-// distinguishable from a panel whose area simply has nothing in it yet.
 const props = defineProps({
   budget: { type: Array, required: false, default: undefined },
   work: { type: Array, required: false, default: undefined },

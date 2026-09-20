@@ -6,12 +6,6 @@ namespace App\Support\Theme;
 
 use App\Models\User;
 
-/**
- * The panel's surface colours as flat hex, for the two places Vue never reaches:
- * email and the error pages.
- *
- * Mirrors resources/js/theme/tokens.js. Keep the two in sync.
- */
 final readonly class Palette
 {
     /**
@@ -43,8 +37,6 @@ final readonly class Palette
     ];
 
     /**
-     * The accent stop each scheme paints with, matching resources/js/theme/preset.js.
-     *
      * @var array<string, int>
      */
     private const array ACCENT_STOPS = ['light' => 500, 'dark' => 400];
@@ -71,11 +63,6 @@ final readonly class Palette
         public string $onAccent,
     ) {}
 
-    /**
-     * Email cannot ask the client what it prefers, and neither can a response
-     * rendered before any script runs, so "system" resolves to light here. That
-     * is the fallback the panel's own light theme uses.
-     */
     public static function of(string $scheme, string $accent): self
     {
         $key = $scheme === 'dark' ? 'dark' : 'light';
@@ -100,12 +87,6 @@ final readonly class Palette
         );
     }
 
-    /**
-     * The palette this user reads the panel in.
-     *
-     * An unknown recipient — an invitee, a signed-out visitor — gets the
-     * household's global setting rather than a hardcoded default.
-     */
     public static function forUser(?User $user): self
     {
         $appearance = Appearance::forUser($user);
@@ -113,33 +94,17 @@ final readonly class Palette
         return self::of($appearance['colorScheme'], $appearance['accent']);
     }
 
-    /**
-     * The palette for someone with no account and so no preference of their own:
-     * light, which is the instruction for an unknown reader, but the household's
-     * accent, so the message still looks like it came from here.
-     */
     public static function forUnknownRecipient(): self
     {
         return self::of('light', Appearance::accent());
     }
 
-    /**
-     * Whether the caller should also emit a prefers-color-scheme block, which is
-     * true only where the resolved preference was "system".
-     */
     public static function followsSystem(?User $user): bool
     {
         return Appearance::forUser($user)['colorScheme'] === 'system';
     }
 
     /**
-     * The palettes an error page needs: the resolved one, and its opposite when
-     * the reader follows the system rather than choosing.
-     *
-     * Everything here can fail — an error page renders when the session, the
-     * database or both are already gone — so the whole resolution falls back to
-     * the built-in light theme rather than turning a 500 into a second one.
-     *
      * @return array{palette: self, dark: self|null}
      */
     public static function forErrorPage(): array
@@ -183,9 +148,6 @@ final readonly class Palette
         ];
     }
 
-    /**
-     * The palette as custom properties, for a stylesheet that can use them.
-     */
     public function cssVariables(): string
     {
         $declarations = '';

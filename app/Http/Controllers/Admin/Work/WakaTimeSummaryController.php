@@ -12,10 +12,6 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-/**
- * Read-only: WakaTime data is synced from the API and never authored by hand,
- * so this does not extend AdminResourceController.
- */
 final class WakaTimeSummaryController extends Controller
 {
     public function index(Request $request): Response

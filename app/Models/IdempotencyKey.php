@@ -9,8 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
 /**
- * A remembered response for one write, so a retry cannot repeat it.
- *
  * @property string $key
  * @property string $endpoint
  * @property string $payload_hash

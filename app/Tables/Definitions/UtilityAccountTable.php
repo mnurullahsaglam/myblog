@@ -16,7 +16,6 @@ final class UtilityAccountTable extends ResourceTable
     #[Override]
     protected string $model = UtilityAccount::class;
 
-    // Column::count reads the _count column, so the query has to produce it.
     #[Override]
     protected array $withCount = ['bills'];
 

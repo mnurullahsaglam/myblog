@@ -27,9 +27,6 @@ final class UtilityBillForm extends ResourceForm
             Field::date('issued_at')->label('Issued'),
             Field::date('due_date')->label('Due date')->required()->help('Son ödeme tarihi.'),
 
-            // Always shown: the form contract has no conditional visibility, and
-            // on create the account is not chosen server side yet. The request
-            // rejects readings on an unmetered account.
             Field::number('meter_start')->label('Meter start')->step(0.001)
                 ->help('Only for metered utilities: elektrik, doğalgaz, su.'),
             Field::number('meter_end')->label('Meter end')->step(0.001),
@@ -49,11 +46,6 @@ final class UtilityBillForm extends ResourceForm
     }
 
     /**
-     * The breakdown rows, which are saved separately from the record's columns.
-     *
-     * Pulled out before partition() so mass assignment never sees a key that is
-     * not a column.
-     *
      * @param  array<string, mixed>  $values
      * @return array<int, array{label?: string|null, amount?: float|int|string|null}>
      */

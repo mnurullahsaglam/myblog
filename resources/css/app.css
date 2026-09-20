@@ -11,7 +11,6 @@
     'Noto Color Emoji';
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
-  /* Terminal Horizon. See docs/superpowers/design-system.md. */
   --color-canvas: #0d0e11;
   --color-surface: #15171c;
   --color-elevated: #1a1d24;
@@ -30,20 +29,11 @@
     color-scheme: light dark;
   }
 
-  /* Tabular figures everywhere numbers are monospaced. */
   .font-mono {
     font-variant-numeric: tabular-nums;
   }
 }
 
-/*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
 @layer base {
   *,
   ::after,
