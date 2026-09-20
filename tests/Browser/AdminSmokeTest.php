@@ -16,6 +16,7 @@ use App\Models\Project;
 use App\Models\Repository;
 use App\Models\Task;
 use App\Models\User;
+use App\Models\UtilityAccount;
 use App\Models\WakaTimeSummary;
 use App\Models\WakaTimeSummaryEntry;
 use App\Models\Writer;
@@ -63,6 +64,8 @@ it('loads every admin page without javascript errors', function (string $routeNa
     'admin.posts.index',
     'admin.categories.index',
     'admin.books.index',
+    'admin.utility-accounts.index',
+    'admin.utility-bills.index',
     'admin.writers.index',
     'admin.publishers.index',
     'admin.clients.index',
@@ -124,4 +127,15 @@ it('shows the isbn field with its fetch button on the book form', function (): v
         ->assertNoJavaScriptErrors()
         ->assertSee('ISBN')
         ->assertSee('Fetch');
+});
+
+it('renders the utility bill form with its repeater and no javascript errors', function (): void {
+    UtilityAccount::factory()->create(['label' => 'Ev elektrik']);
+
+    visit(route('admin.utility-bills.create'))
+        ->assertNoJavaScriptErrors()
+        ->assertSee('Breakdown')
+        ->assertSee('Add row')
+        ->click('button:has-text("Add row")')
+        ->assertNoJavaScriptErrors();
 });

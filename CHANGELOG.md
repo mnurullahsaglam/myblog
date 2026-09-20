@@ -5,6 +5,42 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.0] - 2026-09-20
+
+### Added
+
+- Utility bills: elektrik, doğalgaz, su, internet and telefon, each belonging to
+  a subscription account so a household can hold several phone lines or two
+  flats' electricity.
+- Meter readings for the utilities that have one, with consumption computed from
+  the two readings rather than stored.
+- An itemised breakdown per bill, entered exactly as the bill prints it.
+- Paying a bill records an Expense, so the budget totals need no second entry.
+- `Field::repeater()`, a general repeating-group field type for the form
+  contract, reusing FormField for each sub-field so every existing type works
+  inside it.
+- Migrations squashed to one file per table, and `DatabaseSeeder` now covers
+  settings, categories, posts and utilities so `migrate:fresh --seed` produces
+  a working panel.
+
+### Fixed
+
+- `AdminResourceController` built the route parameter from the resource name
+  without converting hyphens, so every edit, update and delete on a hyphenated
+  resource returned 404. Latent until now, because the only other hyphenated
+  resource is read-only.
+- Two tests pinned the navigation to an exact cluster list and an exact cluster
+  count, which forbade ever adding one. Both now assert coverage and structure.
+
+### Notes
+
+- No Turkish tax rule is encoded anywhere. There is no VAT rate column and
+  nothing is computed: rates and levies change, and a stored rule would silently
+  recompute old bills to figures that never appeared on the paper.
+- `utility_accounts.type` is a plain string column cast to `App\Enums\UtilityType`,
+  not a database enum like `expenses.currency`. Adding a type is one line in the
+  enum and needs no migration.
+
 ## [0.7.1] - 2026-09-20
 
 ### Fixed

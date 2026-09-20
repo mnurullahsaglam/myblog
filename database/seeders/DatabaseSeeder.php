@@ -17,6 +17,7 @@ use App\Models\Repository;
 use App\Models\Setting;
 use App\Models\Task;
 use App\Models\User;
+use App\Models\UtilityAccount;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -31,6 +32,7 @@ class DatabaseSeeder extends Seeder
 
         $this->createSettings();
         $this->createContent();
+        $this->createUtilities();
 
         $projects = [
             [
@@ -347,6 +349,42 @@ class DatabaseSeeder extends Seeder
 
         foreach ($posts as $index => $postData) {
             Post::create($postData)->categories()->attach($categories[$index % $categories->count()]);
+        }
+    }
+
+    /**
+     * One account per utility type, each with a current bill and its breakdown,
+     * so a fresh database shows both the metered and unmetered shapes.
+     */
+    private function createUtilities(): void
+    {
+        $accounts = [
+            ['type' => 'electricity', 'provider' => 'Enerjisa', 'label' => 'Ev elektrik', 'subscriber_no' => '4001234567'],
+            ['type' => 'natural_gas', 'provider' => 'İGDAŞ', 'label' => 'Ev doğalgaz', 'subscriber_no' => '9007654321'],
+            ['type' => 'water', 'provider' => 'İSKİ', 'label' => 'Ev su', 'subscriber_no' => '5551112222'],
+            ['type' => 'internet', 'provider' => 'Türk Telekom', 'label' => 'Ev internet', 'subscriber_no' => null],
+            ['type' => 'phone', 'provider' => 'Turkcell', 'label' => 'İş telefonu', 'subscriber_no' => null],
+        ];
+
+        foreach ($accounts as $accountData) {
+            $account = UtilityAccount::create($accountData + ['is_active' => true]);
+
+            $bill = $account->bills()->create([
+                'bill_number' => 'FTR-'.random_int(1000000, 9999999),
+                'period_start' => now()->startOfMonth()->toDateString(),
+                'period_end' => now()->endOfMonth()->toDateString(),
+                'issued_at' => now()->toDateString(),
+                'due_date' => now()->addDays(12)->toDateString(),
+                'meter_start' => $account->type->hasMeter() ? 1000 : null,
+                'meter_end' => $account->type->hasMeter() ? 1240 : null,
+                'total_amount' => 266.00,
+                'currency' => 'TRY',
+            ]);
+
+            $bill->lines()->createMany([
+                ['label' => 'Hizmet bedeli', 'amount' => 221.50, 'sort_order' => 0],
+                ['label' => 'KDV', 'amount' => 44.50, 'sort_order' => 1],
+            ]);
         }
     }
 }
