@@ -14,8 +14,8 @@ it('has the four states an invite can be in', function (): void {
 it('presents every case', function (InviteStatus $status): void {
     expect($status)->toBeInstanceOf(HasLabel::class)
         ->and($status)->toBeInstanceOf(HasColor::class)
-        ->and($status->getLabel())->not->toBe('')
-        ->and($status->getColor())->not->toBe('');
+        ->and($status->getLabel())->not->toBeEmpty()
+        ->and($status->getColor())->not->toBeEmpty();
 })->with(fn (): array => array_map(fn (InviteStatus $s): array => [$s], InviteStatus::cases()));
 
 it('colours only pending as something a reader should act on', function (): void {

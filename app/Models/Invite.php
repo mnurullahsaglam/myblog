@@ -44,7 +44,7 @@ final class Invite extends Model
      * Acceptance and revocation outrank expiry: an invite that was spent and
      * then sat past its window is spent, not stale.
      */
-    public function getStatusAttribute(): InviteStatus
+    protected function getStatusAttribute(): InviteStatus
     {
         return match (true) {
             $this->accepted_at instanceof Carbon => InviteStatus::Accepted,
@@ -58,7 +58,7 @@ final class Invite extends Model
      * @param  Builder<Invite>  $query
      * @return Builder<Invite>
      */
-    public function scopeUsable(Builder $query): Builder
+    protected function scopeUsable(Builder $query): Builder
     {
         return $query->whereNull('accepted_at')
             ->whereNull('revoked_at')

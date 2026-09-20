@@ -73,7 +73,7 @@ final class PeopleController extends Controller
 
         $this->notifier->success('Invitation revoked', 'That link no longer works.');
 
-        return redirect()->route('admin.people.index');
+        return to_route('admin.people.index');
     }
 
     /**
@@ -98,8 +98,7 @@ final class PeopleController extends Controller
      */
     private function backWithLink(string $token): RedirectResponse
     {
-        return redirect()
-            ->route('admin.people.index')
+        return to_route('admin.people.index')
             ->with('flash.invite_url', route('invite.show', $token));
     }
 }

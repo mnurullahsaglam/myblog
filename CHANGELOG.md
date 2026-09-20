@@ -5,6 +5,37 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.10.0] - 2026-09-20
+
+### Added
+
+- Invitations. Someone with access to General invites an address and a role; the
+  invitee opens a link, chooses her own password, and lands in exactly the areas
+  the invite named.
+- A People screen in General listing accounts and invitations, with invite,
+  reissue and revoke. The link is shown in the panel as well as emailed, so a
+  delivery failure is recoverable.
+- Password reset, with forgot-password and reset-password pages, and a link to
+  it from the sign-in form. An invited user can recover her own account without
+  the owner touching the database.
+- Real mail: the Resend transport for production, Mailtrap locally. Tests keep
+  using the array mailer.
+
+### Changed
+
+- `CreateNewUser` sets a role instead of ignoring the column.
+- `config/fortify.php` no longer describes this as a single-user panel.
+
+### Security
+
+- Invitation tokens are stored only as a SHA-256 hash; the plaintext exists in
+  the link and nowhere else.
+- An expired, revoked, spent, tampered or unknown token all answer 404.
+- Accepting an invitation takes a row lock, so two simultaneous accepts create
+  one account.
+- The invite link is rate limited to six attempts a minute per address.
+- Password reset answers an unknown address exactly as it answers a known one.
+
 ## [0.9.0] - 2026-09-20
 
 ### Added

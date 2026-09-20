@@ -17,7 +17,7 @@ beforeEach(function (): void {
 });
 
 it('issues an invite with a token that is not what it stores', function (): void {
-    ['invite' => $invite, 'token' => $token] = app(CreateInvite::class)
+    ['invite' => $invite, 'token' => $token] = resolve(CreateInvite::class)
         ->handle('her@example.test', UserRole::Member, $this->owner);
 
     expect($token)->toHaveLength(64)
@@ -28,7 +28,7 @@ it('issues an invite with a token that is not what it stores', function (): void
 it('sets the window to 48 hours', function (): void {
     $this->freezeTime();
 
-    ['invite' => $invite] = app(CreateInvite::class)
+    ['invite' => $invite] = resolve(CreateInvite::class)
         ->handle('her@example.test', UserRole::Member, $this->owner);
 
     // To the second: the column stores whole seconds, and now() carries
@@ -37,7 +37,7 @@ it('sets the window to 48 hours', function (): void {
 });
 
 it('records who sent it and what it grants', function (): void {
-    ['invite' => $invite] = app(CreateInvite::class)
+    ['invite' => $invite] = resolve(CreateInvite::class)
         ->handle('her@example.test', UserRole::Admin, $this->owner);
 
     expect($invite->role)->toBe(UserRole::Admin)
@@ -45,7 +45,7 @@ it('records who sent it and what it grants', function (): void {
 });
 
 it('sends exactly one mail, to the invited address', function (): void {
-    app(CreateInvite::class)->handle('her@example.test', UserRole::Member, $this->owner);
+    resolve(CreateInvite::class)->handle('her@example.test', UserRole::Member, $this->owner);
 
     Mail::assertQueuedCount(1);
     Mail::assertQueued(InviteMail::class, fn (InviteMail $mail): bool => $mail->hasTo('her@example.test'));
@@ -56,7 +56,7 @@ it('sends exactly one mail, to the invited address', function (): void {
  * ever hold the same string, the hashing has been undone by a refactor.
  */
 it('puts the plaintext token in the mail and the hash in the database', function (): void {
-    ['invite' => $invite, 'token' => $token] = app(CreateInvite::class)
+    ['invite' => $invite, 'token' => $token] = resolve(CreateInvite::class)
         ->handle('her@example.test', UserRole::Member, $this->owner);
 
     Mail::assertQueued(InviteMail::class, fn (InviteMail $mail): bool => str_contains($mail->url, $token)
@@ -68,10 +68,10 @@ it('puts the plaintext token in the mail and the hash in the database', function
  * not error, and the old link must stop working.
  */
 it('supersedes a live invite rather than refusing', function (): void {
-    ['invite' => $first] = app(CreateInvite::class)
+    ['invite' => $first] = resolve(CreateInvite::class)
         ->handle('her@example.test', UserRole::Member, $this->owner);
 
-    ['invite' => $second] = app(CreateInvite::class)
+    ['invite' => $second] = resolve(CreateInvite::class)
         ->handle('her@example.test', UserRole::Member, $this->owner);
 
     expect($first->fresh()->isUsable())->toBeFalse()
@@ -82,7 +82,7 @@ it('supersedes a live invite rather than refusing', function (): void {
 it('leaves an accepted invite alone when issuing a new one', function (): void {
     $accepted = Invite::factory()->accepted()->create(['email' => 'her@example.test']);
 
-    app(CreateInvite::class)->handle('her@example.test', UserRole::Member, $this->owner);
+    resolve(CreateInvite::class)->handle('her@example.test', UserRole::Member, $this->owner);
 
     expect($accepted->fresh()->revoked_at)->toBeNull();
 });
@@ -90,18 +90,17 @@ it('leaves an accepted invite alone when issuing a new one', function (): void {
 it('refuses an address that already has an account', function (): void {
     User::factory()->create(['email' => 'taken@example.test']);
 
-    expect(fn (): array => app(CreateInvite::class)
+    expect(fn (): array => resolve(CreateInvite::class)
         ->handle('taken@example.test', UserRole::Member, $this->owner))
-        ->toThrow(ValidationException::class);
-
-    expect(Invite::query()->count())->toBe(0);
+        ->toThrow(ValidationException::class)
+        ->and(Invite::query()->count())->toBe(0);
     Mail::assertNothingQueued();
 });
 
 it('matches an existing account case-insensitively', function (): void {
     User::factory()->create(['email' => 'taken@example.test']);
 
-    expect(fn (): array => app(CreateInvite::class)
+    expect(fn (): array => resolve(CreateInvite::class)
         ->handle('TAKEN@example.test', UserRole::Member, $this->owner))
         ->toThrow(ValidationException::class);
 });

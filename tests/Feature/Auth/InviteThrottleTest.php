@@ -16,7 +16,7 @@ it('throttles attempts on the invite link', function (): void {
     config(['app.admin_email' => 'owner@example.test']);
     $owner = User::factory()->admin()->create(['email' => 'owner@example.test']);
 
-    ['token' => $token] = app(CreateInvite::class)->handle('her@example.test', UserRole::Member, $owner);
+    ['token' => $token] = resolve(CreateInvite::class)->handle('her@example.test', UserRole::Member, $owner);
 
     foreach (range(1, 6) as $ignored) {
         $this->get(route('invite.show', $token))->assertOk();

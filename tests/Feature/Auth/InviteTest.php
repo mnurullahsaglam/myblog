@@ -19,7 +19,7 @@ beforeEach(function (): void {
 /** @return array{Invite, string} */
 function issueInvite(UserRole $role = UserRole::Member, string $email = 'her@example.test'): array
 {
-    $result = app(CreateInvite::class)->handle($email, $role, test()->owner);
+    $result = resolve(CreateInvite::class)->handle($email, $role, test()->owner);
 
     return [$result['invite'], $result['token']];
 }
@@ -150,11 +150,10 @@ it('refuses an invite that was spent between loading and accepting', function ()
 
     Invite::query()->whereKey($invite->getKey())->update(['accepted_at' => now()]);
 
-    expect(fn (): User => app(AcceptInvite::class)
+    expect(fn (): User => resolve(AcceptInvite::class)
         ->handle($loaded, 'Her Name', 'correct-horse-battery-staple'))
-        ->toThrow(RuntimeException::class);
-
-    expect(User::query()->where('email', 'her@example.test')->exists())->toBeFalse();
+        ->toThrow(RuntimeException::class)
+        ->and(User::query()->where('email', 'her@example.test')->exists())->toBeFalse();
 });
 
 it('refuses a token whose address gained an account in the meantime', function (): void {

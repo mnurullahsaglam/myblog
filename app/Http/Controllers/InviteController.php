@@ -27,7 +27,7 @@ final class InviteController extends Controller
     public function show(Request $request, string $token): Response|RedirectResponse
     {
         if ($request->user() !== null) {
-            return redirect()->route('admin.dashboard');
+            return to_route('admin.dashboard');
         }
 
         $invite = $this->usableInvite($token);
@@ -56,7 +56,7 @@ final class InviteController extends Controller
 
         $this->notifier->success('Welcome', 'Add a passkey so you can sign in without a password.');
 
-        return redirect()->route('admin.profile');
+        return to_route('admin.profile');
     }
 
     /**
