@@ -13,3 +13,5 @@ Artisan::command('inspire', function (): void {
 Schedule::command('wakatime:sync')
     ->dailyAt('04:00')
     ->withoutOverlapping();
+
+Schedule::command('idempotency:prune')->dailyAt('03:10');

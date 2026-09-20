@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Middleware\EnforceIdempotency;
 use App\Http\Middleware\EnsureAreaAccess;
 use App\Http\Middleware\EnsureFeatureEnabled;
 use App\Http\Middleware\HandleInertiaRequests;
@@ -30,6 +31,8 @@ return Application::configure(basePath: dirname(__DIR__))
             RefuseWritesWhilePreviewing::class,
             ThrottlePasswordReset::class,
         ]);
+
+        $middleware->api(append: [EnforceIdempotency::class]);
 
         $middleware->alias([
             'area' => EnsureAreaAccess::class,
