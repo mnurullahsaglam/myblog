@@ -17,6 +17,17 @@ enum UserRole: string
     case Member = 'member';
 
     /**
+     * @return array<int, Ability>
+     */
+    public function abilities(): array
+    {
+        return match ($this) {
+            self::Admin => Ability::cases(),
+            self::Member => [],
+        };
+    }
+
+    /**
      * @return array<int, Area>
      */
     public function areas(): array

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\Ability;
 use App\Enums\Area;
 use App\Enums\UserRole;
 use Database\Factories\UserFactory;
@@ -53,6 +54,26 @@ final class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     public function canAccess(Area $area): bool
     {
         return in_array($area, $this->areas(), true);
+    }
+
+    /**
+     * Every ability this user holds.
+     *
+     * The column is read raw for the same reason areas() reads it raw: the cast
+     * throws on a value the enum does not know, and an unreadable role must mean
+     * no access rather than a 500 on every page.
+     *
+     * @return array<int, Ability>
+     */
+    public function abilities(): array
+    {
+        if ($this->isAdmin()) {
+            return Ability::cases();
+        }
+
+        $stored = $this->getAttributes()['role'] ?? null;
+
+        return (is_string($stored) ? UserRole::tryFrom($stored) : null)?->abilities() ?? [];
     }
 
     /**
