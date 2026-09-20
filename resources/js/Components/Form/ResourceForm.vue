@@ -32,6 +32,30 @@ props.schema.fields
       },
     )
   })
+
+function applyResolved(data) {
+  // A fetch fills the blanks; anything already typed is the user's and stays.
+  Object.entries(data.values ?? {}).forEach(([key, value]) => {
+    const current = props.form[key]
+
+    if (current === null || current === '' || current === undefined) {
+      props.form[key] = value
+    }
+  })
+
+  if (data.image) {
+    props.form.image = data.image
+  }
+
+  ;['writer', 'publisher'].forEach((relation) => {
+    const match = data[relation]
+    const key = `${relation}_id`
+
+    if (match?.id && !props.form[key]) {
+      props.form[key] = match.id
+    }
+  })
+}
 </script>
 
 <template>
@@ -44,6 +68,7 @@ props.schema.fields
         :field="field"
         :error="form.errors[field.key]"
         :placeholder-value="placeholders[field.key]"
+        @resolved="applyResolved"
       />
     </div>
 

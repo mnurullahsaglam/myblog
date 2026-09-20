@@ -6,6 +6,7 @@ import DatePicker from 'primevue/datepicker'
 import FileUpload from 'primevue/fileupload'
 import InputNumber from 'primevue/inputnumber'
 import InputText from 'primevue/inputtext'
+import axios from 'axios'
 import MultiSelect from 'primevue/multiselect'
 import Select from 'primevue/select'
 import Textarea from 'primevue/textarea'
@@ -19,11 +20,48 @@ const props = defineProps({
   placeholderValue: { type: String, default: null },
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'resolved'])
 const toast = useToast()
 
 function update(value) {
   emit('update:modelValue', value)
+}
+
+const looking = ref(false)
+const lookupMessage = ref(null)
+const duplicate = ref(null)
+
+async function lookupIsbn() {
+  if (!props.modelValue) {
+    return
+  }
+
+  looking.value = true
+  lookupMessage.value = null
+  duplicate.value = null
+
+  try {
+    const { data } = await axios.post(route('admin.books.isbn'), { isbn: props.modelValue })
+
+    if (data.duplicate) {
+      duplicate.value = data.duplicate
+      return
+    }
+
+    if (!data.values || Object.keys(data.values).length === 0) {
+      lookupMessage.value = 'No record for that ISBN.'
+      return
+    }
+
+    emit('resolved', data)
+  } catch (error) {
+    lookupMessage.value =
+      error.response?.status === 422
+        ? (error.response.data.errors?.isbn?.[0] ?? 'That ISBN is not valid.')
+        : 'Could not reach Open Library.'
+  } finally {
+    looking.value = false
+  }
 }
 
 function toIsoDate(date, withTime) {
@@ -234,6 +272,36 @@ const labelClass = 'font-mono text-[11px] font-semibold uppercase tracking-[0.06
       fluid
       @update:model-value="update"
     />
+
+    <div v-else-if="field.type === 'isbn'" class="flex flex-col gap-2">
+      <div class="flex gap-2">
+        <InputText
+          :id="field.key"
+          :model-value="modelValue"
+          :disabled="field.disabled"
+          :invalid="Boolean(error)"
+          placeholder="978-0-451-52493-5"
+          fluid
+          @update:model-value="update"
+        />
+        <Button
+          label="Fetch"
+          icon="pi pi-search"
+          severity="secondary"
+          outlined
+          :loading="looking"
+          :disabled="!modelValue"
+          @click="lookupIsbn"
+        />
+      </div>
+
+      <small v-if="duplicate" class="text-surface-500">
+        Already in the library as
+        <a class="underline" :href="route('admin.books.edit', duplicate.id)">{{ duplicate.name }}</a>
+      </small>
+
+      <small v-if="lookupMessage" class="text-surface-500">{{ lookupMessage }}</small>
+    </div>
 
     <InputText
       v-else

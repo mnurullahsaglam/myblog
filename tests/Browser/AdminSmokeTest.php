@@ -118,3 +118,10 @@ it('opens the bulk edit dialog with options drawn from the schema', function ():
         ->assertSee($category->name)
         ->assertNoJavaScriptErrors();
 });
+
+it('shows the isbn field with its fetch button on the book form', function (): void {
+    visit(route('admin.books.create'))
+        ->assertNoJavaScriptErrors()
+        ->assertSee('ISBN')
+        ->assertSee('Fetch');
+});
