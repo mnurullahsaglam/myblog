@@ -25,12 +25,4 @@ return new class extends Migration
             $table->index('group');
         });
     }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('settings');
-    }
 };

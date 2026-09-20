@@ -34,9 +34,4 @@ return new class extends Migration
             $table->index(['status', 'sort_order']);
         });
     }
-
-    public function down(): void
-    {
-        Schema::dropIfExists('tasks');
-    }
 };

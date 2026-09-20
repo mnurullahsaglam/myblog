@@ -43,9 +43,4 @@ return new class extends Migration
             $table->index(['utility_account_id', 'period_start']);
         });
     }
-
-    public function down(): void
-    {
-        Schema::dropIfExists('utility_bills');
-    }
 };

@@ -355,3 +355,46 @@ livewire(ListUsers::class)
   set column spans when needed.
 
 </laravel-boost-guidelines>
+
+# Project Rules
+
+These are decisions made for this repository. Where they contradict the generated Laravel Boost guidelines above,
+these win.
+
+## No comments
+
+Write no prose comments — not `//`, not `/* */`, not a descriptive docblock, not `{{-- --}}` in Blade, and none in
+Vue, JS or CSS. The only comment that survives is a docblock carrying at least one `@` tag, and then only its tag
+lines: `@param`, `@return`, `@var`, `@template`, `@extends`, `@implements`, `@use`, `@mixin`, `@property`,
+`@property-read`, `@throws`, `@see`, `@deprecated`, and anything `@phpstan-*` or `@psalm-*`. Those exist because
+PHPStan at level max needs them, not to explain anything.
+
+Reasoning that is worth keeping goes in the commit message, where it stays attached to the change that motivated it.
+
+This overrides the Boost guideline "Prefer PHPDoc blocks over inline comments".
+
+## Migrations have no `down()`
+
+Never write a `down()` method. Migrations only go forward. `migrate:rollback` and `migrate:refresh` are not used here
+and are not expected to work; `migrate` and `migrate:fresh` are. A migration that turns out to be wrong is corrected
+by a new migration, never by rolling back.
+
+## Models have no `$fillable` or `$guarded`
+
+`Model::unguard()` runs in `AppServiceProvider::boot`, so mass assignment protection is off application-wide and
+either property would be dead code.
+
+What bounds a write is the form request on the way in, and the field and column definitions in `App\Forms` and
+`App\Tables` that the panel and the API build from. Those definitions are the security boundary — see
+`BulkWriteSafetyTest`, and note that bulk edit and bulk delete loop through models on purpose rather than taking an
+exemption.
+
+This overrides the Boost guideline "Define `$fillable` or `$guarded` on every model".
+
+## The panel is English
+
+There is no translation layer in the Vue panel and no `lang/*.json`. `lang/en` and `lang/tr` hold only the framework's
+own `auth`, `pagination`, `passwords` and `validation` strings, which `app.locale=tr` still uses.
+
+Because the locale is `tr` while the copy is English, any element with CSS `text-transform: uppercase` must carry
+`lang="en"` — Turkish casing turns `i` into `İ`. `PanelLabelsTest` enforces this.

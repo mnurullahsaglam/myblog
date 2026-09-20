@@ -24,9 +24,4 @@ return new class extends Migration
             $table->index(['type', 'name']);
         });
     }
-
-    public function down(): void
-    {
-        Schema::dropIfExists('waka_time_summary_entries');
-    }
 };

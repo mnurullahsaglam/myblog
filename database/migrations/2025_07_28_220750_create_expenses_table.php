@@ -28,9 +28,4 @@ return new class extends Migration
             $table->index('is_tax_deductible');
         });
     }
-
-    public function down(): void
-    {
-        Schema::dropIfExists('expenses');
-    }
 };

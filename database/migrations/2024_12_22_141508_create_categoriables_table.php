@@ -24,9 +24,4 @@ return new class extends Migration
             $table->primary(['category_id', 'categoriable_id', 'categoriable_type'], 'categoriables_primary');
         });
     }
-
-    public function down(): void
-    {
-        Schema::dropIfExists('categoriables');
-    }
 };

@@ -23,12 +23,4 @@ return new class extends PennantMigration
             $table->unique(['name', 'scope']);
         });
     }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('features');
-    }
 };
