@@ -1,0 +1,42 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Enums;
+
+use App\Support\Contracts\HasColor;
+use App\Support\Contracts\HasLabel;
+
+/**
+ * What an invite currently is.
+ *
+ * Derived from three timestamps and never stored: a status column would be a
+ * second source of truth that the passage of time can falsify.
+ */
+enum InviteStatus: string implements HasColor, HasLabel
+{
+    case Pending = 'pending';
+    case Accepted = 'accepted';
+    case Revoked = 'revoked';
+    case Expired = 'expired';
+
+    public function getLabel(): string
+    {
+        return match ($this) {
+            self::Pending => 'Pending',
+            self::Accepted => 'Accepted',
+            self::Revoked => 'Revoked',
+            self::Expired => 'Expired',
+        };
+    }
+
+    public function getColor(): string
+    {
+        return match ($this) {
+            self::Pending => 'warning',
+            self::Accepted => 'success',
+            self::Revoked => 'gray',
+            self::Expired => 'danger',
+        };
+    }
+}
