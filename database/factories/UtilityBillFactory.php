@@ -7,12 +7,14 @@ namespace Database\Factories;
 use App\Models\UtilityAccount;
 use App\Models\UtilityBill;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Override;
 
 /**
  * @extends Factory<UtilityBill>
  */
 final class UtilityBillFactory extends Factory
 {
+    #[Override]
     protected $model = UtilityBill::class;
 
     /**
