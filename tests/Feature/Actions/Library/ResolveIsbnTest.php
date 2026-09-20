@@ -39,7 +39,6 @@ function orwell(): BookMetadata
         publicationYear: 1993,
         publicationLocation: 'New York',
         pageCount: 328,
-        coverId: null,
     );
 }
 
@@ -106,7 +105,7 @@ it('reports a duplicate and fills nothing when the isbn is already in the librar
     $result = resolve(ResolveIsbn::class)->handle(anIsbn());
 
     expect($result['duplicate'])->toBe(['id' => $existing->id, 'name' => 'Already Here'])
-        ->and($result['values'])->toBe([]);
+        ->and($result['values'])->toBeEmpty();
 });
 
 it('returns an empty result when the resolver finds nothing', function (): void {
@@ -114,7 +113,7 @@ it('returns an empty result when the resolver finds nothing', function (): void 
 
     $result = resolve(ResolveIsbn::class)->handle(anIsbn());
 
-    expect($result['values'])->toBe([])
+    expect($result['values'])->toBeEmpty()
         ->and($result['writer'])->toBeNull()
         ->and($result['duplicate'])->toBeNull();
 });

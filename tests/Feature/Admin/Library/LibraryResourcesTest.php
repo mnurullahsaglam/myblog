@@ -8,6 +8,7 @@ use App\Models\Publisher;
 use App\Models\User;
 use App\Models\Writer;
 use App\Support\Navigation;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia;
@@ -229,7 +230,7 @@ it('refuses a second book with the same isbn', function (): void {
     Book::factory()->create(['isbn' => '9780451524935']);
 
     expect(fn () => Book::factory()->create(['isbn' => '9780451524935']))
-        ->toThrow(Illuminate\Database\QueryException::class);
+        ->toThrow(QueryException::class);
 });
 
 it('allows many books with no isbn', function (): void {

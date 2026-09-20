@@ -40,7 +40,7 @@ it('returns null when the cover does not exist', function (): void {
     Http::fake(['covers.openlibrary.org/*' => Http::response('', 404)]);
 
     expect(resolve(DownloadCover::class)->handle(999_999_999))->toBeNull()
-        ->and(Storage::disk('public')->allFiles())->toBe([]);
+        ->and(Storage::disk('public')->allFiles())->toBeEmpty();
 });
 
 it('refuses a response that is not an image', function (): void {
@@ -49,7 +49,7 @@ it('refuses a response that is not an image', function (): void {
     )]);
 
     expect(resolve(DownloadCover::class)->handle(12054527))->toBeNull()
-        ->and(Storage::disk('public')->allFiles())->toBe([]);
+        ->and(Storage::disk('public')->allFiles())->toBeEmpty();
 });
 
 it('refuses a cover larger than the form would accept', function (): void {

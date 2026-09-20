@@ -8,6 +8,7 @@ use App\Contracts\ResolvesIsbn;
 use App\Models\Book;
 use App\Models\Publisher;
 use App\Models\Writer;
+use App\Support\BookMetadata;
 use App\Support\Isbn;
 use Illuminate\Database\Eloquent\Model;
 
@@ -38,9 +39,11 @@ final readonly class ResolveIsbn
     {
         $existing = Book::query()->where('isbn', $isbn->value())->first();
 
-        if ($existing instanceof Book) {
+        $duplicate = $this->identify($existing);
+
+        if ($duplicate !== null) {
             return [
-                'duplicate' => ['id' => (int) $existing->getKey(), 'name' => (string) $existing->getAttribute('name')],
+                'duplicate' => $duplicate,
                 'values' => [],
                 'writer' => null,
                 'publisher' => null,
@@ -50,7 +53,7 @@ final readonly class ResolveIsbn
 
         $metadata = $this->resolver->resolve($isbn);
 
-        if ($metadata === null) {
+        if (! $metadata instanceof BookMetadata) {
             return ['duplicate' => null, 'values' => [], 'writer' => null, 'publisher' => null, 'image' => null];
         }
 
@@ -73,6 +76,25 @@ final readonly class ResolveIsbn
     }
 
     /**
+     * A record's id and name, or null when it is absent or not the shape the
+     * form needs. Eloquent types both as mixed, and casting mixed is exactly the
+     * guess static analysis is right to reject.
+     *
+     * @return array{id: int, name: string}|null
+     */
+    private function identify(?Model $record): ?array
+    {
+        if (! $record instanceof Model) {
+            return null;
+        }
+
+        $id = $record->getKey();
+        $name = $record->getAttribute('name');
+
+        return is_int($id) && is_string($name) ? ['id' => $id, 'name' => $name] : null;
+    }
+
+    /**
      * Lowercases both sides rather than trusting the database collation, for the
      * same reason FindOrCreateNamedRecord does: MySQL and SQLite disagree.
      *
@@ -90,10 +112,6 @@ final readonly class ResolveIsbn
             ->orderBy('id')
             ->first();
 
-        if ($record instanceof Model) {
-            return ['id' => (int) $record->getKey(), 'name' => (string) $record->getAttribute('name')];
-        }
-
-        return ['suggestion' => $name];
+        return $this->identify($record) ?? ['suggestion' => $name];
     }
 }
