@@ -59,9 +59,17 @@ final class AppServiceProvider extends ServiceProvider
         // denyAsNotFound() is Laravel's own mechanism, so a refusal becomes a
         // genuine 404 rather than a faked exception. A forbidden URL and a
         // nonexistent one are indistinguishable, which is what was asked for.
-        Gate::define('access-area', fn (User $user, Area $area): Response => $user->canAccess($area)
-            ? Response::allow()
-            : Response::denyAsNotFound());
+        // The route middleware hands the area over as a string, while callers in
+        // PHP pass the enum, so both are accepted. An area the enum does not know
+        // denies rather than throws: a typo in the route file then shows up as a
+        // route the member cannot reach, which the access matrix test catches.
+        Gate::define('access-area', function (User $user, Area|string $area): Response {
+            $area = $area instanceof Area ? $area : Area::tryFrom($area);
+
+            return $area instanceof Area && $user->canAccess($area)
+                ? Response::allow()
+                : Response::denyAsNotFound();
+        });
 
         // The door. Anyone with at least one area belongs in the panel; which
         // screens they reach is decided by the per-area groups inside.

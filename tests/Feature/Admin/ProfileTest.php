@@ -60,8 +60,8 @@ it('rejects a mismatched confirmation', function (): void {
         ->assertSessionHasErrorsIn('updatePassword', 'password');
 });
 
-it('forbids a non-admin', function (): void {
-    $this->actingAs(User::factory()->create(['email' => 'nobody@example.test']))
+it('forbids a user with no areas', function (): void {
+    $this->actingAs(userWithoutRole('nobody@example.test'))
         ->get(route('admin.profile'))
         ->assertForbidden();
 });

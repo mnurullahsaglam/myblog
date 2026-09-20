@@ -100,8 +100,8 @@ it('returns 404 for a signed url to a missing export', function (): void {
         ->assertNotFound();
 });
 
-it('forbids a non-admin from exporting', function (): void {
-    $this->actingAs(User::factory()->create(['email' => 'nobody@example.test']));
+it('forbids a user with no areas from exporting', function (): void {
+    $this->actingAs(userWithoutRole('nobody@example.test'));
 
     $this->post(route('admin.exports.store', 'writers'))->assertForbidden();
 });

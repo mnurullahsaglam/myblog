@@ -152,8 +152,8 @@ it('appears in the general cluster', function (): void {
     expect(collect($general['items'])->pluck('route'))->toContain('admin.settings');
 });
 
-it('forbids a non-admin', function (): void {
-    $this->actingAs(User::factory()->create(['email' => 'nobody@example.test']));
+it('hides settings from a member entirely', function (): void {
+    $this->actingAs(User::factory()->member()->create(['email' => 'nobody@example.test']));
 
-    $this->get(route('admin.settings'))->assertForbidden();
+    $this->get(route('admin.settings'))->assertNotFound();
 });

@@ -102,8 +102,8 @@ it('redirects a guest away from the panel', function (): void {
     $this->get(route('admin.dashboard'))->assertRedirect();
 });
 
-it('forbids a non-admin', function (): void {
-    $this->actingAs(User::factory()->create(['email' => 'nobody@example.test']))
+it('forbids a user with no areas', function (): void {
+    $this->actingAs(userWithoutRole('nobody@example.test'))
         ->get(route('admin.dashboard'))
         ->assertForbidden();
 });

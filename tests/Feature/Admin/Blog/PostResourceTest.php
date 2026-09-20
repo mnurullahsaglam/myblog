@@ -269,8 +269,8 @@ it('appears in the navigation', function (): void {
     ]);
 });
 
-it('forbids a non-admin', function (): void {
-    $this->actingAs(User::factory()->create(['email' => 'nobody@example.test']));
+it('hides the blog from a member entirely', function (): void {
+    $this->actingAs(User::factory()->member()->create(['email' => 'nobody@example.test']));
 
-    $this->get(route('admin.posts.index'))->assertForbidden();
+    $this->get(route('admin.posts.index'))->assertNotFound();
 });

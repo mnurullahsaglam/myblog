@@ -99,8 +99,8 @@ it('requires an authenticated admin', function (): void {
     $this->getJson(route('admin.search', ['q' => 'rust']))->assertUnauthorized();
 });
 
-it('forbids a non-admin', function (): void {
-    $this->actingAs(User::factory()->create(['email' => 'nobody@example.test']));
+it('forbids a user with no areas', function (): void {
+    $this->actingAs(userWithoutRole('nobody@example.test'));
 
     $this->getJson(route('admin.search', ['q' => 'rust']))->assertForbidden();
 });
