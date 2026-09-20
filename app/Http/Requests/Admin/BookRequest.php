@@ -28,6 +28,7 @@ final class BookRequest extends FormRequest
             'publisher_id' => ['required', 'integer', 'exists:publishers,id'],
             'name' => ['required', 'string', 'min:3', 'max:255'],
             'slug' => ['required', 'string', 'max:255', Rule::unique('books', 'slug')->ignore($bookId)],
+            'isbn' => ['nullable', 'string', 'size:13', Rule::unique('books', 'isbn')->ignore($bookId)],
             'original_name' => ['nullable', 'string', 'min:3', 'max:255'],
             'page_count' => ['nullable', 'integer', 'min:1'],
             'publication_date' => ['nullable', 'integer', 'min:0', 'max:'.(int) date('Y')],

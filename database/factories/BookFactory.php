@@ -25,6 +25,7 @@ class BookFactory extends Factory
             'name' => fake()->name(),
             'original_name' => fake()->name(),
             'slug' => fake()->slug(),
+            'isbn' => null,
             'page_count' => fake()->randomNumber(),
             'publication_date' => fake()->randomNumber(),
             'publication_location' => fake()->word(),

@@ -218,3 +218,22 @@ it('lists the library cluster in navigation', function (): void {
     expect(collect($library['items'])->pluck('route')->all())
         ->toContain('admin.books.index', 'admin.writers.index', 'admin.publishers.index');
 });
+
+it('stores an isbn on a book', function (): void {
+    $book = Book::factory()->create(['isbn' => '9780451524935']);
+
+    expect($book->fresh()->isbn)->toBe('9780451524935');
+});
+
+it('refuses a second book with the same isbn', function (): void {
+    Book::factory()->create(['isbn' => '9780451524935']);
+
+    expect(fn () => Book::factory()->create(['isbn' => '9780451524935']))
+        ->toThrow(Illuminate\Database\QueryException::class);
+});
+
+it('allows many books with no isbn', function (): void {
+    Book::factory()->count(3)->create(['isbn' => null]);
+
+    expect(Book::whereNull('isbn')->count())->toBe(3);
+});
