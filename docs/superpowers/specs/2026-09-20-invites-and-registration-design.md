@@ -224,9 +224,16 @@ Status is derived, never stored: *pending*, *accepted*, *revoked* or *expired*,
 computed from the three timestamps. A stored status column would be a second
 source of truth that a clock can falsify.
 
-Actions: **invite**, **revoke**, **resend** and **copy link**. The link is shown
-in the panel alongside the email exactly as asked, so a delivery failure or a
-spam folder is recoverable without a database query.
+Actions: **invite**, **revoke**, **reissue** and **copy link**. The link is
+shown in the panel alongside the email exactly as asked, so a delivery failure
+or a spam folder is recoverable without a database query.
+
+**Reissue, not resend.** Only the hash is stored, so once the creating request
+ends nothing in the application can rebuild the original link — it exists only
+in the recipient's inbox and in whatever was copied out of the panel. A button
+labelled "resend" would promise a message the application cannot compose. It
+therefore issues a fresh invite and supersedes the old one, and the
+confirmation says the previous link stops working.
 
 The table reuses the project's `ResourceTable` contract. The **form** contract
 is not reused: an invite is created and revoked, never edited, so a modal action
@@ -283,8 +290,8 @@ Mail:
   plaintext token.
 - The token in the mail is **not** the value stored in `token_hash`.
 - Revoking sends nothing.
-- Resending sends again without changing the token, so an earlier copy of the
-  link still works.
+- Reissuing supersedes the old invite, issues a different token, and sends one
+  mail. The superseded link then 404s.
 
 Password reset:
 
