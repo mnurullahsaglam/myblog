@@ -25,10 +25,13 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::factory()
+            ->admin()
             ->create([
                 'name' => config('app.admin_name'),
                 'email' => config('app.admin_email'),
             ]);
+
+        $this->createMember();
 
         $this->createSettings();
         $this->createContent();
@@ -327,6 +330,28 @@ class DatabaseSeeder extends Seeder
      * The panel reads these on every request, so a fresh database without them
      * falls back to defaults and looks unconfigured.
      */
+    /**
+     * The household's second account, seeded only when an address is configured.
+     *
+     * Scaffolding until invites land. The address lives in .env.example so
+     * nothing depends on a value only a local .env carries.
+     */
+    private function createMember(): void
+    {
+        $email = config('app.member_email');
+
+        if (! is_string($email) || $email === '') {
+            return;
+        }
+
+        User::factory()
+            ->member()
+            ->create([
+                'name' => config('app.member_name'),
+                'email' => $email,
+            ]);
+    }
+
     private function createSettings(): void
     {
         Setting::set('appearance', 'accent', 'khaki');

@@ -5,9 +5,12 @@ declare(strict_types=1);
 use App\Actions\Exports\ExportResource;
 use App\Enums\Area;
 use App\Models\Book;
+use App\Models\Category;
 use App\Models\Client;
+use App\Models\Debt;
 use App\Models\Post;
 use App\Models\User;
+use App\Models\UtilityBill;
 use App\Support\GlobalSearch;
 use App\Support\Navigation;
 use Illuminate\Support\Collection;
@@ -118,3 +121,80 @@ it('refuses an export nobody has registered', function (): void {
         ->post(route('admin.exports.store', 'invoices'))
         ->assertNotFound();
 });
+
+/**
+ * The fifth surface, whatever it turns out to be.
+ *
+ * The matrix test only knows about routes. This walks the navigation the member
+ * is actually shown and opens every item in it, so a cluster that lists a screen
+ * she cannot reach — or hides one she can — fails here.
+ */
+it('gives every navigation item a route inside its cluster area', function (): void {
+    foreach (Navigation::clusters() as $cluster) {
+        foreach ($cluster['items'] as $item) {
+            $reachable = $this->member->canAccess($cluster['area']);
+
+            $response = $this->actingAs($this->member)->get(route($item['route']));
+
+            $reachable
+                ? expect($response->status())->not->toBe(404, "{$item['label']} is listed but unreachable")
+                : expect($response->status())->toBe(404, "{$item['label']} is hidden but still reachable");
+        }
+    }
+});
+
+/**
+ * Categories are General, but the books form needs them. She must be able to
+ * pick one from inside Library without the Categories screen ever being hers.
+ */
+it('lets the member use categories from inside the books form', function (): void {
+    Category::factory()->create(['name' => 'Zzshared']);
+
+    $this->actingAs($this->member)
+        ->get(route('admin.books.create'))
+        ->assertOk()
+        ->assertSee('Zzshared');
+
+    $this->actingAs($this->member)
+        ->get(route('admin.categories.index'))
+        ->assertNotFound();
+});
+
+/**
+ * Reading is not the point of her account. These are the two writes she does
+ * most, and they have to work end to end.
+ */
+it('lets the member pay a utility bill', function (): void {
+    $bill = UtilityBill::factory()->create();
+
+    $this->actingAs($this->member)
+        ->post(route('admin.utility-bills.pay', $bill))
+        ->assertRedirect();
+
+    expect($bill->fresh()->paid_at)->not->toBeNull();
+});
+
+it('lets the member record a debt payment', function (): void {
+    $debt = Debt::factory()->create(['amount' => 1000, 'status' => 'pending']);
+
+    $this->actingAs($this->member)
+        ->post(route('admin.debts.pay', $debt), [
+            'payment_amount' => 250,
+            'payment_description' => 'First instalment',
+        ])
+        ->assertRedirect();
+
+    expect((float) $debt->fresh()->amount)->toBe(750.0);
+});
+
+it('keeps the member out of every blog and work write route', function (string $routeName): void {
+    $this->actingAs($this->member)
+        ->post(route($routeName))
+        ->assertNotFound();
+})->with([
+    'admin.posts.store',
+    'admin.clients.store',
+    'admin.projects.store',
+    'admin.invoices.store',
+    'admin.tasks.store',
+]);

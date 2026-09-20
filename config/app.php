@@ -127,4 +127,8 @@ return [
 
     'admin_name' => env('ADMIN_NAME'),
     'admin_email' => env('ADMIN_EMAIL'),
+
+    'member_name' => env('MEMBER_NAME', 'Member'),
+
+    'member_email' => env('MEMBER_EMAIL'),
 ];
