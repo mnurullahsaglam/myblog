@@ -77,9 +77,11 @@ final class AppServiceProvider extends ServiceProvider
         Gate::define('has-ability', fn (User $user, Ability $ability): bool => app(AccessProfile::class)->allows($ability));
 
         View::composer('app', function (\Illuminate\View\View $view): void {
+            $appearance = Appearance::forUser(auth()->user());
+
             $view->with([
-                'accentCss' => AccentRamps::cssVariables(Appearance::accent()),
-                'colorScheme' => Appearance::colorScheme(),
+                'accentCss' => AccentRamps::cssVariables($appearance['accent']),
+                'colorScheme' => $appearance['colorScheme'],
             ]);
         });
     }

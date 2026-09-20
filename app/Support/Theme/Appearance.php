@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Support\Theme;
 
 use App\Models\Setting;
+use App\Models\User;
 
 final class Appearance
 {
@@ -26,6 +27,27 @@ final class Appearance
         $scheme = is_string($stored) ? $stored : self::DEFAULT_SCHEME;
 
         return in_array($scheme, self::SCHEMES, true) ? $scheme : self::DEFAULT_SCHEME;
+    }
+
+    /**
+     * This user's appearance, falling back to the global setting and then to the
+     * built-in default.
+     *
+     * The global rows stay as they are: they are what the public site, every
+     * signed-out page and any user without a preference use.
+     *
+     * @return array{accent: string, colorScheme: string}
+     */
+    public static function forUser(?User $user): array
+    {
+        $preferences = $user instanceof User ? ($user->preferences ?? []) : [];
+        $accent = $preferences['accent'] ?? null;
+        $scheme = $preferences['color_scheme'] ?? null;
+
+        return [
+            'accent' => is_string($accent) && AccentRamps::has($accent) ? $accent : self::accent(),
+            'colorScheme' => is_string($scheme) && in_array($scheme, self::SCHEMES, true) ? $scheme : self::colorScheme(),
+        ];
     }
 
     /**

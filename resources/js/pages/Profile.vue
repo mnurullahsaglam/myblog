@@ -1,18 +1,43 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { router, useForm } from '@inertiajs/vue3'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
 import { useConfirm } from 'primevue/useconfirm'
+import SelectButton from 'primevue/selectbutton'
+import AccentPicker from '@/Components/Settings/AccentPicker.vue'
 import AdminLayout from '@/Layouts/AdminLayout.vue'
 import { usePasskeys } from '@/composables/usePasskeys'
 
-defineProps({
+const props = defineProps({
   twoFactorEnabled: { type: Boolean, default: false },
   twoFactorPending: { type: Boolean, default: false },
   passkeys: { type: Array, default: () => [] },
+  appearance: { type: Object, required: true },
+  accents: { type: Array, required: true },
+  schemes: { type: Array, required: true },
 })
+
+const appearanceForm = useForm({
+  accent: props.appearance.accent,
+  color_scheme: props.appearance.colorScheme,
+})
+
+watch(
+  () => appearanceForm.color_scheme,
+  (scheme) => {
+    const root = document.documentElement
+    const dark = scheme === 'dark' || (scheme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+
+    root.classList.toggle('dark', dark)
+    root.dataset.theme = scheme
+  },
+)
+
+function saveAppearance() {
+  appearanceForm.put(route('admin.preferences.update'), { preserveScroll: true })
+}
 
 const confirm = useConfirm()
 const webauthn = usePasskeys()
@@ -71,6 +96,37 @@ function disableTwoFactor() {
 <template>
   <AdminLayout title="Profile" subtitle="Credentials and second factor.">
     <div class="flex max-w-2xl flex-col gap-5">
+      <section class="border-surface-200 bg-surface-0 rounded-lg border p-4 dark:border-[#272B35] dark:bg-[#15171C]">
+        <header class="mb-4">
+          <h2 class="text-lg font-medium tracking-[-0.01em]">Appearance</h2>
+          <p class="text-surface-500 mt-1 text-sm">Yours alone. It does not change what anyone else sees.</p>
+        </header>
+
+        <div class="flex flex-col gap-6">
+          <div class="flex flex-col gap-2">
+            <span class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase">Accent</span>
+            <AccentPicker v-model="appearanceForm.accent" :accents="accents" />
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <span class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase"
+              >Colour scheme</span
+            >
+            <SelectButton
+              v-model="appearanceForm.color_scheme"
+              :options="schemes"
+              option-label="label"
+              option-value="value"
+              :allow-empty="false"
+            />
+          </div>
+
+          <div>
+            <Button label="Save appearance" :loading="appearanceForm.processing" @click="saveAppearance" />
+          </div>
+        </div>
+      </section>
+
       <section class="border-surface-200 bg-surface-0 rounded-lg border p-4 dark:border-[#272B35] dark:bg-[#15171C]">
         <h2 class="mb-4 text-lg font-medium tracking-[-0.01em]">Change password</h2>
 

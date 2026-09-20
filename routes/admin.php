@@ -35,7 +35,8 @@ Route::middleware(['auth', 'can:access-panel'])
     ->name('admin.')
     ->group(function (): void {
         Route::get('/', DashboardController::class)->name('dashboard');
-        Route::get('profile', ProfileController::class)->name('profile');
+        Route::get('profile', [ProfileController::class, 'index'])->name('profile');
+        Route::put('preferences', [ProfileController::class, 'updatePreferences'])->name('preferences.update');
         Route::get('search', SearchController::class)->name('search');
         Route::patch('notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.read-all');
         Route::patch('notifications/{notification}', [NotificationController::class, 'read'])->name('notifications.read');

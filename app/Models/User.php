@@ -19,6 +19,7 @@ use Override;
 
 /**
  * @property UserRole $role
+ * @property array<string, mixed>|null $preferences
  */
 final class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 {
@@ -106,6 +107,7 @@ final class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'role' => UserRole::class,
+            'preferences' => 'array',
         ];
     }
 }

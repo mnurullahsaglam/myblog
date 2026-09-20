@@ -43,7 +43,7 @@ final class HandleInertiaRequests extends Middleware
 
             'navigation' => fn (): array => Navigation::forProfile(app(AccessProfile::class)),
 
-            'appearance' => Appearance::toArray(...),
+            'appearance' => fn (): array => Appearance::forUser($user),
 
             'flash' => [
                 'notification' => fn (): mixed => $request->session()->get(NotifiesAdmin::SESSION_KEY),

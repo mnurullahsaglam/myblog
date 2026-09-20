@@ -24,6 +24,7 @@ return new class extends Migration
             // privileged value, so a row created without one cannot accidentally be
             // an admin.
             $table->string('role')->default('member');
+            $table->json('preferences')->nullable();
             $table->text('two_factor_secret')->nullable();
             $table->text('two_factor_recovery_codes')->nullable();
             $table->timestamp('two_factor_confirmed_at')->nullable();
