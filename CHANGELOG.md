@@ -5,7 +5,7 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.5.0] - 2026-09-20
 
 ### Added
 
@@ -23,6 +23,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `max` the form declares, so a tax rate still cannot exceed 100 in bulk.
 - A `*.bulk-update` route for each of the twelve resources that already had
   bulk delete.
+- A guard that fails if any bulk write in `app/` goes through the query builder,
+  which fires no model events. It demonstrates the trap on both `delete` and
+  `update`, and reports the offending file and line.
 
 ## [0.4.0] - 2026-09-19
 
