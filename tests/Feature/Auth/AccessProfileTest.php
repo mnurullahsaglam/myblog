@@ -7,6 +7,7 @@ use App\Enums\Area;
 use App\Enums\UserRole;
 use App\Models\User;
 use App\Support\Access\AccessProfile;
+use App\Support\Navigation;
 
 beforeEach(function (): void {
     config(['app.admin_email' => 'owner@example.test']);
@@ -66,10 +67,39 @@ it('refuses to preview a role that is not narrower', function (): void {
         ->toThrow(InvalidArgumentException::class);
 });
 
-it('is bound once per request', function (): void {
+/**
+ * Resolved from whoever is authenticated now, not from whoever was first.
+ *
+ * A cached profile made the access matrix reuse the owner's answers for the
+ * member's half of every case, so this asserts the behaviour that bug broke
+ * rather than the binding style that caused it.
+ */
+it('reflects the user authenticated at the moment it is resolved', function (): void {
     $owner = User::factory()->admin()->create(['email' => 'owner@example.test']);
+    $member = User::factory()->member()->create(['email' => 'her@example.test']);
 
-    $this->actingAs($owner)->get(route('admin.dashboard'));
+    $this->actingAs($owner);
+    expect(app(AccessProfile::class)->allows(Ability::SeeClientIdentity))->toBeTrue();
 
-    expect(app(AccessProfile::class))->toBe(app(AccessProfile::class));
+    $this->actingAs($member);
+    expect(app(AccessProfile::class)->allows(Ability::SeeClientIdentity))->toBeFalse();
+});
+
+/**
+ * The point of routing every question through one object: substituting it
+ * changes the navigation, the search and the dashboard together, rather than
+ * leaving one of them telling the truth while the others lie.
+ */
+it('changes navigation and the dashboard together', function (): void {
+    $owner = User::factory()->admin()->create(['email' => 'owner@example.test']);
+    $narrow = AccessProfile::preview($owner, UserRole::Member);
+
+    app()->instance(AccessProfile::class, $narrow);
+
+    expect(collect(Navigation::forProfile($narrow))->pluck('label')->all())
+        ->not->toContain('Work');
+
+    $this->actingAs($owner)
+        ->get(route('admin.dashboard'))
+        ->assertInertia(fn ($page) => $page->missing('work'));
 });

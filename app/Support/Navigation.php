@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Support;
 
 use App\Enums\Area;
-use App\Models\User;
+use App\Support\Access\AccessProfile;
 
 final class Navigation
 {
@@ -62,11 +62,11 @@ final class Navigation
      *
      * @return array<int, array{label: string, icon: string, area: Area, items: array<int, array{label: string, route: string, icon: string}>}>
      */
-    public static function forUser(User $user): array
+    public static function forProfile(AccessProfile $profile): array
     {
         return array_values(array_filter(
             self::clusters(),
-            fn (array $cluster): bool => $user->canAccess($cluster['area']),
+            fn (array $cluster): bool => $profile->canAccess($cluster['area']),
         ));
     }
 }

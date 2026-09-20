@@ -8,10 +8,10 @@ use App\Enums\Area;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Models\Task;
+use App\Support\Access\AccessProfile;
 use App\Support\Widgets\BudgetOverview;
 use App\Support\Widgets\LibraryOverview;
 use App\Support\Widgets\WorkOverview;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -23,28 +23,26 @@ final class DashboardController extends Controller
      * An empty panel still names the area and links into it, which is the thing
      * a user without that area should not learn exists.
      */
-    public function __invoke(Request $request): Response
+    public function __invoke(): Response
     {
-        $user = $request->user();
-
-        abort_if($user === null, 401);
+        $profile = app(AccessProfile::class);
 
         $props = [];
 
-        if ($user->canAccess(Area::Budget)) {
+        if ($profile->canAccess(Area::Budget)) {
             $props['budget'] = BudgetOverview::stats(...);
         }
 
-        if ($user->canAccess(Area::Work)) {
+        if ($profile->canAccess(Area::Work)) {
             $props['work'] = WorkOverview::stats(...);
             $props['openTasks'] = fn (): array => $this->openTasks();
         }
 
-        if ($user->canAccess(Area::Library)) {
+        if ($profile->canAccess(Area::Library)) {
             $props['library'] = LibraryOverview::stats(...);
         }
 
-        if ($user->canAccess(Area::Blog)) {
+        if ($profile->canAccess(Area::Blog)) {
             $props['recentPosts'] = fn (): array => $this->recentPosts();
         }
 

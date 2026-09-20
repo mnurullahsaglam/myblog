@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Middleware;
 
 use App\Contracts\NotifiesAdmin;
+use App\Support\Access\AccessProfile;
 use App\Support\Navigation;
 use App\Support\Theme\Appearance;
 use Illuminate\Http\Request;
@@ -40,7 +41,7 @@ final class HandleInertiaRequests extends Middleware
                 ],
             ],
 
-            'navigation' => fn (): array => $user === null ? [] : Navigation::forUser($user),
+            'navigation' => fn (): array => Navigation::forProfile(app(AccessProfile::class)),
 
             'appearance' => Appearance::toArray(...),
 

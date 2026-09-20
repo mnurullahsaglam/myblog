@@ -10,6 +10,7 @@ use App\Models\Repository;
 use App\Models\User;
 use App\Models\WakaTimeSummary;
 use App\Models\Writer;
+use App\Support\Access\AccessProfile;
 use App\Support\GlobalSearch;
 
 beforeEach(function (): void {
@@ -50,7 +51,7 @@ it('links each result to a page for that record', function (): void {
 it('links read-only resources to their show page', function (): void {
     $repository = Repository::factory()->create(['name' => 'zzfindme']);
 
-    $result = collect(GlobalSearch::query('zzfindme', $this->owner))->firstWhere('group', 'Repositories');
+    $result = collect(GlobalSearch::query('zzfindme', AccessProfile::forUser($this->owner)))->firstWhere('group', 'Repositories');
 
     expect($result['url'])->toBe(route('admin.repositories.show', $repository->id));
 });
@@ -58,7 +59,7 @@ it('links read-only resources to their show page', function (): void {
 it('finds a wakatime summary by date', function (): void {
     $summary = WakaTimeSummary::factory()->create(['date' => '2026-06-01']);
 
-    $result = collect(GlobalSearch::query('2026-06-01', $this->owner))->firstWhere('group', 'Daily summaries');
+    $result = collect(GlobalSearch::query('2026-06-01', AccessProfile::forUser($this->owner)))->firstWhere('group', 'Daily summaries');
 
     expect($result['url'])->toBe(route('admin.waka-time-summaries.show', $summary->id));
 });
@@ -75,7 +76,7 @@ it('searches across relationships', function (): void {
     $writer = Writer::factory()->create(['name' => 'Zafón']);
     Book::factory()->create(['writer_id' => $writer->id]);
 
-    $groups = collect(GlobalSearch::query('Zafón', $this->owner))->pluck('group');
+    $groups = collect(GlobalSearch::query('Zafón', AccessProfile::forUser($this->owner)))->pluck('group');
 
     expect($groups)->toContain('Books', 'Writers');
 });
@@ -83,13 +84,13 @@ it('searches across relationships', function (): void {
 it('searches debts, which take a constructor argument', function (): void {
     Debt::factory()->create(['creditor_name' => 'Zzbank']);
 
-    expect(collect(GlobalSearch::query('Zzbank', $this->owner))->pluck('group'))->toContain('Debts');
+    expect(collect(GlobalSearch::query('Zzbank', AccessProfile::forUser($this->owner)))->pluck('group'))->toContain('Debts');
 });
 
 it('gives every result a label, a group and a url', function (): void {
     Post::factory()->create(['title' => 'Learning Rust']);
 
-    foreach (GlobalSearch::query('rust', $this->owner) as $result) {
+    foreach (GlobalSearch::query('rust', AccessProfile::forUser($this->owner)) as $result) {
         expect($result)->toHaveKeys(['label', 'group', 'url'])
             ->and($result['label'])->toBeString()->not->toBeEmpty()
             ->and($result['url'])->toStartWith('http');

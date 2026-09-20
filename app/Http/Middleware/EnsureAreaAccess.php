@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Middleware;
 
 use App\Enums\Area;
+use App\Support\Access\AccessProfile;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +31,7 @@ final class EnsureAreaAccess
         // reports it.
         abort_if($resolved === null, 404);
 
-        abort_unless($request->user()?->can('access-area', $resolved) ?? false, 404);
+        abort_unless(app(AccessProfile::class)->canAccess($resolved), 404);
 
         return $next($request);
     }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Support;
 
 use App\Enums\Area;
-use App\Models\User;
+use App\Support\Access\AccessProfile;
 use App\Tables\Definitions\BookTable;
 use App\Tables\Definitions\CategoryTable;
 use App\Tables\Definitions\ClientTable;
@@ -57,12 +57,12 @@ final class GlobalSearch
     }
 
     /**
-     * The user is required rather than nullable: a call site that forgets it
+     * The profile is required rather than nullable: a call site that forgets it
      * will not compile, instead of quietly searching everything.
      *
      * @return array<int, array{label: string, group: string, url: string}>
      */
-    public static function query(string $term, User $user, int $perResource = self::PER_RESOURCE): array
+    public static function query(string $term, AccessProfile $profile, int $perResource = self::PER_RESOURCE): array
     {
         $term = trim($term);
 
@@ -75,7 +75,7 @@ final class GlobalSearch
         foreach (self::registry() as $group => $entry) {
             // The palette reaches every resource at once, so it is the surface
             // most likely to name something the user cannot open.
-            if (! $user->canAccess($entry['area'])) {
+            if (! $profile->canAccess($entry['area'])) {
                 continue;
             }
 

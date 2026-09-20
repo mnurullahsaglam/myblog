@@ -11,6 +11,7 @@ use App\Models\Debt;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\UtilityBill;
+use App\Support\Access\AccessProfile;
 use App\Support\GlobalSearch;
 use App\Support\Navigation;
 use Illuminate\Support\Collection;
@@ -23,17 +24,17 @@ beforeEach(function (): void {
 });
 
 it('shows the member only her clusters', function (): void {
-    $labels = collect(Navigation::forUser($this->member))->pluck('label')->all();
+    $labels = collect(Navigation::forProfile(AccessProfile::forUser($this->member)))->pluck('label')->all();
 
     expect($labels)->toEqualCanonicalizing(['Budget', 'Library', 'Utilities']);
 });
 
 it('shows the admin every cluster', function (): void {
-    expect(Navigation::forUser($this->owner))->toHaveSameSize(Navigation::clusters());
+    expect(Navigation::forProfile(AccessProfile::forUser($this->owner)))->toHaveSameSize(Navigation::clusters());
 });
 
 it('keeps every navigation item inside its own cluster area', function (): void {
-    foreach (Navigation::forUser($this->member) as $cluster) {
+    foreach (Navigation::forProfile(AccessProfile::forUser($this->member)) as $cluster) {
         expect($this->member->canAccess($cluster['area']))->toBeTrue(
             "Cluster {$cluster['label']} leaked to a member",
         );
@@ -53,7 +54,7 @@ it('hides search results from areas the member cannot reach', function (): void 
     Client::factory()->create(['title' => 'Zzleak Client']);
     Book::factory()->create(['name' => 'Zzleak Book']);
 
-    $groups = collect(GlobalSearch::query('Zzleak', $this->member))->pluck('group');
+    $groups = collect(GlobalSearch::query('Zzleak', AccessProfile::forUser($this->member)))->pluck('group');
 
     expect($groups)->toContain('Books')
         ->and($groups)->not->toContain('Clients');
@@ -62,14 +63,14 @@ it('hides search results from areas the member cannot reach', function (): void 
 it('still searches everything for the admin', function (): void {
     Client::factory()->create(['title' => 'Zzleak Client']);
 
-    expect(collect(GlobalSearch::query('Zzleak', $this->owner))->pluck('group'))
+    expect(collect(GlobalSearch::query('Zzleak', AccessProfile::forUser($this->owner)))->pluck('group'))
         ->toContain('Clients');
 });
 
 it('returns nothing rather than everything when the term matches a hidden area only', function (): void {
     Post::factory()->create(['title' => 'Zzleak Post']);
 
-    expect(GlobalSearch::query('Zzleak', $this->member))->toBeEmpty();
+    expect(GlobalSearch::query('Zzleak', AccessProfile::forUser($this->member)))->toBeEmpty();
 });
 
 it('sends the member a dashboard without work or blog panels', function (): void {

@@ -14,14 +14,21 @@ use InvalidArgumentException;
 final class AccessServiceProvider extends ServiceProvider
 {
     /**
-     * Scoped rather than singleton: one profile per request, rebuilt for the
-     * next one.
+     * Bound rather than scoped, deliberately.
+     *
+     * A scoped instance survives for the life of the container, which is one
+     * request under FPM but many requests inside a single test. That made the
+     * access matrix reuse the owner's profile for the member's half of each
+     * case, so every route looked reachable and the suite passed without
+     * testing anything. Correctness in the test that guards this feature is
+     * worth rebuilding a handful of enum arrays per resolution.
      */
     public function register(): void
     {
-        $this->app->scoped(AccessProfile::class, function (Application $app): AccessProfile {
+        $this->app->bind(AccessProfile::class, function (Application $app): AccessProfile {
             $request = $app->make('request');
-            $user = $request->user();
+
+            $user = $app->make('auth')->guard()->user();
 
             if (! $user instanceof User) {
                 return AccessProfile::forUser(null);
