@@ -30,10 +30,26 @@ it('makes the user a passkey user', function (): void {
         ->and($this->admin->hasPasskeysEnabled())->toBeFalse();
 });
 
+/**
+ * The handle is a 32-byte binary HMAC, so it must not be searched for text.
+ *
+ * This assertion used to be `not->toContain((string) $id)`, which asked whether
+ * 32 random bytes happened to include 0x31. They do about one time in eight,
+ * and CI generates a fresh APP_KEY per run — while a local .env pins one, so
+ * the handle never varied and the failure was unreachable outside CI. That is
+ * the intermittent failure recorded against 0.7.1.
+ *
+ * What the test means is checked instead: the handle is stable, it is not the
+ * key, and two users do not share one.
+ */
 it('derives a stable user handle that is not the id', function (): void {
     $handle = $this->admin->getPasskeyUserHandle();
+    $other = User::factory()->create(['email' => 'other@example.test']);
 
-    expect($handle)->toBe($this->admin->getPasskeyUserHandle())->not->toContain((string) $this->admin->id);
+    expect($handle)->toBe($this->admin->getPasskeyUserHandle())
+        ->and($handle)->not->toBe((string) $this->admin->id)
+        ->and(mb_strlen($handle, '8bit'))->toBe(32)
+        ->and($handle)->not->toBe($other->getPasskeyUserHandle());
 });
 
 it('gives authenticators a display name and username', function (): void {

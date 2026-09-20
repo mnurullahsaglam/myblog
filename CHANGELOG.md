@@ -5,6 +5,18 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.10.1] - 2026-09-20
+
+### Fixed
+
+- The intermittent CI failure recorded against 0.7.1, identified and removed.
+  `PasskeyTest` asserted that a 32-byte binary HMAC did not contain the user's
+  id as text, which asks whether random bytes happen to include `0x31` — true
+  about one run in eight. It never failed locally because a local `.env` pins
+  `APP_KEY` and the handle never varied, while CI generates a fresh key per run,
+  so the failure was unreachable outside CI. The test now checks what it meant:
+  the handle is stable, is not the key, is 32 bytes, and differs between users.
+
 ## [0.10.0] - 2026-09-20
 
 ### Added
