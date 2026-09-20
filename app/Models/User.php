@@ -17,7 +17,7 @@ use Laravel\Passkeys\PasskeyAuthenticatable;
 use Override;
 
 /**
- * @property UserRole|null $role Null when the column holds a value the enum does not know
+ * @property UserRole $role
  */
 final class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 {
@@ -52,11 +52,28 @@ final class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
      */
     public function canAccess(Area $area): bool
     {
+        return in_array($area, $this->areas(), true);
+    }
+
+    /**
+     * Every area this user reaches. Empty means they do not belong in the panel
+     * at all.
+     *
+     * The column is read raw rather than through the cast: the cast throws on a
+     * value the enum does not know, and an unreadable role must mean no access
+     * rather than a 500 on every page.
+     *
+     * @return array<int, Area>
+     */
+    public function areas(): array
+    {
         if ($this->isAdmin()) {
-            return true;
+            return Area::cases();
         }
 
-        return $this->role instanceof UserRole && in_array($area, $this->role->areas(), true);
+        $stored = $this->getAttributes()['role'] ?? null;
+
+        return (is_string($stored) ? UserRole::tryFrom($stored) : null)?->areas() ?? [];
     }
 
     /**

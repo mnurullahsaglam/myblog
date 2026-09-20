@@ -383,8 +383,9 @@ git commit -m "feat: give users a role and an area check" -- database/migrations
 
 **Interfaces:**
 - Consumes: `User::canAccess()` from Task 2.
-- Produces: gate `access-area` taking an `Area`, denying as 404. The existing
-  `access-admin` gate stays, now meaning `Area::General`.
+- Produces: gates `access-area` (taking an `Area`, denying as 404) and
+  `access-panel`. `access-admin` is left in place until Task 5 removes its last
+  caller, so no commit leaves the panel unreachable.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -472,11 +473,14 @@ Gate::define('access-area', fn (User $user, Area $area): Response => $user->canA
 Gate::define('access-panel', fn (User $user): bool => $user->areas() !== []);
 ```
 
-**`access-admin` is deleted, not redefined.** The outer route group currently
-carries `can:access-admin`, and that group wraps every admin route including
-Budget and Utilities. Redefining it to mean General would deny the member at the
-door, before any area group ran. Task 4 replaces the outer middleware with
-`can:access-panel`, and the 19 requests lose their `access-admin` call in Task 5.
+**`access-admin` is deleted, not redefined — but not yet.** The outer route
+group currently carries `can:access-admin`, and that group wraps every admin
+route including Budget and Utilities. Redefining it to mean General would deny
+the member at the door, before any area group ran.
+
+Deleting it in this task turns the whole suite red until Task 5 lands, so it
+stays defined here with a comment saying why, and Task 5 deletes it once the
+route group and all 18 requests have moved off it. Every commit stays green.
 
 Add the supporting method to `app/Models/User.php`:
 
