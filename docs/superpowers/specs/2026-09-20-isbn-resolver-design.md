@@ -142,8 +142,9 @@ is better than a wrong one, and `books.publication_date` is a `YEAR` column.
 
 ### `App\Actions\Library\ResolveIsbn`
 
-Orchestrates one lookup: validate the ISBN, check whether a book already holds
-it, call the service, match writer and publisher by name.
+Orchestrates one lookup: check whether a book already holds this ISBN, call the
+service, match writer and publisher by name, and download the cover. It returns
+a stored path rather than a cover id, so the form has nothing left to fetch.
 
 Returns an array shape the form consumes:
 
@@ -154,7 +155,7 @@ Returns an array shape the form consumes:
                   'publication_location' => …],
   'writer'    => ['id' => 2, 'name' => 'George Orwell'] | ['suggestion' => 'George Orwell'] | null,
   'publisher' => ['id' => 7, 'name' => 'Signet Classics'] | ['suggestion' => 'Signet Classics'] | null,
-  'coverId'   => 12054527 | null,
+  'image'     => 'books/3f2a….jpg' | null,   // already downloaded and stored
 ]
 ```
 
