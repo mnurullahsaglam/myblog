@@ -8,6 +8,7 @@ use App\Models\Client;
 use App\Models\Debt;
 use App\Models\Expense;
 use App\Models\Income;
+use App\Models\Invite;
 use App\Models\Invoice;
 use App\Models\Post;
 use App\Models\Project;
@@ -91,6 +92,7 @@ function parameterValue(string $parameter, User $user): Model|string|int
     return match ($parameter) {
         'post' => Post::factory()->create(),
         'category' => Category::factory()->create(),
+        'invite' => Invite::factory()->create(),
         'publisher' => Publisher::factory()->create(),
         'writer' => Writer::factory()->create(),
         'book' => Book::factory()->create(),
@@ -140,6 +142,7 @@ function areaOf(string $routeName): ?string
         'admin.posts.' => 'blog',
         'admin.categories.' => 'general',
         'admin.settings' => 'general',
+        'admin.people.' => 'general',
         'admin.publishers.' => 'library',
         'admin.writers.' => 'library',
         'admin.books.' => 'library',

@@ -48,6 +48,7 @@ final class Navigation
             ]],
             ['label' => 'General', 'icon' => 'pi pi-cog', 'area' => Area::General, 'items' => [
                 ['label' => 'Categories', 'route' => 'admin.categories.index', 'icon' => 'pi pi-tags'],
+                ['label' => 'People', 'route' => 'admin.people.index', 'icon' => 'pi pi-users'],
                 ['label' => 'Settings', 'route' => 'admin.settings', 'icon' => 'pi pi-cog'],
             ]],
         ];

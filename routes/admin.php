@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\Budget\IncomeController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ExportController;
 use App\Http\Controllers\Admin\General\CategoryController;
+use App\Http\Controllers\Admin\General\PeopleController;
 use App\Http\Controllers\Admin\Library\BookController;
 use App\Http\Controllers\Admin\Library\IsbnLookupController;
 use App\Http\Controllers\Admin\Library\PublisherController;
@@ -54,6 +55,11 @@ Route::middleware(['auth', 'can:access-panel'])
         Route::middleware('area:'.Area::General->value)->group(function (): void {
             Route::get('settings', [SettingsController::class, 'edit'])->name('settings');
             Route::put('settings', [SettingsController::class, 'update'])->name('settings.update');
+
+            Route::get('people', [PeopleController::class, 'index'])->name('people.index');
+            Route::post('people', [PeopleController::class, 'store'])->name('people.store');
+            Route::post('people/{invite}/reissue', [PeopleController::class, 'reissue'])->name('people.reissue');
+            Route::delete('people/{invite}', [PeopleController::class, 'revoke'])->name('people.revoke');
 
             Route::delete('categories/bulk', [CategoryController::class, 'bulkDestroy'])->name('categories.bulk-destroy');
             Route::patch('categories/bulk', [CategoryController::class, 'bulkUpdate'])->name('categories.bulk-update');

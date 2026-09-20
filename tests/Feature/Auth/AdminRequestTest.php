@@ -42,5 +42,5 @@ it('declares an area for every admin request', function (): void {
 });
 
 it('covers every request this application has', function (): void {
-    expect(glob(app_path('Http/Requests/Admin/*.php')) ?: [])->toHaveCount(19);
+    expect(glob(app_path('Http/Requests/Admin/*.php')) ?: [])->toHaveCount(20);
 });
