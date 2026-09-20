@@ -131,15 +131,40 @@ it('refuses an export nobody has registered', function (): void {
  * she cannot reach — or hides one she can — fails here.
  */
 it('gives every navigation item a route inside its cluster area', function (): void {
+    $shown = Navigation::forProfile(AccessProfile::forUser($this->member));
+
+    expect($shown)->not->toBeEmpty();
+
+    foreach ($shown as $cluster) {
+        expect($this->member->canAccess($cluster['area']))->toBeTrue(
+            "Cluster {$cluster['label']} is listed but not hers",
+        );
+
+        foreach ($cluster['items'] as $item) {
+            expect($this->actingAs($this->member)->get(route($item['route']))->status())
+                ->not->toBe(404, "{$item['label']} is listed but unreachable");
+        }
+    }
+});
+
+/**
+ * The other direction: anything the navigation does not show her must also be
+ * unreachable, whether it is hidden by its area or by a feature flag.
+ */
+it('makes every navigation item it hides from her unreachable', function (): void {
+    $shownRoutes = collect(Navigation::forProfile(AccessProfile::forUser($this->member)))
+        ->flatMap(fn (array $cluster): array => $cluster['items'])
+        ->pluck('route')
+        ->all();
+
     foreach (Navigation::clusters() as $cluster) {
         foreach ($cluster['items'] as $item) {
-            $reachable = $this->member->canAccess($cluster['area']);
+            if (in_array($item['route'], $shownRoutes, true)) {
+                continue;
+            }
 
-            $response = $this->actingAs($this->member)->get(route($item['route']));
-
-            $reachable
-                ? expect($response->status())->not->toBe(404, "{$item['label']} is listed but unreachable")
-                : expect($response->status())->toBe(404, "{$item['label']} is hidden but still reachable");
+            expect($this->actingAs($this->member)->get(route($item['route']))->status())
+                ->toBe(404, "{$item['label']} is hidden but still reachable");
         }
     }
 });

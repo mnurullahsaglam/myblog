@@ -8,7 +8,9 @@ use App\Enums\Ability;
 use App\Enums\Area;
 use App\Enums\UserRole;
 use App\Models\User;
+use App\Support\Features;
 use InvalidArgumentException;
+use Laravel\Pennant\Feature;
 
 /**
  * Everything the panel is allowed to show this request, in one place.
@@ -23,21 +25,33 @@ final class AccessProfile
     /**
      * @param  array<int, Area>  $areas
      * @param  array<int, Ability>  $abilities
+     * @param  array<string, bool>  $flags
      */
     private function __construct(
         private readonly ?User $user,
         private readonly array $areas,
         private readonly array $abilities,
         private readonly bool $previewing,
+        private readonly bool $privileged,
+        private readonly array $flags,
     ) {}
 
     public static function forUser(?User $user): self
     {
         if (! $user instanceof User) {
-            return new self(null, [], [], false);
+            return new self(null, [], [], false, false, []);
         }
 
-        return new self($user, $user->areas(), $user->abilities(), false);
+        $privileged = $user->abilities() !== [];
+
+        return new self(
+            $user,
+            $user->areas(),
+            $user->abilities(),
+            false,
+            $privileged,
+            $privileged ? [] : self::resolveFlags($user),
+        );
     }
 
     /**
@@ -54,7 +68,7 @@ final class AccessProfile
             throw new InvalidArgumentException('A preview may only narrow what is visible.');
         }
 
-        return new self($user, $areas, $role->abilities(), true);
+        return new self($user, $areas, $role->abilities(), true, false, self::resolveFlags($user));
     }
 
     /**
@@ -73,6 +87,40 @@ final class AccessProfile
     public function allows(Ability $ability): bool
     {
         return in_array($ability, $this->abilities, true);
+    }
+
+    /**
+     * An admin sees every flag. A member sees one only once it is turned on for
+     * her, and a flag nobody declared is always off.
+     */
+    public function feature(string $flag): bool
+    {
+        if (! in_array($flag, Features::ALL, true)) {
+            return false;
+        }
+
+        if ($this->privileged) {
+            return true;
+        }
+
+        return $this->flags[$flag] ?? false;
+    }
+
+    /**
+     * Resolved once per profile, so a page that checks several flags makes one
+     * round trip rather than one per check.
+     *
+     * @return array<string, bool>
+     */
+    private static function resolveFlags(User $user): array
+    {
+        $flags = [];
+
+        foreach (Features::ALL as $flag) {
+            $flags[$flag] = Feature::for($user)->active($flag);
+        }
+
+        return $flags;
     }
 
     public function isPreviewing(): bool

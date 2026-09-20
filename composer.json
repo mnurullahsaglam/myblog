@@ -13,6 +13,7 @@
     "inertiajs/inertia-laravel": "^3.3",
     "laravel/fortify": "^1.39",
     "laravel/framework": "^13.0",
+    "laravel/pennant": "^1.26",
     "laravel/tinker": "^3.0",
     "resend/resend-php": "^1.15",
     "spatie/laravel-sluggable": "^4.0",

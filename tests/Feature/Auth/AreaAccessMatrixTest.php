@@ -25,6 +25,20 @@ use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * Routes hidden by a feature flag rather than by an area.
+ *
+ * The matrix compares the member's answer to the owner's, and a flagged route
+ * answers differently on purpose: it is not finished, so she does not get it
+ * yet. FeatureFlagTest covers these instead. Keep this list short; if it grows,
+ * flags are being used for something they were not meant for.
+ *
+ * @var array<int, string>
+ */
+const FLAG_GATED = [
+    'admin.budget-limits.index',
+];
+
+/**
  * Every admin route, crossed with both roles.
  *
  * Built from the router rather than hand-listed, so a route added next year is
@@ -65,6 +79,10 @@ function adminRoutes(): array
         // The signed download route cannot be reached without a signature, and
         // its guard is the signature, not an area.
         if ($name === 'admin.exports.download') {
+            continue;
+        }
+
+        if (in_array($name, FLAG_GATED, true)) {
             continue;
         }
 

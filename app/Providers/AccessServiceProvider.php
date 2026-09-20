@@ -7,9 +7,11 @@ namespace App\Providers;
 use App\Enums\UserRole;
 use App\Models\User;
 use App\Support\Access\AccessProfile;
+use App\Support\Features;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
+use Laravel\Pennant\Feature;
 
 final class AccessServiceProvider extends ServiceProvider
 {
@@ -48,5 +50,17 @@ final class AccessServiceProvider extends ServiceProvider
                 return AccessProfile::forUser($user);
             }
         });
+    }
+
+    /**
+     * Every flag defaults to off. An admin never reaches this: AccessProfile
+     * short-circuits before asking Pennant, so a flag cannot hide a screen from
+     * the person building it.
+     */
+    public function boot(): void
+    {
+        foreach (Features::ALL as $flag) {
+            Feature::define($flag, fn (): bool => false);
+        }
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Enums\Area;
 use App\Http\Controllers\Admin\Blog\PostController;
+use App\Http\Controllers\Admin\Budget\BudgetLimitController;
 use App\Http\Controllers\Admin\Budget\DebtController;
 use App\Http\Controllers\Admin\Budget\ExpenseController;
 use App\Http\Controllers\Admin\Budget\IncomeController;
@@ -28,6 +29,7 @@ use App\Http\Controllers\Admin\Work\ProjectController;
 use App\Http\Controllers\Admin\Work\RepositoryController;
 use App\Http\Controllers\Admin\Work\TaskBoardController;
 use App\Http\Controllers\Admin\Work\WakaTimeSummaryController;
+use App\Support\Features;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'can:access-panel'])
@@ -127,6 +129,10 @@ Route::middleware(['auth', 'can:access-panel'])
         });
 
         Route::middleware('area:'.Area::Budget->value)->group(function (): void {
+            Route::get('budget-limits', [BudgetLimitController::class, 'index'])
+                ->middleware('feature:'.Features::BudgetLimits)
+                ->name('budget-limits.index');
+
             Route::delete('incomes/bulk', [IncomeController::class, 'bulkDestroy'])->name('incomes.bulk-destroy');
             Route::patch('incomes/bulk', [IncomeController::class, 'bulkUpdate'])->name('incomes.bulk-update');
             Route::resource('incomes', IncomeController::class);
