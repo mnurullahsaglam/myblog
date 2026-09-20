@@ -37,6 +37,10 @@ it('settles rather than going negative when the payment overshoots', function ()
 });
 
 it('creates one expense carrying the debt currency and today as the date', function (): void {
+    // The action reads now() and the assertion reads it again; without freezing,
+    // a run that straddles midnight compares two different days.
+    $this->freezeTime();
+
     $debt = Debt::factory()->create(['amount' => 300, 'currency' => 'USD']);
 
     resolve(PayDebt::class)->handle($debt, 100.0, 'Instalment');
