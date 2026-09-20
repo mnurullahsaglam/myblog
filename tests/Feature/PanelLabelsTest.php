@@ -82,7 +82,7 @@ it('marks every uppercase label as English', function (): void {
         }
     }
 
-    expect($offenders)->toBe([]);
+    expect($offenders)->toBeEmpty('Uppercase labels missing lang="en": '.implode('; ', $offenders));
 });
 
 /**
