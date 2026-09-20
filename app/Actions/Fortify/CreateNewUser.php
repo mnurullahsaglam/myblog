@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Fortify;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -34,12 +35,17 @@ final class CreateNewUser implements CreatesNewUsers
                 Rule::unique(User::class),
             ],
             'password' => $this->passwordRules(),
+            'role' => ['sometimes', Rule::enum(UserRole::class)],
         ])->validate();
 
         return User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
+            // Defaulted here as well as in the column, so this action states the
+            // access decision rather than depending on a schema default to
+            // rescue it.
+            'role' => $input['role'] ?? UserRole::Member->value,
         ]);
     }
 }
