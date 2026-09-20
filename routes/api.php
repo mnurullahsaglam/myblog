@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\V1\General\CategoryController;
 use App\Http\Controllers\Api\V1\Library\BookController;
 use App\Http\Controllers\Api\V1\Library\PublisherController;
 use App\Http\Controllers\Api\V1\Library\WriterController;
+use App\Http\Controllers\Api\V1\MeController;
 use App\Http\Controllers\Api\V1\TokenController;
 use App\Http\Controllers\Api\V1\Utilities\UtilityAccountController;
 use App\Http\Controllers\Api\V1\Utilities\UtilityBillController;
@@ -29,6 +30,8 @@ Route::prefix('v1')->name('api.v1.')->group(function (): void {
 
 Route::middleware('auth:sanctum')->prefix('v1')->name('api.v1.')->group(function (): void {
     Route::delete('tokens/current', [TokenController::class, 'destroy'])->name('tokens.destroy');
+
+    Route::get('me', MeController::class)->name('me');
 
     Route::middleware('area:'.Area::Blog->value)->group(function (): void {
         Route::get('posts/schema', [PostController::class, 'schema'])->name('posts.schema');

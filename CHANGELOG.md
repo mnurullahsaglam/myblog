@@ -5,6 +5,17 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.0] - 2026-09-20
+
+### Added
+
+- `GET /api/v1/me`, returning the signed-in account and the areas and abilities
+  its token reaches. A client builds its navigation from this; without it the
+  only way to learn which areas a person has is to try each one and watch for
+  404s. It reveals nothing to somebody already holding the token, who could probe
+  those endpoints themselves, and a test asserts the areas it reports are the
+  areas that actually answer.
+
 ## [0.14.0] - 2026-09-20
 
 ### Added
