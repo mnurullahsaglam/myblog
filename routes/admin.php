@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ExportController;
 use App\Http\Controllers\Admin\General\CategoryController;
 use App\Http\Controllers\Admin\Library\BookController;
+use App\Http\Controllers\Admin\Library\IsbnLookupController;
 use App\Http\Controllers\Admin\Library\PublisherController;
 use App\Http\Controllers\Admin\Library\WriterController;
 use App\Http\Controllers\Admin\NotificationController;
@@ -62,6 +63,10 @@ Route::middleware(['auth', 'can:access-admin'])
 
         Route::delete('books/bulk', [BookController::class, 'bulkDestroy'])->name('books.bulk-destroy');
         Route::patch('books/bulk', [BookController::class, 'bulkUpdate'])->name('books.bulk-update');
+        // Declared before the resource route so "books/isbn" is not captured by
+        // "books/{book}".
+        Route::post('books/isbn', [IsbnLookupController::class, 'store'])->name('books.isbn');
+        Route::post('books/isbn/relation', [IsbnLookupController::class, 'relation'])->name('books.isbn-relation');
         Route::resource('books', BookController::class)->except(['show']);
 
         Route::delete('clients/bulk', [ClientController::class, 'bulkDestroy'])->name('clients.bulk-destroy');
