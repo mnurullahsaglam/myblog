@@ -7,7 +7,7 @@ namespace App\Http\Resources\Api\V1;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Date;
 
 /**
  * One date format for the whole API.
@@ -45,8 +45,8 @@ abstract class ApiResource extends JsonResource
             $dateOnly = is_string($cast) && ($cast === 'date' || str_starts_with($cast, 'date:'));
 
             $attributes[$key] = $dateOnly
-                ? Carbon::instance($raw)->toDateString()
-                : Carbon::instance($raw)->toIso8601String();
+                ? Date::instance($raw)->toDateString()
+                : Date::instance($raw)->toIso8601String();
         }
 
         return $attributes;

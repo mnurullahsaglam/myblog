@@ -50,6 +50,23 @@ abstract class ApiResourceController extends Controller
      */
     abstract protected function resourceClass(): string;
 
+    /**
+     * The table and form definitions this request may see.
+     *
+     * The client renders its lists and forms from these, exactly as the panel
+     * does, which means the field hiding arrives on the phone without the phone
+     * knowing abilities exist: schema() already filters through AccessProfile.
+     *
+     * @return array<string, mixed>
+     */
+    public function schema(): array
+    {
+        return [
+            'table' => $this->table()->schema(),
+            'form' => $this->form()->schema(),
+        ];
+    }
+
     public function index(Request $request): AnonymousResourceCollection
     {
         $resource = $this->resourceClass();

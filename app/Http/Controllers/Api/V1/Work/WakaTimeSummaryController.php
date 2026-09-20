@@ -17,6 +17,20 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
  */
 final class WakaTimeSummaryController extends Controller
 {
+    /**
+     * No form: this resource is synced from an API and never authored, so there
+     * is nothing for a client to fill in.
+     *
+     * @return array<string, mixed>
+     */
+    public function schema(): array
+    {
+        return [
+            'table' => (new WakaTimeSummaryTable)->schema(),
+            'form' => null,
+        ];
+    }
+
     public function index(Request $request): AnonymousResourceCollection
     {
         return WakaTimeSummaryResource::collection((new WakaTimeSummaryTable)->records($request));
