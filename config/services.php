@@ -56,4 +56,10 @@ return [
     'metals' => [
         'api_key' => env('METALS_API_KEY', ''),
     ],
+
+    'open_library' => [
+        // Identifying the caller raises Open Library's limit from 1 to 3 requests
+        // a second. It is a courtesy, not a credential.
+        'contact' => env('OPEN_LIBRARY_CONTACT', env('ADMIN_EMAIL', '')),
+    ],
 ];
