@@ -29,7 +29,7 @@ it('shows the member only her clusters', function (): void {
 });
 
 it('shows the admin every cluster', function (): void {
-    expect(Navigation::forUser($this->owner))->toHaveCount(count(Navigation::clusters()));
+    expect(Navigation::forUser($this->owner))->toHaveSameSize(Navigation::clusters());
 });
 
 it('keeps every navigation item inside its own cluster area', function (): void {
@@ -69,7 +69,7 @@ it('still searches everything for the admin', function (): void {
 it('returns nothing rather than everything when the term matches a hidden area only', function (): void {
     Post::factory()->create(['title' => 'Zzleak Post']);
 
-    expect(GlobalSearch::query('Zzleak', $this->member))->toBe([]);
+    expect(GlobalSearch::query('Zzleak', $this->member))->toBeEmpty();
 });
 
 it('sends the member a dashboard without work or blog panels', function (): void {

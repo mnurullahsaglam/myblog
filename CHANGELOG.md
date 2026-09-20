@@ -5,6 +5,38 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.0] - 2026-09-20
+
+### Added
+
+- A `role` on each user, `admin` or `member`, mapped to six areas: Blog, Budget,
+  Work, Library, Utilities and General.
+- A `MEMBER_EMAIL` account seeded with access to Budget, Library and Utilities,
+  so a second person in the household can keep the bills and the budget without
+  seeing client work or the blog.
+- `AdminRequest`, an abstract base that makes every admin request declare its
+  area before it can be written. `area()` is abstract, so a new request that
+  forgets the check does not compile.
+- An `area` route middleware, and a generated test crossing all 137 admin routes
+  with both roles.
+
+### Changed
+
+- Admin routes are grouped by area and refuse with a 404 rather than a 403, so a
+  hidden area is indistinguishable from one that does not exist.
+- The navigation, the command palette, the dashboard and the exports each show
+  only the areas the signed-in user can reach. Dashboard panels are omitted
+  rather than emptied, because an empty panel still names its area.
+- `GlobalSearch::query()` now requires the asking user, so a call site cannot
+  quietly search everything.
+- The seeded owner carries the admin role in the column rather than relying on
+  the `ADMIN_EMAIL` bypass.
+
+### Removed
+
+- The `access-admin` gate, replaced by `access-panel` for the door and
+  `access-area` for each area behind it.
+
 ## [0.8.0] - 2026-09-20
 
 ### Added

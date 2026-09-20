@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Actions\Exports\ExportResource;
 use App\Contracts\NotifiesAdmin;
+use App\Enums\Area;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -25,7 +26,7 @@ final class ExportController extends Controller
         // One route serves several resources, so the route group cannot guard
         // this; the area is resolved per resource instead. Unknown and forbidden
         // both 404, which is also what the gate returns.
-        abort_if($area === null, 404);
+        abort_if(! $area instanceof Area, 404);
         abort_unless($request->user()?->can('access-area', $area) ?? false, 404);
 
         $path = $exportResource->handle($resource);
