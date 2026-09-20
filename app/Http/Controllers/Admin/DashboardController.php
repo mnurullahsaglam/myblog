@@ -25,7 +25,7 @@ final class DashboardController extends Controller
      */
     public function __invoke(): Response
     {
-        $profile = app(AccessProfile::class);
+        $profile = resolve(AccessProfile::class);
 
         $props = [];
 

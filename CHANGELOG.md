@@ -5,6 +5,47 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.11.0] - 2026-09-20
+
+### Added
+
+- Abilities: named capabilities beside areas, with `see-client-identity` the
+  first. A column, filter or field declares `hiddenWithout()` and disappears
+  from the schema, the payload, sorting, filtering, the forms and bulk editing
+  together.
+- Incomes that name a client are read-only for anyone without that ability. The
+  row and its amount stay visible, so both people's totals agree.
+- Per-user appearance. Each user keeps their own accent and colour scheme in
+  `users.preferences`, set from Profile; Settings keeps the global default that
+  the public site and signed-out pages use.
+- Feature flags, through Pennant. A flag is always on for an admin and off for a
+  member until enabled, so it can only hide a screen that is not finished. The
+  first one hides the unbuilt budget limits screen.
+- View-as: render the panel as a narrower role, read-only, with a banner that
+  cannot be dismissed while it is on.
+
+### Changed
+
+- Areas, abilities and flags are all answered by one request-scoped
+  `AccessProfile` rather than asked of the user directly.
+- `Income::$source` is a derived label. It reads generically for anyone who may
+  not see which client an income came from, because it previously returned the
+  client's name to everyone.
+
+### Fixed
+
+- The access profile was bound as a scoped instance, which survives the whole
+  container. Inside a test that meant the member's half of every access matrix
+  case reused the owner's profile, so all 136 cases passed without testing
+  anything.
+
+### Security
+
+- Hidden fields are removed server-side, so the value never reaches the browser.
+- A hidden filter or sort applied by hand-editing the query string is ignored.
+- A preview refuses every write, cannot be started by a member, cannot be
+  started from inside another, and cannot widen what the viewer already has.
+
 ## [0.10.2] - 2026-09-20
 
 ### Fixed

@@ -53,7 +53,7 @@ abstract class ResourceTable
      */
     final protected function visibleColumns(): array
     {
-        $profile = app(AccessProfile::class);
+        $profile = resolve(AccessProfile::class);
 
         return array_values(array_filter(
             $this->columns(),
@@ -66,7 +66,7 @@ abstract class ResourceTable
      */
     final protected function visibleFilters(): array
     {
-        $profile = app(AccessProfile::class);
+        $profile = resolve(AccessProfile::class);
 
         return array_values(array_filter(
             $this->filters(),

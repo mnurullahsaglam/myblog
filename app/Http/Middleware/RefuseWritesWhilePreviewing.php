@@ -28,7 +28,7 @@ final class RefuseWritesWhilePreviewing
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $previewing = app(AccessProfile::class)->isPreviewing();
+        $previewing = resolve(AccessProfile::class)->isPreviewing();
         $leaving = $request->routeIs('admin.preview.destroy') || $request->routeIs('logout');
 
         abort_if(

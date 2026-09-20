@@ -39,7 +39,7 @@ final class IncomeRequest extends AdminRequest
             'description' => ['required', 'string', 'max:1000'],
         ];
 
-        if (app(AccessProfile::class)->allows(Ability::SeeClientIdentity)) {
+        if (resolve(AccessProfile::class)->allows(Ability::SeeClientIdentity)) {
             $rules['client_id'] = ['nullable', 'integer', 'exists:clients,id'];
         }
 

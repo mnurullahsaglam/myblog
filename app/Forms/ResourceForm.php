@@ -35,7 +35,7 @@ abstract class ResourceForm
      */
     final protected function visibleFields(): array
     {
-        $profile = app(AccessProfile::class);
+        $profile = resolve(AccessProfile::class);
 
         return array_values(array_filter(
             $this->fields(),

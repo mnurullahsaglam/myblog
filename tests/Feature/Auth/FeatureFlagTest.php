@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Models\User;
 use App\Support\Access\AccessProfile;
 use App\Support\Features;
+use Illuminate\Support\Collection;
 use Laravel\Pennant\Feature;
 
 beforeEach(function (): void {
@@ -48,7 +49,7 @@ it('hides a flagged navigation item from a member', function (): void {
         ->get(route('admin.dashboard'))
         ->assertInertia(fn ($page) => $page->where(
             'navigation',
-            fn (Illuminate\Support\Collection $clusters): bool => $clusters
+            fn (Collection $clusters): bool => $clusters
                 ->flatMap(fn (array $cluster): array => $cluster['items'])
                 ->pluck('label')
                 ->doesntContain('Budget limits'),
@@ -60,7 +61,7 @@ it('shows it to the owner', function (): void {
         ->get(route('admin.dashboard'))
         ->assertInertia(fn ($page) => $page->where(
             'navigation',
-            fn (Illuminate\Support\Collection $clusters): bool => $clusters
+            fn (Collection $clusters): bool => $clusters
                 ->flatMap(fn (array $cluster): array => $cluster['items'])
                 ->pluck('label')
                 ->contains('Budget limits'),

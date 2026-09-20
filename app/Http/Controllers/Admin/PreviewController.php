@@ -23,7 +23,7 @@ final class PreviewController extends Controller
         $user = $request->user();
 
         abort_unless($user !== null && $user->abilities() !== [], 404);
-        abort_if(app(AccessProfile::class)->isPreviewing(), 403);
+        abort_if(resolve(AccessProfile::class)->isPreviewing(), 403);
 
         $role = UserRole::tryFrom($request->string('role')->toString());
 

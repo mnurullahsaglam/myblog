@@ -23,7 +23,7 @@ final class EnsureFeatureEnabled
      */
     public function handle(Request $request, Closure $next, string $flag): Response
     {
-        abort_unless(app(AccessProfile::class)->feature($flag), 404);
+        abort_unless(resolve(AccessProfile::class)->feature($flag), 404);
 
         return $next($request);
     }

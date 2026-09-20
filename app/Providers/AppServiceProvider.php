@@ -67,14 +67,14 @@ final class AppServiceProvider extends ServiceProvider
         Gate::define('access-area', function (User $user, Area|string $area): Response {
             $area = $area instanceof Area ? $area : Area::tryFrom($area);
 
-            return $area instanceof Area && app(AccessProfile::class)->canAccess($area)
+            return $area instanceof Area && resolve(AccessProfile::class)->canAccess($area)
                 ? Response::allow()
                 : Response::denyAsNotFound();
         });
 
-        Gate::define('access-panel', fn (User $user): bool => app(AccessProfile::class)->areas() !== []);
+        Gate::define('access-panel', fn (User $user): bool => resolve(AccessProfile::class)->areas() !== []);
 
-        Gate::define('has-ability', fn (User $user, Ability $ability): bool => app(AccessProfile::class)->allows($ability));
+        Gate::define('has-ability', fn (User $user, Ability $ability): bool => resolve(AccessProfile::class)->allows($ability));
 
         View::composer('app', function (\Illuminate\View\View $view): void {
             $appearance = Appearance::forUser(auth()->user());

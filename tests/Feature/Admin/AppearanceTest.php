@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\Setting;
 use App\Models\User;
+use App\Support\Theme\AccentRamps;
 use App\Support\Theme\Appearance;
 
 beforeEach(function (): void {
@@ -67,8 +68,8 @@ it('carries her accent in the first paint', function (): void {
 
     $html = $this->actingAs($this->member->fresh())->get(route('admin.dashboard'))->getContent();
 
-    $rose = App\Support\Theme\AccentRamps::cssVariables('rose');
-    $emerald = App\Support\Theme\AccentRamps::cssVariables('emerald');
+    $rose = AccentRamps::cssVariables('rose');
+    $emerald = AccentRamps::cssVariables('emerald');
 
     expect($html)->toContain($rose)->and($html)->not->toContain($emerald);
 });

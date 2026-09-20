@@ -102,7 +102,7 @@ final class Income extends Model
      */
     protected function getSourceAttribute(): string
     {
-        if ($this->client_id !== null && ! app(AccessProfile::class)->allows(Ability::SeeClientIdentity)) {
+        if ($this->client_id !== null && ! resolve(AccessProfile::class)->allows(Ability::SeeClientIdentity)) {
             return 'Client work';
         }
 

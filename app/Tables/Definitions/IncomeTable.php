@@ -74,7 +74,7 @@ final class IncomeTable extends ResourceTable
     #[Override]
     protected function isRowEditable(Model $record): bool
     {
-        return app(AccessProfile::class)->allows(Ability::SeeClientIdentity)
+        return resolve(AccessProfile::class)->allows(Ability::SeeClientIdentity)
             || $record->getAttribute('client_id') === null;
     }
 }

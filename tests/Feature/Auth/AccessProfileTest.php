@@ -31,7 +31,7 @@ it('answers for a member', function (): void {
 it('answers nothing for a guest', function (): void {
     $profile = AccessProfile::forUser(null);
 
-    expect($profile->areas())->toBe([])
+    expect($profile->areas())->toBeEmpty()
         ->and($profile->allows(Ability::SeeClientIdentity))->toBeFalse()
         ->and($profile->user())->toBeNull();
 });
@@ -79,10 +79,10 @@ it('reflects the user authenticated at the moment it is resolved', function (): 
     $member = User::factory()->member()->create(['email' => 'her@example.test']);
 
     $this->actingAs($owner);
-    expect(app(AccessProfile::class)->allows(Ability::SeeClientIdentity))->toBeTrue();
+    expect(resolve(AccessProfile::class)->allows(Ability::SeeClientIdentity))->toBeTrue();
 
     $this->actingAs($member);
-    expect(app(AccessProfile::class)->allows(Ability::SeeClientIdentity))->toBeFalse();
+    expect(resolve(AccessProfile::class)->allows(Ability::SeeClientIdentity))->toBeFalse();
 });
 
 /**

@@ -20,7 +20,7 @@ use Laravel\Pennant\Feature;
  * only some of them would report a screen as hidden while its route stayed open,
  * which is worse than having no preview at all.
  */
-final class AccessProfile
+final readonly class AccessProfile
 {
     /**
      * @param  array<int, Area>  $areas
@@ -28,12 +28,12 @@ final class AccessProfile
      * @param  array<string, bool>  $flags
      */
     private function __construct(
-        private readonly ?User $user,
-        private readonly array $areas,
-        private readonly array $abilities,
-        private readonly bool $previewing,
-        private readonly bool $privileged,
-        private readonly array $flags,
+        private ?User $user,
+        private array $areas,
+        private array $abilities,
+        private bool $previewing,
+        private bool $privileged,
+        private array $flags,
     ) {}
 
     public static function forUser(?User $user): self
@@ -64,9 +64,7 @@ final class AccessProfile
     {
         $areas = $role->areas();
 
-        if (count($areas) >= count($user->areas())) {
-            throw new InvalidArgumentException('A preview may only narrow what is visible.');
-        }
+        throw_if(count($areas) >= count($user->areas()), InvalidArgumentException::class, 'A preview may only narrow what is visible.');
 
         return new self($user, $areas, $role->abilities(), true, false, self::resolveFlags($user));
     }

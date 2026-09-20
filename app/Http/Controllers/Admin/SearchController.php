@@ -19,7 +19,7 @@ final class SearchController extends Controller
         abort_if($user === null, 401);
 
         return response()->json([
-            'results' => GlobalSearch::query($request->string('q')->toString(), app(AccessProfile::class)),
+            'results' => GlobalSearch::query($request->string('q')->toString(), resolve(AccessProfile::class)),
         ]);
     }
 }

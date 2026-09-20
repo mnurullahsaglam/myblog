@@ -10,7 +10,7 @@ it('gives an admin every ability', function (): void {
 });
 
 it('gives a member none', function (): void {
-    expect(UserRole::Member->abilities())->toBe([]);
+    expect(UserRole::Member->abilities())->toBeEmpty();
 });
 
 /**

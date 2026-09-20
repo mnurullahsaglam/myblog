@@ -41,14 +41,14 @@ final class HandleInertiaRequests extends Middleware
                 ],
             ],
 
-            'navigation' => fn (): array => Navigation::forProfile(app(AccessProfile::class)),
+            'navigation' => fn (): array => Navigation::forProfile(resolve(AccessProfile::class)),
 
             'appearance' => fn (): array => Appearance::forUser($user),
 
             'preview' => fn (): array => [
-                'active' => app(AccessProfile::class)->isPreviewing(),
+                'active' => resolve(AccessProfile::class)->isPreviewing(),
                 'role' => $request->session()->get('preview_role'),
-                'available' => $user !== null && $user->abilities() !== [] && ! app(AccessProfile::class)->isPreviewing(),
+                'available' => $user !== null && $user->abilities() !== [] && ! resolve(AccessProfile::class)->isPreviewing(),
             ],
 
             'flash' => [

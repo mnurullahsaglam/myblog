@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Enums\UserRole;
+use App\Models\Client;
 use App\Models\Income;
 use App\Models\User;
 
@@ -77,7 +78,7 @@ it('hides the same dashboard panels from him as from her', function (): void {
 });
 
 it('hides the client from him while previewing', function (): void {
-    $client = App\Models\Client::factory()->create(['title' => 'Zzpreview Client']);
+    $client = Client::factory()->create(['title' => 'Zzpreview Client']);
     Income::factory()->create(['client_id' => $client->id]);
 
     $this->actingAs($this->owner)

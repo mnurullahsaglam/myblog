@@ -54,7 +54,7 @@ final class IncomeController extends AdminResourceController
     #[Override]
     protected function isRecordEditable(Model $record): bool
     {
-        if (app(AccessProfile::class)->allows(Ability::SeeClientIdentity)) {
+        if (resolve(AccessProfile::class)->allows(Ability::SeeClientIdentity)) {
             return true;
         }
 

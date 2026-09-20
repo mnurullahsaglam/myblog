@@ -31,7 +31,7 @@ final class EnsureAreaAccess
         // reports it.
         abort_if($resolved === null, 404);
 
-        abort_unless(app(AccessProfile::class)->canAccess($resolved), 404);
+        abort_unless(resolve(AccessProfile::class)->canAccess($resolved), 404);
 
         return $next($request);
     }
