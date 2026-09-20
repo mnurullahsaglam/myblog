@@ -1,7 +1,7 @@
 <x-mail::message>
 # You have been invited
 
-{{ $invitedByName }} has invited you to {{ config('app.name') }}.
+You have been invited to {{ config('app.name') }}@if ($invitedByName !== config('app.name')) by {{ $invitedByName }}@endif.
 
 The link below works once and expires in 48 hours.
 

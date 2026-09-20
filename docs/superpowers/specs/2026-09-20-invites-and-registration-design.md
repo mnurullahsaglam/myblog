@@ -25,10 +25,14 @@ was scaffolding, and this replaces it.
 - **Email verification as a Fortify feature.** Covered under *Verification*
   below: invited addresses are already proven, and enabling the feature would
   wall off the accounts that already exist.
-- **A real queue.** `QUEUE_CONNECTION=sync` stays, so the invite mail sends
-  inside the request. `InviteMail` still implements `ShouldQueue`, because this
-  application's architecture test requires it of every mailable and sync makes
-  it a no-op today — but no worker is introduced here.
+- **Queue infrastructure.** `InviteMail` implements `ShouldQueue`, because this
+  application's architecture test requires it of every mailable. Note that
+  `QUEUE_CONNECTION=database` here, not `sync` — an earlier draft of this spec
+  said otherwise, reading the `sync` that `phpunit.xml` pins for tests as if it
+  were the application's setting. **Invites therefore do not send unless a
+  worker is running.** `composer run dev` runs `queue:listen`, so development is
+  covered; any deployment must run a worker or invite mail will queue silently
+  and never arrive. The panel's copyable link is what stops that being fatal.
 
 ---
 
