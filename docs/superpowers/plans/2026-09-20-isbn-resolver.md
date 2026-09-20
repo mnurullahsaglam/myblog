@@ -1066,9 +1066,10 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Reuse a writer or publisher by name, or create one carrying just that name.
  *
- * Matching relies on MySQL's case insensitive default collation rather than
- * wrapping the column in LOWER(), which would stop an index being used. Neither
- * table has a unique index on name, so a tie goes to the lowest id.
+ * Matching lowercases both sides explicitly rather than leaning on the
+ * database's collation: MySQL compares case insensitively by default and SQLite
+ * does not, and the suite runs on SQLite. Neither table has a unique index on
+ * name, so a tie goes to the lowest id.
  */
 final class FindOrCreateNamedRecord
 {
@@ -1079,7 +1080,10 @@ final class FindOrCreateNamedRecord
     {
         $name = trim($name);
 
-        $existing = $modelClass::query()->where('name', $name)->orderBy('id')->first();
+        $existing = $modelClass::query()
+            ->whereRaw('LOWER(name) = ?', [mb_strtolower($name)])
+            ->orderBy('id')
+            ->first();
 
         if ($existing instanceof Model) {
             return $existing;
@@ -1360,7 +1364,10 @@ final readonly class ResolveIsbn
             return null;
         }
 
-        $record = $modelClass::query()->where('name', $name)->orderBy('id')->first();
+        $record = $modelClass::query()
+            ->whereRaw('LOWER(name) = ?', [mb_strtolower($name)])
+            ->orderBy('id')
+            ->first();
 
         if ($record instanceof Model) {
             return ['id' => (int) $record->getKey(), 'name' => (string) $record->getAttribute('name')];

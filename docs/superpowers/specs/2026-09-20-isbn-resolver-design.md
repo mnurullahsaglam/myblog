@@ -159,9 +159,11 @@ Returns an array shape the form consumes:
 ]
 ```
 
-**Matching** is case-insensitive on `name`. MySQL's default collation is
-already case-insensitive, so this is a plain `where('name', $name)` — wrapping
-it in `LOWER()` would only stop an index being used. Neither `writers` nor
+**Matching** is case-insensitive on `name`, done by lowercasing both sides
+explicitly. MySQL's default collation would do it for free, but SQLite's does
+not, and the test suite runs on SQLite — leaning on collation would mean tests
+and production disagreed. These tables hold tens of rows, so the lost index is
+worth the certainty. Neither `writers` nor
 `publishers` has a unique index on `name`, so a tie is resolved by lowest id.
 No row is ever created here.
 
