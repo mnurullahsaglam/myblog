@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\Area;
 use App\Support\Theme\AccentRamps;
 use App\Support\Theme\Appearance;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Override;
 
-final class SettingsRequest extends FormRequest
+final class SettingsRequest extends AdminRequest
 {
-    public function authorize(): bool
+    #[Override]
+    protected function area(): Area
     {
-        return $this->user()?->can('access-admin') ?? false;
+        return Area::General;
     }
 
     /**

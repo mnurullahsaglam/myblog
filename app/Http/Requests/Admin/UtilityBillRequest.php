@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\Area;
 use App\Models\UtilityAccount;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
+use Override;
 
-final class UtilityBillRequest extends FormRequest
+final class UtilityBillRequest extends AdminRequest
 {
-    public function authorize(): bool
+    #[Override]
+    protected function area(): Area
     {
-        return $this->user()?->can('access-admin') ?? false;
+        return Area::Utilities;
     }
 
     /**

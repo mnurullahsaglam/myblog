@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Enums\Area;
+use Override;
 
-final class ProjectRequest extends FormRequest
+final class ProjectRequest extends AdminRequest
 {
-    public function authorize(): bool
+    #[Override]
+    protected function area(): Area
     {
-        return $this->user()?->can('access-admin') ?? false;
+        return Area::Work;
     }
 
     /**

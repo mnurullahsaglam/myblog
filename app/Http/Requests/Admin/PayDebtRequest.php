@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\Area;
 use App\Models\Debt;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
+use Override;
 
-final class PayDebtRequest extends FormRequest
+final class PayDebtRequest extends AdminRequest
 {
-    public function authorize(): bool
+    #[Override]
+    protected function area(): Area
     {
-        return $this->user()?->can('access-admin') ?? false;
+        return Area::Budget;
     }
 
     /**

@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Enums\Area;
 use Illuminate\Validation\Rule;
+use Override;
 
-final class MoveTaskRequest extends FormRequest
+final class MoveTaskRequest extends AdminRequest
 {
     /** @var array<int, string> */
     public const array STATUSES = ['todo', 'in_progress', 'completed'];
 
-    public function authorize(): bool
+    #[Override]
+    protected function area(): Area
     {
-        return $this->user()?->can('access-admin') ?? false;
+        return Area::Work;
     }
 
     /**

@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\Area;
 use App\Models\Category;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Override;
 
-final class CategoryRequest extends FormRequest
+final class CategoryRequest extends AdminRequest
 {
-    public function authorize(): bool
+    #[Override]
+    protected function area(): Area
     {
-        return $this->user()?->can('access-admin') ?? false;
+        return Area::General;
     }
 
     /**

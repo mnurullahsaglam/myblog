@@ -52,10 +52,6 @@ final class AppServiceProvider extends ServiceProvider
 
         RedirectIfAuthenticated::redirectUsing(fn (): string => route('admin.dashboard'));
 
-        // Superseded by access-panel and access-area; kept only until the last
-        // caller moves over, so no commit leaves the panel unreachable.
-        Gate::define('access-admin', fn (User $user): bool => $user->isAdmin());
-
         // denyAsNotFound() is Laravel's own mechanism, so a refusal becomes a
         // genuine 404 rather than a faked exception. A forbidden URL and a
         // nonexistent one are indistinguishable, which is what was asked for.

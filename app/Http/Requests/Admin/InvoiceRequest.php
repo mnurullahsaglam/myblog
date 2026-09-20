@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\Area;
 use App\Enums\Currencies;
 use App\Models\Invoice;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Override;
 
-final class InvoiceRequest extends FormRequest
+final class InvoiceRequest extends AdminRequest
 {
-    public function authorize(): bool
+    #[Override]
+    protected function area(): Area
     {
-        return $this->user()?->can('access-admin') ?? false;
+        return Area::Work;
     }
 
     /**
