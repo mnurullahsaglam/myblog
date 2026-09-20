@@ -39,6 +39,9 @@ final class Navigation
                 ['label' => 'Writers', 'route' => 'admin.writers.index', 'icon' => 'pi pi-user'],
                 ['label' => 'Publishers', 'route' => 'admin.publishers.index', 'icon' => 'pi pi-building'],
             ]],
+            ['label' => 'Utilities', 'icon' => 'pi pi-bolt', 'items' => [
+                ['label' => 'Accounts', 'route' => 'admin.utility-accounts.index', 'icon' => 'pi pi-id-card'],
+            ]],
             ['label' => 'General', 'icon' => 'pi pi-cog', 'items' => [
                 ['label' => 'Categories', 'route' => 'admin.categories.index', 'icon' => 'pi pi-tags'],
                 ['label' => 'Settings', 'route' => 'admin.settings', 'icon' => 'pi pi-cog'],

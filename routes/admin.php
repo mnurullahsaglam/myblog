@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SearchController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\Utilities\UtilityAccountController;
 use App\Http\Controllers\Admin\Work\ClientController;
 use App\Http\Controllers\Admin\Work\CodingDashboardController;
 use App\Http\Controllers\Admin\Work\InvoiceController;
@@ -68,6 +69,10 @@ Route::middleware(['auth', 'can:access-admin'])
         Route::post('books/isbn', [IsbnLookupController::class, 'store'])->name('books.isbn');
         Route::post('books/isbn/relation', [IsbnLookupController::class, 'relation'])->name('books.isbn-relation');
         Route::resource('books', BookController::class)->except(['show']);
+
+        Route::delete('utility-accounts/bulk', [UtilityAccountController::class, 'bulkDestroy'])->name('utility-accounts.bulk-destroy');
+        Route::patch('utility-accounts/bulk', [UtilityAccountController::class, 'bulkUpdate'])->name('utility-accounts.bulk-update');
+        Route::resource('utility-accounts', UtilityAccountController::class)->except(['show']);
 
         Route::delete('clients/bulk', [ClientController::class, 'bulkDestroy'])->name('clients.bulk-destroy');
         Route::patch('clients/bulk', [ClientController::class, 'bulkUpdate'])->name('clients.bulk-update');

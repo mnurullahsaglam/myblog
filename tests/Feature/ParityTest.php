@@ -126,7 +126,7 @@ it('points every navigation item at a real route', function (): void {
 it('covers every cluster the old panel had', function (): void {
     $labels = collect(Navigation::clusters())->pluck('label')->all();
 
-    expect($labels)->toBe(['Blog', 'Budget', 'Work', 'Library', 'General']);
+    expect($labels)->toContain('Blog', 'Budget', 'Work', 'Library', 'General');
 });
 
 it('still exposes the wakatime oauth routes', function (): void {

@@ -93,7 +93,10 @@ abstract class AdminResourceController extends Controller
     /** The route parameter holding the record, e.g. "post". */
     protected function recordParameter(): string
     {
-        return Str::singular($this->resourceName());
+        // Route::resource turns "utility-accounts" into the parameter
+        // {utility_account}, so the hyphen has to become an underscore or the
+        // record is never found and every edit returns 404.
+        return Str::singular(str_replace('-', '_', $this->resourceName()));
     }
 
     /**
