@@ -162,6 +162,7 @@ watch(
     <div
       v-if="!env.isProduction"
       class="border-surface-200 bg-primary/10 text-primary border-b py-1 text-center font-mono text-[11px] tracking-[0.06em] uppercase dark:border-[#272B35]"
+      lang="en"
     >
       {{ env.name }}
     </div>

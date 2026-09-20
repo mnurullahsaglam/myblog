@@ -145,7 +145,7 @@ function clearAll() {
     </div>
 
     <div v-if="activeChips.length" class="flex flex-wrap items-center gap-2">
-      <span class="text-surface-500 font-mono text-[11px] tracking-[0.06em] uppercase">Active filters</span>
+      <span class="text-surface-500 font-mono text-[11px] tracking-[0.06em] uppercase" lang="en">Active filters</span>
 
       <Chip
         v-for="chip in activeChips"

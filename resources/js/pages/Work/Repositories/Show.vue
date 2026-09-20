@@ -62,7 +62,7 @@ function isMono(field) {
     <div class="border-surface-200 bg-surface-0 rounded-lg border p-4 dark:border-[#272B35] dark:bg-[#15171C]">
       <dl class="grid gap-x-8 gap-y-4 sm:grid-cols-2">
         <div v-for="field in fields" :key="field.key">
-          <dt class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase">
+          <dt class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase" lang="en">
             {{ field.label }}
           </dt>
           <dd class="mt-1 text-[13px] break-words" :class="isMono(field) ? 'font-mono tabular-nums' : ''">

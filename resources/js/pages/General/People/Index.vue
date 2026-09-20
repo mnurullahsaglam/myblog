@@ -86,7 +86,9 @@ function isPending(row) {
 
       <section>
         <header class="mb-3 flex items-center justify-between">
-          <h2 class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase">Accounts</h2>
+          <h2 class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase" lang="en">
+            Accounts
+          </h2>
         </header>
 
         <DataTable :value="users.rows.data" data-key="id" size="small">
@@ -98,7 +100,9 @@ function isPending(row) {
 
       <section>
         <header class="mb-3 flex items-center justify-between">
-          <h2 class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase">Invitations</h2>
+          <h2 class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase" lang="en">
+            Invitations
+          </h2>
           <Button label="Invite someone" icon="pi pi-plus" size="small" @click="dialogOpen = true" />
         </header>
 
@@ -126,7 +130,9 @@ function isPending(row) {
       </section>
       <section>
         <header class="mb-3 flex items-center justify-between">
-          <h2 class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase">Devices</h2>
+          <h2 class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase" lang="en">
+            Devices
+          </h2>
         </header>
 
         <DataTable :value="devices" data-key="id" size="small">
@@ -148,7 +154,10 @@ function isPending(row) {
     <Dialog v-model:visible="dialogOpen" modal header="Invite someone" :style="{ width: '24rem' }">
       <form class="flex flex-col gap-4" @submit.prevent="submit">
         <div class="flex flex-col gap-1.5">
-          <label for="email" class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase"
+          <label
+            for="email"
+            class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase"
+            lang="en"
             >Email</label
           >
           <InputText id="email" v-model="form.email" type="email" fluid :invalid="Boolean(form.errors.email)" />
@@ -156,7 +165,10 @@ function isPending(row) {
         </div>
 
         <div class="flex flex-col gap-1.5">
-          <label for="role" class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase"
+          <label
+            for="role"
+            class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase"
+            lang="en"
             >Role</label
           >
           <Select

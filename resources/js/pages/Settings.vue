@@ -101,7 +101,7 @@ const UPLOADS = [
           <TabPanel value="appearance">
             <div class="flex flex-col gap-6 pt-2">
               <div class="flex flex-col gap-2">
-                <span :class="labelClass">Accent</span>
+                <span :class="labelClass" lang="en">Accent</span>
                 <AccentPicker v-model="form.appearance.accent" :accents="accents" />
                 <small class="text-surface-500">
                   Used for primary actions and active states. Filled accents always take dark text.
@@ -109,7 +109,7 @@ const UPLOADS = [
               </div>
 
               <div class="flex flex-col gap-2">
-                <span :class="labelClass">Colour scheme</span>
+                <span :class="labelClass" lang="en">Colour scheme</span>
                 <SelectButton
                   v-model="form.appearance.color_scheme"
                   :options="schemes"
@@ -125,7 +125,7 @@ const UPLOADS = [
           <TabPanel value="site">
             <div class="flex flex-col gap-4 pt-2">
               <div v-for="[key, label] in TEXT_FIELDS.site_info" :key="key" class="flex flex-col gap-1.5">
-                <label :for="key" :class="labelClass">{{ label }}</label>
+                <label :for="key" :class="labelClass" lang="en">{{ label }}</label>
                 <InputText
                   :id="key"
                   v-model="form.site_info[key]"
@@ -138,7 +138,7 @@ const UPLOADS = [
               </div>
 
               <div class="flex flex-col gap-1.5">
-                <label for="site_description" :class="labelClass">Site description</label>
+                <label for="site_description" :class="labelClass" lang="en">Site description</label>
                 <Textarea id="site_description" v-model="form.site_info.site_description" :rows="3" />
               </div>
             </div>
@@ -147,18 +147,18 @@ const UPLOADS = [
           <TabPanel value="meta">
             <div class="flex flex-col gap-4 pt-2">
               <div class="flex flex-col gap-1.5">
-                <label for="meta_title" :class="labelClass">Meta title</label>
+                <label for="meta_title" :class="labelClass" lang="en">Meta title</label>
                 <InputText id="meta_title" v-model="form.meta.meta_title" fluid />
               </div>
 
               <div class="flex flex-col gap-1.5">
-                <label for="meta_description" :class="labelClass">Meta description</label>
+                <label for="meta_description" :class="labelClass" lang="en">Meta description</label>
                 <Textarea id="meta_description" v-model="form.meta.meta_description" :rows="3" />
                 <small class="text-surface-500">160 characters at most.</small>
               </div>
 
               <div class="flex flex-col gap-1.5">
-                <label :class="labelClass">Keywords</label>
+                <label :class="labelClass" lang="en">Keywords</label>
                 <AutoComplete
                   v-model="form.meta.meta_keywords"
                   multiple
@@ -169,17 +169,17 @@ const UPLOADS = [
               </div>
 
               <div class="flex flex-col gap-1.5">
-                <label for="og_title" :class="labelClass">Open Graph title</label>
+                <label for="og_title" :class="labelClass" lang="en">Open Graph title</label>
                 <InputText id="og_title" v-model="form.meta.og_title" fluid />
               </div>
 
               <div class="flex flex-col gap-1.5">
-                <label for="og_description" :class="labelClass">Open Graph description</label>
+                <label for="og_description" :class="labelClass" lang="en">Open Graph description</label>
                 <Textarea id="og_description" v-model="form.meta.og_description" :rows="3" />
               </div>
 
               <div class="flex flex-col gap-1.5">
-                <label :class="labelClass">Open Graph image</label>
+                <label :class="labelClass" lang="en">Open Graph image</label>
                 <img
                   v-if="typeof form.meta.og_image === 'string' && form.meta.og_image"
                   :src="`/storage/${form.meta.og_image}`"
@@ -202,7 +202,7 @@ const UPLOADS = [
           <TabPanel value="branding">
             <div class="flex flex-col gap-5 pt-2">
               <div v-for="[group, key, label] in UPLOADS" :key="key" class="flex flex-col gap-1.5">
-                <label :class="labelClass">{{ label }}</label>
+                <label :class="labelClass" lang="en">{{ label }}</label>
                 <img
                   v-if="typeof form[group][key] === 'string' && form[group][key]"
                   :src="`/storage/${form[group][key]}`"
@@ -226,11 +226,11 @@ const UPLOADS = [
 
               <div class="grid gap-4 sm:grid-cols-2">
                 <div class="flex flex-col gap-1.5">
-                  <label for="primary_color" :class="labelClass">Primary colour</label>
+                  <label for="primary_color" :class="labelClass" lang="en">Primary colour</label>
                   <InputText id="primary_color" v-model="form.branding.primary_color" fluid />
                 </div>
                 <div class="flex flex-col gap-1.5">
-                  <label for="secondary_color" :class="labelClass">Secondary colour</label>
+                  <label for="secondary_color" :class="labelClass" lang="en">Secondary colour</label>
                   <InputText id="secondary_color" v-model="form.branding.secondary_color" fluid />
                 </div>
               </div>
@@ -240,7 +240,7 @@ const UPLOADS = [
           <TabPanel value="social">
             <div class="flex flex-col gap-4 pt-2">
               <div v-for="[key, label] in TEXT_FIELDS.social" :key="key" class="flex flex-col gap-1.5">
-                <label :for="key" :class="labelClass">{{ label }}</label>
+                <label :for="key" :class="labelClass" lang="en">{{ label }}</label>
                 <InputText
                   :id="key"
                   v-model="form.social[key]"
@@ -258,13 +258,13 @@ const UPLOADS = [
           <TabPanel value="contact">
             <div class="flex flex-col gap-4 pt-2">
               <div class="flex flex-col gap-1.5">
-                <label for="address" :class="labelClass">Address</label>
+                <label for="address" :class="labelClass" lang="en">Address</label>
                 <Textarea id="address" v-model="form.contact.address" :rows="2" />
               </div>
 
               <div class="grid gap-4 sm:grid-cols-2">
                 <div v-for="[key, label] in TEXT_FIELDS.contact" :key="key" class="flex flex-col gap-1.5">
-                  <label :for="key" :class="labelClass">{{ label }}</label>
+                  <label :for="key" :class="labelClass" lang="en">{{ label }}</label>
                   <InputText :id="key" v-model="form.contact[key]" fluid />
                 </div>
               </div>

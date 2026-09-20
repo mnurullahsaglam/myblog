@@ -104,12 +104,14 @@ function disableTwoFactor() {
 
         <div class="flex flex-col gap-6">
           <div class="flex flex-col gap-2">
-            <span class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase">Accent</span>
+            <span class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase" lang="en"
+              >Accent</span
+            >
             <AccentPicker v-model="appearanceForm.accent" :accents="accents" />
           </div>
 
           <div class="flex flex-col gap-2">
-            <span class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase"
+            <span class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase" lang="en"
               >Colour scheme</span
             >
             <SelectButton
@@ -135,6 +137,7 @@ function disableTwoFactor() {
             <label
               for="current_password"
               class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase"
+              lang="en"
               >Current password</label
             >
             <Password
@@ -154,6 +157,7 @@ function disableTwoFactor() {
             <label
               for="password"
               class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase"
+              lang="en"
               >New password</label
             >
             <Password
@@ -172,6 +176,7 @@ function disableTwoFactor() {
             <label
               for="password_confirmation"
               class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase"
+              lang="en"
               >Confirm new password</label
             >
             <Password

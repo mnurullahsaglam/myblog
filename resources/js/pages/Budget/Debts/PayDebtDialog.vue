@@ -58,7 +58,7 @@ const labelClass = 'font-mono text-[11px] font-semibold uppercase tracking-[0.06
       </p>
 
       <div class="flex flex-col gap-1.5">
-        <label for="payment_amount" :class="labelClass">Payment amount</label>
+        <label for="payment_amount" :class="labelClass" lang="en">Payment amount</label>
         <InputNumber
           id="payment_amount"
           v-model="form.payment_amount"
@@ -75,7 +75,7 @@ const labelClass = 'font-mono text-[11px] font-semibold uppercase tracking-[0.06
       </div>
 
       <div class="flex flex-col gap-1.5">
-        <label for="payment_description" :class="labelClass">Description</label>
+        <label for="payment_description" :class="labelClass" lang="en">Description</label>
         <Textarea
           id="payment_description"
           v-model="form.payment_description"
@@ -88,7 +88,7 @@ const labelClass = 'font-mono text-[11px] font-semibold uppercase tracking-[0.06
       </div>
 
       <div class="flex flex-col gap-1.5">
-        <label :class="labelClass">Receipt</label>
+        <label :class="labelClass" lang="en">Receipt</label>
         <FileUpload
           mode="basic"
           accept="image/*,application/pdf"

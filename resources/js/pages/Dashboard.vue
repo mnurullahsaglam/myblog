@@ -31,7 +31,7 @@ const STATUS_LABEL = { todo: 'To do', in_progress: 'In progress' }
     <div class="flex flex-col gap-8">
       <section v-for="[key, title, routeName] in sections" :key="key">
         <header class="mb-3 flex items-center justify-between">
-          <h2 class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase">
+          <h2 class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase" lang="en">
             {{ title }}
           </h2>
           <Link :href="route(routeName)" class="text-surface-500 hover:text-primary font-mono text-[11px]">

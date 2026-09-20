@@ -95,19 +95,19 @@ const labelClass = 'font-mono text-[11px] font-semibold uppercase tracking-[0.06
   >
     <form class="flex flex-col gap-4" @submit.prevent="submit">
       <div class="flex flex-col gap-1.5">
-        <label for="title" :class="labelClass">Title</label>
+        <label for="title" :class="labelClass" lang="en">Title</label>
         <InputText id="title" v-model="form.title" autofocus fluid :invalid="Boolean(form.errors.title)" />
         <small v-if="form.errors.title" class="text-[#D95757]">{{ form.errors.title }}</small>
       </div>
 
       <div class="flex flex-col gap-1.5">
-        <label for="description" :class="labelClass">Description</label>
+        <label for="description" :class="labelClass" lang="en">Description</label>
         <Textarea id="description" v-model="form.description" :rows="4" auto-resize />
       </div>
 
       <div class="grid gap-4 sm:grid-cols-2">
         <div class="flex flex-col gap-1.5">
-          <label for="status" :class="labelClass">Status</label>
+          <label for="status" :class="labelClass" lang="en">Status</label>
           <Select
             id="status"
             v-model="form.status"
@@ -119,7 +119,7 @@ const labelClass = 'font-mono text-[11px] font-semibold uppercase tracking-[0.06
         </div>
 
         <div class="flex flex-col gap-1.5">
-          <label for="project_id" :class="labelClass">Project</label>
+          <label for="project_id" :class="labelClass" lang="en">Project</label>
           <Select
             id="project_id"
             v-model="form.project_id"
@@ -134,7 +134,7 @@ const labelClass = 'font-mono text-[11px] font-semibold uppercase tracking-[0.06
       </div>
 
       <div class="flex flex-col gap-1.5">
-        <label for="repository_id" :class="labelClass">Repository</label>
+        <label for="repository_id" :class="labelClass" lang="en">Repository</label>
         <Select
           id="repository_id"
           v-model="form.repository_id"

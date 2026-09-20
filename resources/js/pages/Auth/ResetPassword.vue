@@ -41,7 +41,10 @@ function submit() {
         @submit.prevent="submit"
       >
         <div class="flex flex-col gap-1.5">
-          <label for="email" class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase"
+          <label
+            for="email"
+            class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase"
+            lang="en"
             >Email</label
           >
           <InputText
@@ -56,7 +59,10 @@ function submit() {
         </div>
 
         <div class="flex flex-col gap-1.5">
-          <label for="password" class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase"
+          <label
+            for="password"
+            class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase"
+            lang="en"
             >New password</label
           >
           <Password
@@ -76,6 +82,7 @@ function submit() {
           <label
             for="password_confirmation"
             class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase"
+            lang="en"
             >Confirm password</label
           >
           <Password

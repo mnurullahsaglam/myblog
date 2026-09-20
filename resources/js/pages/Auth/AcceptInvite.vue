@@ -43,7 +43,10 @@ function submit() {
         <Message severity="info" class="mb-0">Setting up the account for {{ email }}</Message>
 
         <div class="flex flex-col gap-1.5">
-          <label for="name" class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase"
+          <label
+            for="name"
+            class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase"
+            lang="en"
             >Name</label
           >
           <InputText
@@ -58,7 +61,10 @@ function submit() {
         </div>
 
         <div class="flex flex-col gap-1.5">
-          <label for="password" class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase"
+          <label
+            for="password"
+            class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase"
+            lang="en"
             >Password</label
           >
           <Password
@@ -77,6 +83,7 @@ function submit() {
           <label
             for="password_confirmation"
             class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase"
+            lang="en"
             >Confirm password</label
           >
           <Password

@@ -50,7 +50,10 @@ function signInWithPasskey() {
         @submit.prevent="submit"
       >
         <div class="flex flex-col gap-1.5">
-          <label for="email" class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase"
+          <label
+            for="email"
+            class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase"
+            lang="en"
             >Email</label
           >
           <InputText
@@ -66,7 +69,10 @@ function signInWithPasskey() {
         </div>
 
         <div class="flex flex-col gap-1.5">
-          <label for="password" class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase"
+          <label
+            for="password"
+            class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase"
+            lang="en"
             >Password</label
           >
           <Password
@@ -97,7 +103,7 @@ function signInWithPasskey() {
 
       <div class="my-5 flex items-center gap-3">
         <span class="bg-surface-200 h-px flex-1 dark:bg-[#272B35]" />
-        <span class="text-surface-500 font-mono text-[11px] tracking-[0.06em] uppercase">or</span>
+        <span class="text-surface-500 font-mono text-[11px] tracking-[0.06em] uppercase" lang="en">or</span>
         <span class="bg-surface-200 h-px flex-1 dark:bg-[#272B35]" />
       </div>
 

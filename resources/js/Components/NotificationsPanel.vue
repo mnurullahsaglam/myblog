@@ -69,7 +69,7 @@ function remove(notification) {
     <Popover ref="panel" :pt="{ content: { class: '!p-0' } }">
       <div class="w-80">
         <header class="border-surface-200 flex items-center justify-between border-b px-3 py-2 dark:border-[#272B35]">
-          <span class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase">
+          <span class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase" lang="en">
             Notifications
           </span>
           <Button

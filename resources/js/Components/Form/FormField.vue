@@ -131,7 +131,7 @@ const labelClass = 'font-mono text-[11px] font-semibold uppercase tracking-[0.06
     class="flex flex-col gap-1.5"
     :class="field.columnSpan === 2 ? 'sm:col-span-2' : ''"
   >
-    <label v-if="field.type !== 'toggle'" :for="field.key" :class="labelClass">
+    <label v-if="field.type !== 'toggle'" :for="field.key" :class="labelClass" lang="en">
       {{ field.label }}
       <span v-if="field.required" class="text-[#D95757]">*</span>
     </label>

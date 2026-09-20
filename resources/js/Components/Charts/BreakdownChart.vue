@@ -41,7 +41,7 @@ const options = {
 
       <div class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
         <span class="font-mono text-[18px] font-medium tabular-nums">{{ series.total }}</span>
-        <span class="text-surface-500 font-mono text-[10px] tracking-[0.06em] uppercase">total</span>
+        <span class="text-surface-500 font-mono text-[10px] tracking-[0.06em] uppercase" lang="en">total</span>
       </div>
     </div>
 

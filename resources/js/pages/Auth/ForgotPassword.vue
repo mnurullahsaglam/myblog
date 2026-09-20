@@ -39,7 +39,10 @@ function submit() {
         <p class="text-surface-500 text-sm">Enter your address and we will send you a link to choose a new password.</p>
 
         <div class="flex flex-col gap-1.5">
-          <label for="email" class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase"
+          <label
+            for="email"
+            class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase"
+            lang="en"
             >Email</label
           >
           <InputText
