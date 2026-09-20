@@ -2,8 +2,12 @@
 
 declare(strict_types=1);
 
+use App\Providers\AccessServiceProvider;
+use App\Providers\AppServiceProvider;
+use App\Providers\FortifyServiceProvider;
+
 return [
-    App\Providers\AccessServiceProvider::class,
-    App\Providers\AppServiceProvider::class,
-    App\Providers\FortifyServiceProvider::class,
+    AccessServiceProvider::class,
+    AppServiceProvider::class,
+    FortifyServiceProvider::class,
 ];
