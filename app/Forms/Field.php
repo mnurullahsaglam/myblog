@@ -37,6 +37,9 @@ final class Field
     /** @var array<int, array{value: mixed, label: string}> */
     private array $options = [];
 
+    /** @var array<int, self> */
+    private array $fields = [];
+
     private function __construct(
         public readonly string $key,
         public readonly string $type,
@@ -62,6 +65,23 @@ final class Field
     public static function isbn(string $key): self
     {
         return new self($key, 'isbn');
+    }
+
+    /**
+     * A repeating group of sub-fields, edited as rows.
+     *
+     * Its own type rather than a bespoke widget because ResourceForm.vue has no
+     * slots. The renderer reuses FormField for each sub-field, so every existing
+     * type works inside a repeater without further work.
+     *
+     * @param  array<int, self>  $fields
+     */
+    public static function repeater(string $key, array $fields): self
+    {
+        $field = new self($key, 'repeater');
+        $field->fields = $fields;
+
+        return $field;
     }
 
     public static function textarea(string $key): self
@@ -305,11 +325,11 @@ final class Field
     }
 
     /**
-     * @return array{key: string, type: string, label: string, required: bool, disabled: bool, help: string|null, placeholder: string|null, default: mixed, options: array<int, array{value: mixed, label: string}>, meta: array<string, mixed>, columnSpan: int}
+     * @return array{key: string, type: string, label: string, required: bool, disabled: bool, help: string|null, placeholder: string|null, default: mixed, options: array<int, array{value: mixed, label: string}>, meta: array<string, mixed>, columnSpan: int, fields?: array<int, array<string, mixed>>}
      */
     public function schema(): array
     {
-        return [
+        $schema = [
             'key' => $this->key,
             'type' => $this->type,
             'label' => $this->label ?? $this->humanisedLabel(),
@@ -322,6 +342,12 @@ final class Field
             'meta' => $this->meta,
             'columnSpan' => $this->columnSpan,
         ];
+
+        if ($this->type === 'repeater') {
+            $schema['fields'] = array_map(fn (self $field): array => $field->schema(), $this->fields);
+        }
+
+        return $schema;
     }
 
     /**

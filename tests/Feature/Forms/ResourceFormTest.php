@@ -153,3 +153,24 @@ it('puts the isbn field on the book form', function (): void {
 it('does not offer the isbn field for bulk editing', function (): void {
     expect((new BookForm)->bulkEditableFields())->not->toContain('isbn');
 });
+
+it('declares a repeater carrying its sub-fields', function (): void {
+    $schema = Field::repeater('lines', [
+        Field::text('label')->required(),
+        Field::money('amount')->required(),
+    ])->label('Breakdown')->schema();
+
+    expect($schema['type'])->toBe('repeater')
+        ->and($schema['key'])->toBe('lines')
+        ->and($schema['label'])->toBe('Breakdown')
+        ->and(array_column($schema['fields'], 'key'))->toBe(['label', 'amount'])
+        ->and(array_column($schema['fields'], 'type'))->toBe(['text', 'money']);
+});
+
+it('gives a repeater an empty field list when it has no sub-fields', function (): void {
+    expect(Field::repeater('lines', [])->schema()['fields'])->toBeEmpty();
+});
+
+it('leaves every other field type without a fields key', function (): void {
+    expect(Field::text('name')->schema())->not->toHaveKey('fields');
+});

@@ -31,6 +31,26 @@ const looking = ref(false)
 const lookupMessage = ref(null)
 const duplicate = ref(null)
 
+function repeaterRows() {
+  return Array.isArray(props.modelValue) ? props.modelValue : []
+}
+
+function blankRow() {
+  return Object.fromEntries(props.field.fields.map((sub) => [sub.key, null]))
+}
+
+function addRow() {
+  update([...repeaterRows(), blankRow()])
+}
+
+function removeRow(index) {
+  update(repeaterRows().filter((_, i) => i !== index))
+}
+
+function updateRow(index, key, value) {
+  update(repeaterRows().map((row, i) => (i === index ? { ...row, [key]: value } : row)))
+}
+
 async function lookupIsbn() {
   if (!props.modelValue) {
     return
@@ -301,6 +321,42 @@ const labelClass = 'font-mono text-[11px] font-semibold uppercase tracking-[0.06
       </small>
 
       <small v-if="lookupMessage" class="text-surface-500">{{ lookupMessage }}</small>
+    </div>
+
+    <div v-else-if="field.type === 'repeater'" class="flex flex-col gap-3">
+      <div
+        v-for="(row, index) in repeaterRows()"
+        :key="index"
+        class="border-surface-200 flex items-end gap-2 rounded border p-3 dark:border-[#272B35]"
+      >
+        <div
+          class="grid flex-1 gap-3"
+          :style="{ gridTemplateColumns: `repeat(${field.fields.length}, minmax(0, 1fr))` }"
+        >
+          <FormField
+            v-for="sub in field.fields"
+            :key="sub.key"
+            :field="sub"
+            :model-value="row[sub.key]"
+            :error="error?.[index]?.[sub.key] ?? null"
+            @update:model-value="(value) => updateRow(index, sub.key, value)"
+          />
+        </div>
+
+        <Button
+          icon="pi pi-trash"
+          severity="danger"
+          text
+          rounded
+          size="small"
+          :aria-label="`Remove row ${index + 1}`"
+          @click="removeRow(index)"
+        />
+      </div>
+
+      <div>
+        <Button label="Add row" icon="pi pi-plus" severity="secondary" outlined size="small" @click="addRow" />
+      </div>
     </div>
 
     <InputText
