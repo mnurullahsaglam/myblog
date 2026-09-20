@@ -13,8 +13,8 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table): void {
             $table->id();
 
-            $table->foreignId('project_id')->nullable();
-            $table->foreignId('repository_id')->nullable();
+            $table->foreignId('project_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('repository_id')->nullable()->constrained()->nullOnDelete();
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('status');
@@ -30,6 +30,8 @@ return new class extends Migration
             $table->timestamp('github_closed_at')->nullable();
 
             $table->timestamps();
+
+            $table->index(['status', 'sort_order']);
         });
     }
 

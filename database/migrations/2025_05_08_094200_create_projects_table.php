@@ -13,7 +13,7 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table): void {
             $table->id();
 
-            $table->foreignId('client_id')->nullable();
+            $table->foreignId('client_id')->nullable()->constrained()->nullOnDelete();
 
             $table->string('name');
             $table->date('due_date')->nullable();

@@ -13,7 +13,7 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table): void {
             $table->id();
 
-            $table->foreignId('client_id')->constrained('projects');
+            $table->foreignId('client_id')->constrained('clients');
             $table->string('invoice_number')->unique();
             $table->date('issued_at');
             $table->integer('tax_rate');
@@ -23,7 +23,6 @@ return new class extends Migration
             $table->string('currency');
 
             $table->string('invoice');
-            $table->string('invoice_pdf')->nullable();
 
             $table->timestamps();
         });

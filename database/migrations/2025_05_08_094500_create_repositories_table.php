@@ -26,6 +26,7 @@ return new class extends Migration
             $table->integer('stars_count')->default(0);
             $table->integer('forks_count')->default(0);
             $table->integer('issues_count')->default(0);
+            $table->unsignedInteger('commits_count')->default(0);
             $table->boolean('is_active')->default(true);
             $table->timestamp('github_created_at')->nullable();
             $table->timestamp('github_updated_at')->nullable();

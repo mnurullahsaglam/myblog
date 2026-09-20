@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('original_name')->nullable();
             $table->string('slug');
+            $table->string('isbn', 13)->nullable()->unique();
             $table->integer('page_count')->nullable();
             $table->year('publication_date')->nullable();
             $table->string('publication_location')->nullable();

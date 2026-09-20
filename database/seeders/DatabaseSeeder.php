@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\Client;
 use App\Models\Debt;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use App\Models\Income;
 use App\Models\IncomeCategory;
+use App\Models\Post;
 use App\Models\Project;
 use App\Models\Repository;
+use App\Models\Setting;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -25,6 +28,9 @@ class DatabaseSeeder extends Seeder
                 'name' => config('app.admin_name'),
                 'email' => config('app.admin_email'),
             ]);
+
+        $this->createSettings();
+        $this->createContent();
 
         $projects = [
             [
@@ -312,6 +318,35 @@ class DatabaseSeeder extends Seeder
 
         foreach ($expenses as $expenseData) {
             Expense::create($expenseData);
+        }
+    }
+
+    /**
+     * The panel reads these on every request, so a fresh database without them
+     * falls back to defaults and looks unconfigured.
+     */
+    private function createSettings(): void
+    {
+        Setting::set('appearance', 'accent', 'khaki');
+        Setting::set('appearance', 'color_scheme', 'dark');
+        Setting::set('site_info', 'title', 'OP//SHELL');
+        Setting::set('site_info', 'description', 'A developer blog and personal admin panel.');
+        Setting::set('meta', 'meta_keywords', json_encode(['laravel', 'php', 'rust']), 'json');
+    }
+
+    private function createContent(): void
+    {
+        $categories = collect(['Laravel', 'PHP', 'Rust'])
+            ->map(fn (string $name): Category => Category::create(['name' => $name]));
+
+        $posts = [
+            ['title' => 'Learning Rust', 'content' => 'Notes from starting out with Rust.'],
+            ['title' => 'Rewriting the admin panel', 'content' => 'Why the panel was rewritten in Inertia and Vue.'],
+            ['title' => 'Static analysis at level max', 'content' => 'What PHPStan found.'],
+        ];
+
+        foreach ($posts as $index => $postData) {
+            Post::create($postData)->categories()->attach($categories[$index % $categories->count()]);
         }
     }
 }

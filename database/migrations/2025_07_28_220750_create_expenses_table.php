@@ -18,9 +18,14 @@ return new class extends Migration
             $table->decimal('amount', 15, 2);
             $table->enum('currency', array_column(Currencies::cases(), 'value'))->default('TRY');
             $table->text('description');
+            $table->boolean('is_recurring')->default(false);
+            $table->boolean('is_tax_deductible')->default(false);
             $table->string('receipt_path')->nullable();
             $table->date('date');
             $table->timestamps();
+
+            $table->index('is_recurring');
+            $table->index('is_tax_deductible');
         });
     }
 
