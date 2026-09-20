@@ -32,6 +32,14 @@ final class CreateInvite
     {
         $email = mb_strtolower(trim($email));
 
+        $adminEmail = config('app.admin_email');
+
+        if (is_string($adminEmail) && $adminEmail !== '' && $email === mb_strtolower($adminEmail)) {
+            throw ValidationException::withMessages([
+                'email' => 'That address is reserved.',
+            ]);
+        }
+
         if (User::query()->whereRaw('LOWER(email) = ?', [$email])->exists()) {
             throw ValidationException::withMessages([
                 'email' => 'That address already has an account.',

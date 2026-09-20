@@ -5,6 +5,42 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.11.1] - 2026-09-20
+
+### Security
+
+- **Privilege escalation closed.** A member could PUT her own email address to
+  the configured `ADMIN_EMAIL` and gain every area, because `User::isAdmin()`
+  compares against a column the user can edit and the profile route is behind
+  `auth` alone. The only thing preventing it was the unique index happening to
+  be occupied by the owner's row, which is an accident of data rather than a
+  control. That address is now reserved: it cannot be taken by a profile update
+  or issued as an invitation.
+- Password reset is rate limited. `password.email` and `password.update` had no
+  throttle while login, two-factor, passkeys and invitations all did, leaving the
+  reset form usable as a mail relay.
+- Export downloads expire after an hour instead of being valid forever.
+- Export cells beginning `=`, `+`, `-` or `@` are prefixed so a spreadsheet
+  treats them as text rather than executing them as formulas.
+- Sessions are encrypted by default and the cookie is marked secure in
+  production.
+- `APP_DEBUG` defaults to false in `.env.example`.
+- The cover download follows at most three redirects, HTTPS only.
+- Two high-severity npm advisories resolved, in axios and form-data.
+
+### Fixed
+
+- Searching incomes returned a 500 in development and production and silently
+  removed the whole resource from global search. `IncomeTable` listed `source`
+  as searchable, which is an accessor rather than a column: MySQL answered
+  "Unknown column" while SQLite quietly matched nothing, so CI stayed green. A
+  new test walks every table definition and checks each searchable path against
+  the schema.
+- Changing an email address returned a 500 while saving the change anyway. The
+  profile action always sent a verification mail, which needs a route that does
+  not exist because the feature is disabled. It now only sends when verification
+  is enabled, and leaves a verified address verified when it is not.
+
 ## [0.11.0] - 2026-09-20
 
 ### Added

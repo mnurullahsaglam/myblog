@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\Actions\Fortify;
 
 use App\Models\User;
+use App\Rules\NotTheAdminAddress;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
+use Laravel\Fortify\Features;
 
 final class UpdateUserProfileInformation implements UpdatesUserProfileInformation
 {
@@ -30,11 +32,12 @@ final class UpdateUserProfileInformation implements UpdatesUserProfileInformatio
                 'email',
                 'max:255',
                 Rule::unique('users')->ignore($user->id),
+                new NotTheAdminAddress($user->email),
             ],
         ])->validateWithBag('updateProfileInformation');
 
         if ($input['email'] !== $user->email) {
-            $this->updateVerifiedUser($user, $input);
+            $this->updateChangedEmail($user, $input);
         } else {
             $user->forceFill([
                 'name' => $input['name'],
@@ -44,18 +47,27 @@ final class UpdateUserProfileInformation implements UpdatesUserProfileInformatio
     }
 
     /**
-     * Update the given verified user's profile information.
+     * Update a user whose email address has changed.
+     *
+     * The verification mail is only sent when the feature is enabled. It is not,
+     * and sending it regardless asked Laravel to build a URL for the
+     * verification.verify route, which does not exist without the feature: the
+     * address changed, the row saved, and the request then died with a 500.
      *
      * @param  array<string, string>  $input
      */
-    private function updateVerifiedUser(User $user, array $input): void
+    private function updateChangedEmail(User $user, array $input): void
     {
+        $verifying = Features::enabled(Features::emailVerification());
+
         $user->forceFill([
             'name' => $input['name'],
             'email' => $input['email'],
-            'email_verified_at' => null,
+            'email_verified_at' => $verifying ? null : $user->email_verified_at,
         ])->save();
 
-        $user->sendEmailVerificationNotification();
+        if ($verifying) {
+            $user->sendEmailVerificationNotification();
+        }
     }
 }

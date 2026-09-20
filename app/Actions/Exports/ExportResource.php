@@ -44,6 +44,22 @@ final class ExportResource
     }
 
     /**
+     * Stop a spreadsheet treating a cell as a formula.
+     *
+     * A value beginning =, +, - or @ is executed by Excel and Sheets when the
+     * file is opened. Prefixing a single quote makes it text, which is what a
+     * book title starting with a minus sign was always meant to be.
+     */
+    private function neutralise(bool|float|int|string|null $value): bool|float|int|string|null
+    {
+        if (! is_string($value) || $value === '') {
+            return $value;
+        }
+
+        return in_array($value[0], ['=', '+', '-', '@', "\t", "\r"], true) ? "'".$value : $value;
+    }
+
+    /**
      * Streams through the rows so memory stays flat however many there are.
      *
      * @return string the stored path on the private disk
@@ -64,7 +80,7 @@ final class ExportResource
         fputcsv($handle, $export->headings(), escape: '\\');
 
         $export->query()->lazy(500)->each(function (Model $record) use ($handle, $export): void {
-            fputcsv($handle, $export->row($record), escape: '\\');
+            fputcsv($handle, array_map($this->neutralise(...), $export->row($record)), escape: '\\');
         });
 
         rewind($handle);

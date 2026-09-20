@@ -6,6 +6,7 @@ use App\Http\Middleware\EnsureAreaAccess;
 use App\Http\Middleware\EnsureFeatureEnabled;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\RefuseWritesWhilePreviewing;
+use App\Http\Middleware\ThrottlePasswordReset;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -26,6 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
             RefuseWritesWhilePreviewing::class,
+            ThrottlePasswordReset::class,
         ]);
 
         $middleware->alias([

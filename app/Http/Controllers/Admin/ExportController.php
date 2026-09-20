@@ -33,7 +33,7 @@ final class ExportController extends Controller
 
         $this->notifier->success(
             'Export ready',
-            URL::signedRoute('admin.exports.download', ['path' => $path]),
+            URL::temporarySignedRoute('admin.exports.download', now()->addHour(), ['path' => $path]),
         );
 
         return back();

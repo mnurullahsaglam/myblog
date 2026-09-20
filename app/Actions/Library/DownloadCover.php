@@ -30,7 +30,7 @@ final class DownloadCover
         try {
             $response = Http::withUserAgent('myblog/1.0 ('.config()->string('services.open_library.contact').')')
                 ->timeout(10)
-                ->withOptions(['allow_redirects' => true])
+                ->withOptions(['allow_redirects' => ['max' => 3, 'strict' => true, 'referer' => false, 'protocols' => ['https']]])
                 ->get(self::BASE_URL.$coverId.'-L.jpg', ['default' => 'false']);
         } catch (Throwable) {
             return null;

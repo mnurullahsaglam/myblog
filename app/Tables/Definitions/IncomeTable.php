@@ -63,7 +63,7 @@ final class IncomeTable extends ResourceTable
 
     protected function searchable(): array
     {
-        return ['source', 'description', 'incomeCategory.name'];
+        return ['description', 'incomeCategory.name'];
     }
 
     protected function titleColumn(): string
