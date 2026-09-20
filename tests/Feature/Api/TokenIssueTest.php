@@ -170,5 +170,5 @@ it('lets a device revoke its own token', function (): void {
      */
     $this->app->make('auth')->forgetGuards();
 
-    $this->withToken($token)->getJson(route('api.v1.profile-probe'))->assertUnauthorized();
+    $this->withToken($token)->getJson(route('api.v1.incomes.index'))->assertUnauthorized();
 });

@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 pest()->extend(TestCase::class)
@@ -26,4 +27,64 @@ function userWithoutRole(string $email): User
     DB::table('users')->where('id', $user->getKey())->update(['role' => '']);
 
     return $user->fresh() ?? $user;
+}
+
+/**
+ * Authenticate the next API request as this user, by token.
+ *
+ * The auth guard caches the user it resolved earlier in the same test, which
+ * production never does because each request is its own process. Without
+ * forgetting it first, a test that checks one user's payload against another's
+ * silently checks the first user twice — and a leak test written that way passes
+ * while leaking.
+ */
+function apiAs(User $user): PendingApiRequest
+{
+    app('auth')->forgetGuards();
+
+    return new PendingApiRequest($user);
+}
+
+final readonly class PendingApiRequest
+{
+    public function __construct(private User $user) {}
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    public function json(string $method, string $uri, array $data = []): TestResponse
+    {
+        return test()
+            ->withToken($this->user->createToken('test')->plainTextToken)
+            ->json($method, $uri, $data);
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    public function get(string $uri): TestResponse
+    {
+        return $this->json('GET', $uri);
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    public function post(string $uri, array $data = []): TestResponse
+    {
+        return $this->json('POST', $uri, $data);
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    public function put(string $uri, array $data = []): TestResponse
+    {
+        return $this->json('PUT', $uri, $data);
+    }
+
+    public function delete(string $uri): TestResponse
+    {
+        return $this->json('DELETE', $uri);
+    }
 }

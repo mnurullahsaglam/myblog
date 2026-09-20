@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Exports\ResourceExport;
 use App\Forms\ResourceForm;
 use App\Http\Controllers\Admin\AdminResourceController;
+use App\Http\Controllers\Api\V1\ApiResourceController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdminRequest;
 use App\Tables\ResourceTable;
@@ -48,6 +49,7 @@ arch('every class is final')
         Controller::class,
         AdminResourceController::class,
         AdminRequest::class,
+        ApiResourceController::class,
     ]);
 
 arch('the six base classes stay abstract')
@@ -58,6 +60,7 @@ arch('the six base classes stay abstract')
         Controller::class,
         AdminResourceController::class,
         AdminRequest::class,
+        ApiResourceController::class,
     ])
     ->toBeAbstract();
 

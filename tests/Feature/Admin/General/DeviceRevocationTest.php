@@ -37,14 +37,14 @@ it('lets the owner revoke any device', function (): void {
 it('stops the revoked token working at once', function (): void {
     $plain = $this->member->createToken('Her iPhone');
 
-    $this->withToken($plain->plainTextToken)->getJson(route('api.v1.profile-probe'))->assertOk();
+    $this->withToken($plain->plainTextToken)->getJson(route('api.v1.incomes.index'))->assertOk();
 
     $this->actingAs($this->owner)
         ->delete(route('admin.people.revoke-device', $plain->accessToken->getKey()));
 
     $this->app->make('auth')->forgetGuards();
 
-    $this->withToken($plain->plainTextToken)->getJson(route('api.v1.profile-probe'))->assertUnauthorized();
+    $this->withToken($plain->plainTextToken)->getJson(route('api.v1.incomes.index'))->assertUnauthorized();
 });
 
 it('hides device revocation from a member', function (): void {

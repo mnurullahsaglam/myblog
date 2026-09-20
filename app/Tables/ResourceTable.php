@@ -150,9 +150,16 @@ abstract class ResourceTable
     }
 
     /**
-     * @return LengthAwarePaginator<int, array{id: mixed, editable: bool, cells: array<string, array<string, mixed>>}>
+     * The models behind a page of rows, filtered and sorted exactly as the table
+     * would, but not rendered.
+     *
+     * The API serialises models; the panel renders cells. Both go through this
+     * one query so a filter added for one applies to the other, and neither can
+     * quietly see a different set of records.
+     *
+     * @return \Illuminate\Pagination\LengthAwarePaginator<int, Model>
      */
-    public function rows(Request $request): LengthAwarePaginator
+    public function records(Request $request): \Illuminate\Pagination\LengthAwarePaginator
     {
         $query = $this->query();
 
@@ -168,8 +175,6 @@ abstract class ResourceTable
         $this->applyFilters($query, $request);
         $this->applySort($query, $request);
 
-        $columns = $this->visibleColumns();
-
         $page = $request->integer('page');
 
         return $query
@@ -177,7 +182,17 @@ abstract class ResourceTable
                 perPage: $this->resolvePerPage($request),
                 page: $page > 0 ? $page : 1,
             )
-            ->appends(Arr::except($request->query(), 'page'))
+            ->appends(Arr::except($request->query(), 'page'));
+    }
+
+    /**
+     * @return LengthAwarePaginator<int, array{id: mixed, editable: bool, cells: array<string, array<string, mixed>>}>
+     */
+    public function rows(Request $request): LengthAwarePaginator
+    {
+        $columns = $this->visibleColumns();
+
+        return $this->records($request)
             ->through(fn (Model $record): array => [
                 'id' => $record->getKey(),
                 'editable' => $this->isRowEditable($record),

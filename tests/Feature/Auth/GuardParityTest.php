@@ -3,26 +3,32 @@
 declare(strict_types=1);
 
 use App\Enums\Ability;
-use App\Enums\Area;
+use App\Models\Income;
 use App\Models\User;
+use App\Support\Access\AccessProfile;
 
 beforeEach(function (): void {
     config(['app.admin_email' => 'owner@example.test']);
+    Income::factory()->count(3)->create();
 });
 
 /**
- * The assertion this whole plan rests on. The same person must get the same
- * answers whether they arrive with a session cookie or a device token; the day
- * those two diverge is the day one of them is wrong and nothing says so.
+ * The assertion this whole feature rests on.
+ *
+ * The same person must get the same answers whether they arrive with a session
+ * cookie or a device token. Laravel's Authenticate middleware calls
+ * shouldUse(), which makes the authenticating guard the default for the rest of
+ * the request, so AccessProfile resolves correctly for both without any special
+ * handling. That is a framework detail which could change under us, and the
+ * consequence would be silent: the API would 404 everything, or resolve the
+ * wrong person.
  */
-it('resolves the same profile for a session and a token', function (string $email, string $state): void {
+it('returns the same payload for a session and a token', function (string $email, string $state): void {
     $user = User::factory()->{$state}()->create(['email' => $email]);
 
-    $viaSession = $this->actingAs($user)->getJson(route('api.v1.profile-probe'))->json();
+    $viaSession = $this->actingAs($user)->getJson(route('api.v1.incomes.index'))->json('data');
 
-    $viaToken = $this->withToken($user->createToken('probe')->plainTextToken)
-        ->getJson(route('api.v1.profile-probe'))
-        ->json();
+    $viaToken = apiAs($user)->get(route('api.v1.incomes.index'))->json('data');
 
     expect($viaToken)->toBe($viaSession);
 })->with([
@@ -30,26 +36,25 @@ it('resolves the same profile for a session and a token', function (string $emai
     'member' => ['her@example.test', 'member'],
 ]);
 
-it('gives a token-authenticated member her areas and no more', function (): void {
-    $member = User::factory()->member()->create(['email' => 'her@example.test']);
+it('resolves the same areas and abilities under both guards', function (string $email, string $state): void {
+    $user = User::factory()->{$state}()->create(['email' => $email]);
 
-    $response = $this->withToken($member->createToken('probe')->plainTextToken)
-        ->getJson(route('api.v1.profile-probe'));
+    $this->actingAs($user)->getJson(route('api.v1.incomes.index'));
+    $viaSession = app(AccessProfile::class);
 
-    expect($response->json('areas'))->toEqualCanonicalizing(
-        array_map(fn (Area $area): string => $area->value, [Area::Budget, Area::Utilities, Area::Library]),
-    )->and($response->json('abilities'))->toBe([]);
-});
+    $sessionAreas = $viaSession->areas();
+    $sessionAllows = $viaSession->allows(Ability::SeeClientIdentity);
 
-it('gives a token-authenticated admin everything', function (): void {
-    $owner = User::factory()->admin()->create(['email' => 'owner@example.test']);
+    apiAs($user)->get(route('api.v1.incomes.index'));
+    $viaToken = app(AccessProfile::class);
 
-    $response = $this->withToken($owner->createToken('probe')->plainTextToken)
-        ->getJson(route('api.v1.profile-probe'));
-
-    expect($response->json('abilities'))->toContain(Ability::SeeClientIdentity->value);
-});
+    expect($viaToken->areas())->toEqualCanonicalizing($sessionAreas)
+        ->and($viaToken->allows(Ability::SeeClientIdentity))->toBe($sessionAllows);
+})->with([
+    'admin' => ['owner@example.test', 'admin'],
+    'member' => ['her@example.test', 'member'],
+]);
 
 it('gives an unauthenticated request nothing', function (): void {
-    $this->getJson(route('api.v1.profile-probe'))->assertUnauthorized();
+    $this->getJson(route('api.v1.incomes.index'))->assertUnauthorized();
 });
