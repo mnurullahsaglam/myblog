@@ -17,7 +17,11 @@ final class UpdateRecord
     use SyncsRelations;
 
     /**
+     * @template TModel of Model
+     *
+     * @param  TModel  $record
      * @param  array{attributes: array<string, mixed>, relations: array<string, array<int, mixed>>}  $partitioned
+     * @return TModel
      */
     public function handle(Model $record, array $partitioned): Model
     {

@@ -40,6 +40,7 @@ final class Navigation
                 ['label' => 'Publishers', 'route' => 'admin.publishers.index', 'icon' => 'pi pi-building'],
             ]],
             ['label' => 'Utilities', 'icon' => 'pi pi-bolt', 'items' => [
+                ['label' => 'Bills', 'route' => 'admin.utility-bills.index', 'icon' => 'pi pi-receipt'],
                 ['label' => 'Accounts', 'route' => 'admin.utility-accounts.index', 'icon' => 'pi pi-id-card'],
             ]],
             ['label' => 'General', 'icon' => 'pi pi-cog', 'items' => [
