@@ -25,7 +25,10 @@ was scaffolding, and this replaces it.
 - **Email verification as a Fortify feature.** Covered under *Verification*
   below: invited addresses are already proven, and enabling the feature would
   wall off the accounts that already exist.
-- **Queued mail.** One recipient, one message. `QUEUE_CONNECTION=sync` stays.
+- **A real queue.** `QUEUE_CONNECTION=sync` stays, so the invite mail sends
+  inside the request. `InviteMail` still implements `ShouldQueue`, because this
+  application's architecture test requires it of every mailable and sync makes
+  it a no-op today — but no worker is introduced here.
 
 ---
 

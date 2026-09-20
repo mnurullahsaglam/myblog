@@ -588,7 +588,9 @@ it('sets the window to 48 hours', function (): void {
     ['invite' => $invite] = app(CreateInvite::class)
         ->handle('her@example.test', UserRole::Member, $this->owner);
 
-    expect($invite->expires_at->equalTo(now()->addHours(48)))->toBeTrue();
+    // To the second: the column stores whole seconds, and now() carries
+    // microseconds that never survive the round trip.
+    expect($invite->expires_at->toDateTimeString())->toBe(now()->addHours(48)->toDateTimeString());
 });
 
 it('records who sent it and what it grants', function (): void {
@@ -602,8 +604,8 @@ it('records who sent it and what it grants', function (): void {
 it('sends exactly one mail, to the invited address', function (): void {
     app(CreateInvite::class)->handle('her@example.test', UserRole::Member, $this->owner);
 
-    Mail::assertSentCount(1);
-    Mail::assertSent(InviteMail::class, fn (InviteMail $mail): bool => $mail->hasTo('her@example.test'));
+    Mail::assertQueuedCount(1);
+    Mail::assertQueued(InviteMail::class, fn (InviteMail $mail): bool => $mail->hasTo('her@example.test'));
 });
 
 /**
@@ -614,7 +616,7 @@ it('puts the plaintext token in the mail and the hash in the database', function
     ['invite' => $invite, 'token' => $token] = app(CreateInvite::class)
         ->handle('her@example.test', UserRole::Member, $this->owner);
 
-    Mail::assertSent(InviteMail::class, function (InviteMail $mail) use ($token, $invite): bool {
+    Mail::assertQueued(InviteMail::class, function (InviteMail $mail) use ($token, $invite): bool {
         return str_contains($mail->url, $token)
             && ! str_contains($mail->url, $invite->token_hash);
     });
@@ -652,7 +654,7 @@ it('refuses an address that already has an account', function (): void {
         ->toThrow(ValidationException::class);
 
     expect(Invite::query()->count())->toBe(0);
-    Mail::assertNothingSent();
+    Mail::assertNothingQueued();
 });
 
 it('matches an existing account case-insensitively', function (): void {
@@ -685,11 +687,11 @@ declare(strict_types=1);
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use Override;
 
 /**
  * The only message this application sends.
@@ -697,7 +699,7 @@ use Override;
  * The plaintext token is passed in rather than read from the invite, because
  * the invite does not have it — it stores a hash.
  */
-final class InviteMail extends Mailable
+final class InviteMail extends Mailable implements ShouldQueue
 {
     use Queueable;
     use SerializesModels;
@@ -707,13 +709,13 @@ final class InviteMail extends Mailable
         public readonly string $invitedByName,
     ) {}
 
-    #[Override]
+    // No #[Override]: Mailable does not declare envelope() or content(),
+    // it resolves them dynamically, and the attribute is a fatal error.
     public function envelope(): Envelope
     {
         return new Envelope(subject: 'You have been invited to '.config('app.name'));
     }
 
-    #[Override]
     public function content(): Content
     {
         return new Content(markdown: 'mail.invite');
@@ -1684,7 +1686,7 @@ it('creates an invite and shows the link once', function (): void {
     expect($invite->role)->toBe(UserRole::Member)
         ->and(session('flash.invite_url'))->toContain('/invite/');
 
-    Mail::assertSentCount(1);
+    Mail::assertQueuedCount(1);
 });
 
 it('refuses an invite from a member', function (): void {
@@ -1718,7 +1720,7 @@ it('revokes an invite', function (): void {
         ->assertRedirect(route('admin.people.index'));
 
     expect($invite->fresh()->revoked_at)->not->toBeNull();
-    Mail::assertNothingSent();
+    Mail::assertNothingQueued();
 });
 
 it('refuses to revoke from a member', function (): void {
@@ -1752,7 +1754,7 @@ it('reissues rather than resending, because the token cannot be recovered', func
     $fresh = Invite::query()->where('email', 'new@example.test')->usable()->sole();
 
     expect($fresh->token_hash)->not->toBe($hash);
-    Mail::assertSentCount(1);
+    Mail::assertQueuedCount(1);
 });
 
 it('refuses to reissue an invite that is no longer usable', function (): void {
@@ -1762,7 +1764,7 @@ it('refuses to reissue an invite that is no longer usable', function (): void {
         ->post(route('admin.people.resend', $invite))
         ->assertNotFound();
 
-    Mail::assertNothingSent();
+    Mail::assertNothingQueued();
 });
 ```
 
