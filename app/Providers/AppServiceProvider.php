@@ -37,7 +37,9 @@ final class AppServiceProvider extends ServiceProvider
 
         Model::unguard();
 
-        Model::shouldBeStrict();
+        // Strict mode turns a lazy load into an exception, which is a useful
+        // nudge in development and a 500 for the visitor in production.
+        Model::shouldBeStrict(! app()->isProduction());
 
         URL::forceHttps(app()->isProduction());
 

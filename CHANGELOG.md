@@ -5,6 +5,25 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- `Model::shouldBeStrict()` ran unconditionally, so a lazy load in production
+  would have been a 500 for the visitor rather than a nudge for the developer.
+  Now gated on the environment, matching the two hardening calls either side.
+- `tasks` and `projects` carried id columns with neither an index nor a
+  constraint. `tasks.status` is filtered in nine places and `sort_order`
+  ordered in three, so those are indexed together; the three references now
+  null out on delete instead of leaving rows pointing at nothing.
+
+### Changed
+
+- Inertia pages load lazily, so each is its own chunk. The initial bundle drops
+  from 1,641 kB to 495 kB, and from 416 kB to 142 kB gzipped.
+- `AppServiceProviderTest` asserts behaviour rather than grepping the
+  provider's source for method names.
+
 ## [0.5.0] - 2026-09-20
 
 ### Added
