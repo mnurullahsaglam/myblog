@@ -124,6 +124,7 @@ function parameterValue(string $parameter, User $user): Model|string|int
         'post' => Post::factory()->create(),
         'category' => Category::factory()->create(),
         'invite' => Invite::factory()->create(),
+        'device' => User::factory()->create()->createToken('matrix')->accessToken->getKey(),
         'publisher' => Publisher::factory()->create(),
         'writer' => Writer::factory()->create(),
         'book' => Book::factory()->create(),

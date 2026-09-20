@@ -64,6 +64,7 @@ Route::middleware(['auth', 'can:access-panel'])
 
             Route::get('people', [PeopleController::class, 'index'])->name('people.index');
             Route::post('people', [PeopleController::class, 'store'])->name('people.store');
+            Route::delete('people/devices/{device}', [PeopleController::class, 'revokeDevice'])->name('people.revoke-device');
             Route::post('people/{invite}/reissue', [PeopleController::class, 'reissue'])->name('people.reissue');
             Route::delete('people/{invite}', [PeopleController::class, 'revoke'])->name('people.revoke');
 

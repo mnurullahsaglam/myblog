@@ -10,12 +10,14 @@ use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\InviteRequest;
 use App\Models\Invite;
+use App\Models\User;
 use App\Tables\Definitions\InviteTable;
 use App\Tables\Definitions\UserTable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Laravel\Sanctum\PersonalAccessToken;
 
 /**
  * Who can reach the panel, and who has been asked to.
@@ -42,6 +44,19 @@ final class PeopleController extends Controller
                 'schema' => $invites->schema(),
                 'rows' => $invites->rows($request),
             ],
+            'devices' => PersonalAccessToken::query()
+                ->with('tokenable')
+                ->latest()
+                ->get()
+                ->map(fn (PersonalAccessToken $token): array => [
+                    'id' => $token->getKey(),
+                    'name' => $token->name,
+                    'owner' => $token->tokenable instanceof User ? $token->tokenable->name : '—',
+                    'createdAt' => $token->created_at?->diffForHumans(),
+                    'lastUsedAt' => $token->last_used_at?->diffForHumans() ?? 'never',
+                ])
+                ->all(),
+
             'roles' => array_map(
                 fn (UserRole $role): array => ['value' => $role->value, 'label' => ucfirst($role->value)],
                 UserRole::cases(),
@@ -90,6 +105,19 @@ final class PeopleController extends Controller
         $this->notifier->success('Invitation reissued', 'The previous link has stopped working.');
 
         return $this->backWithLink($token);
+    }
+
+    /**
+     * A lost phone cannot revoke its own token, so the decision belongs where you
+     * already are: signed in on something else.
+     */
+    public function revokeDevice(PersonalAccessToken $device): RedirectResponse
+    {
+        $device->delete();
+
+        $this->notifier->success('Device revoked', 'That phone will have to sign in again.');
+
+        return to_route('admin.people.index');
     }
 
     /**

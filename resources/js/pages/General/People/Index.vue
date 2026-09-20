@@ -13,6 +13,7 @@ import AdminLayout from '@/Layouts/AdminLayout.vue'
 
 defineProps({
   users: { type: Object, required: true },
+  devices: { type: Array, default: () => [] },
   invites: { type: Object, required: true },
   roles: { type: Array, required: true },
 })
@@ -45,6 +46,10 @@ function copyLink() {
     copied.value = true
     setTimeout(() => (copied.value = false), 2000)
   })
+}
+
+function revokeDevice(id) {
+  router.delete(route('admin.people.revoke-device', id), { preserveScroll: true })
 }
 
 function revoke(id) {
@@ -114,6 +119,25 @@ function isPending(row) {
               <div v-if="isPending(data)" class="flex justify-end gap-2">
                 <Button label="Reissue" size="small" severity="secondary" outlined @click="reissue(data.id)" />
                 <Button label="Revoke" size="small" severity="danger" outlined @click="revoke(data.id)" />
+              </div>
+            </template>
+          </Column>
+        </DataTable>
+      </section>
+      <section>
+        <header class="mb-3 flex items-center justify-between">
+          <h2 class="text-surface-500 font-mono text-[11px] font-semibold tracking-[0.06em] uppercase">Devices</h2>
+        </header>
+
+        <DataTable :value="devices" data-key="id" size="small">
+          <Column field="name" header="Device" />
+          <Column field="owner" header="Owner" />
+          <Column field="createdAt" header="Added" />
+          <Column field="lastUsedAt" header="Last used" />
+          <Column header="">
+            <template #body="{ data }">
+              <div class="flex justify-end">
+                <Button label="Revoke" size="small" severity="danger" outlined @click="revokeDevice(data.id)" />
               </div>
             </template>
           </Column>
