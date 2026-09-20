@@ -21,6 +21,7 @@ final class BookForm extends ResourceForm
             Field::relationship('publisher_id', 'publisher', 'name')->label('Publisher')->required()->searchable(),
             Field::text('name')->required()->columnSpan(2),
             Field::readonlyCode('slug')->slugFrom('name')->columnSpan(2),
+            Field::isbn('isbn')->label('ISBN')->help('Paste an ISBN and press Fetch to fill the form.')->columnSpan(2),
             Field::text('original_name')->label('Original title')->columnSpan(2),
             Field::multiRelationship('categories', Category::class, 'name')->label('Categories')->columnSpan(2),
             Field::number('page_count')->label('Pages')->min(1),

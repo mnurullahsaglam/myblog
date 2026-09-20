@@ -135,3 +135,20 @@ it('unwraps a backed enum into its value', function (): void {
 
     expect($form->values($expense)['currency'])->toBe('USD');
 });
+
+it('declares an isbn field that the form renders with a lookup button', function (): void {
+    $field = Field::isbn('isbn')->schema();
+
+    expect($field['type'])->toBe('isbn')
+        ->and($field['key'])->toBe('isbn');
+});
+
+it('puts the isbn field on the book form', function (): void {
+    $keys = array_column((new App\Forms\Definitions\BookForm)->schema()['fields'], 'key');
+
+    expect($keys)->toContain('isbn');
+});
+
+it('does not offer the isbn field for bulk editing', function (): void {
+    expect((new App\Forms\Definitions\BookForm)->bulkEditableFields())->not->toContain('isbn');
+});

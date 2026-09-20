@@ -52,6 +52,18 @@ final class Field
         return new self($key, 'text');
     }
 
+    /**
+     * An ISBN with a lookup button beside it.
+     *
+     * Its own type rather than a text field because ResourceForm.vue has no
+     * slots, so the Fetch affordance cannot be layered on from the page. Being
+     * part of the schema, it appears on Create and Edit alike.
+     */
+    public static function isbn(string $key): self
+    {
+        return new self($key, 'isbn');
+    }
+
     public static function textarea(string $key): self
     {
         return new self($key, 'textarea');
