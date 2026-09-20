@@ -13,8 +13,10 @@ Route::get('/', fn (): Factory|View => view('welcome'));
 
 Route::get('books', [BookController::class, 'index'])->name('books.index');
 
-Route::get('invite/{token}', [InviteController::class, 'show'])->name('invite.show');
-Route::post('invite/{token}', [InviteController::class, 'store'])->name('invite.store');
+Route::middleware('throttle:invite')->group(function (): void {
+    Route::get('invite/{token}', [InviteController::class, 'show'])->name('invite.show');
+    Route::post('invite/{token}', [InviteController::class, 'store'])->name('invite.store');
+});
 
 Route::middleware('auth')->group(function (): void {
     Route::get('wakatime/connect', [WakaTimeOAuthController::class, 'connect'])->name('wakatime.connect');
