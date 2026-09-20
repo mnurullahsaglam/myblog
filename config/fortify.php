@@ -164,8 +164,11 @@ return [
     */
 
     'features' => [
-        // Registration and password reset are deliberately off: this is a
-        // single-user panel and the only account is provisioned by hand.
+        // Registration stays off: accounts come from invitations, created
+        // inside the panel by someone who already has access.
+        // Password reset is on, because an invited user must be able to recover
+        // her own account without the owner touching the database.
+        Features::resetPasswords(),
         Features::updateProfileInformation(),
         Features::updatePasswords(),
         Features::twoFactorAuthentication([
