@@ -23,6 +23,8 @@ it('sets a relation across the selection', function (): void {
         'value' => $categories->modelKeys(),
     ])->assertRedirect(route('admin.posts.index'));
 
+    expect($posts)->toHaveCount(3);
+
     foreach ($posts as $post) {
         expect($post->categories()->pluck('categories.id')->all())
             ->toEqualCanonicalizing($categories->modelKeys());

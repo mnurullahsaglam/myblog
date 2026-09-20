@@ -54,8 +54,11 @@ it('exposes a swatch for the settings picker', function (): void {
 it('stays in sync with the javascript ramps', function (): void {
     $js = file_get_contents(resource_path('js/theme/ramps.js'));
 
+    expect(AccentRamps::all())->not->toBeEmpty('No ramps to compare against the javascript');
+
     foreach (AccentRamps::all() as $name => $ramp) {
-        expect($js)->toContain($name.': {');
+        expect($js)->toContain($name.': {')
+            ->and($ramp)->not->toBeEmpty("Ramp {$name} has no stops");
 
         foreach ($ramp as $stop => $hex) {
             expect($js)->toContain("{$stop}: '{$hex}'");

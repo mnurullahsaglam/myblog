@@ -112,6 +112,8 @@ it('keeps the public site working', function (): void {
 });
 
 it('points every navigation item at a real route', function (): void {
+    expect(Navigation::clusters())->not->toBeEmpty('Navigation has no clusters at all');
+
     foreach (Navigation::clusters() as $cluster) {
         expect($cluster['items'])->not->toBeEmpty("Cluster {$cluster['label']} has no items");
 

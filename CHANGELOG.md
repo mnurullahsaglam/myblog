@@ -5,6 +5,24 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.1] - 2026-09-20
+
+### Fixed
+
+- Three tests looped over a collection and asserted only inside the loop, so
+  each would have passed while checking nothing had its collection ever been
+  empty: the bulk update relation check, the navigation route check and the
+  accent ramp comparison against the JavaScript. Each now proves the collection
+  is populated first.
+
+### Notes
+
+- The intermittent single-test failure seen three times during development was
+  not reproduced and remains unidentified. Roughly 120 full-suite runs,
+  including 100 in randomised order, were clean. All three sightings occurred
+  in a shell invocation where a file-modifying tool had just run, which points
+  at the environment rather than a defect, but that is not proven.
+
 ## [0.7.0] - 2026-09-20
 
 ### Added
