@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\Library\IsbnLookupController;
 use App\Http\Controllers\Admin\Library\PublisherController;
 use App\Http\Controllers\Admin\Library\WriterController;
 use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\PreviewController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SearchController;
 use App\Http\Controllers\Admin\SettingsController;
@@ -39,6 +40,8 @@ Route::middleware(['auth', 'can:access-panel'])
         Route::get('/', DashboardController::class)->name('dashboard');
         Route::get('profile', [ProfileController::class, 'index'])->name('profile');
         Route::put('preferences', [ProfileController::class, 'updatePreferences'])->name('preferences.update');
+        Route::post('preview', [PreviewController::class, 'store'])->name('preview.store');
+        Route::delete('preview', [PreviewController::class, 'destroy'])->name('preview.destroy');
         Route::get('search', SearchController::class)->name('search');
         Route::patch('notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.read-all');
         Route::patch('notifications/{notification}', [NotificationController::class, 'read'])->name('notifications.read');

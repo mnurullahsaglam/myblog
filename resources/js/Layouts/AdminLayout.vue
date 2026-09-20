@@ -51,11 +51,28 @@ function isActiveCluster(cluster) {
   })
 }
 
-const userMenuItems = computed(() => [
-  { label: 'Profile', icon: 'pi pi-user', command: () => router.visit(route('admin.profile')) },
-  { separator: true },
-  { label: 'Sign out', icon: 'pi pi-sign-out', command: () => router.post(route('logout')) },
-])
+const preview = computed(() => page.props.preview ?? { active: false, role: null, available: false })
+
+function startPreview() {
+  router.post(route('admin.preview.store'), { role: 'member' }, { preserveScroll: true })
+}
+
+function stopPreview() {
+  router.delete(route('admin.preview.destroy'), { preserveScroll: true })
+}
+
+const userMenuItems = computed(() => {
+  const items = [{ label: 'Profile', icon: 'pi pi-user', command: () => router.visit(route('admin.profile')) }]
+
+  if (preview.value.available) {
+    items.push({ label: 'View as member', icon: 'pi pi-eye', command: startPreview })
+  }
+
+  items.push({ separator: true })
+  items.push({ label: 'Sign out', icon: 'pi pi-sign-out', command: () => router.post(route('logout')) })
+
+  return items
+})
 
 watch(
   () => page.props.flash?.notification,
@@ -79,6 +96,14 @@ watch(
   <Head :title="title" />
 
   <div class="bg-surface-50 text-surface-900 dark:text-surface-100 flex min-h-screen flex-col dark:bg-[#0D0E11]">
+    <div
+      v-if="preview.active"
+      class="flex items-center justify-center gap-3 bg-amber-400 px-4 py-2 text-center text-sm font-medium text-black"
+    >
+      <span>Viewing as {{ preview.role }}. Nothing can be changed from here.</span>
+      <button type="button" class="underline underline-offset-2" @click="stopPreview">Leave preview</button>
+    </div>
+
     <header class="border-surface-200 bg-surface-0 border-b dark:border-[#272B35] dark:bg-[#15171C]">
       <div class="mx-auto flex h-14 max-w-[1280px] items-center gap-6 px-4">
         <Link

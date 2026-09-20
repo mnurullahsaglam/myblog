@@ -39,6 +39,19 @@ const FLAG_GATED = [
 ];
 
 /**
+ * Routes whose guard is the controller rather than an area.
+ *
+ * Starting a preview is refused to a member with a 404 and to the owner with a
+ * 422 when no role is supplied, so the two answers differ on purpose and the
+ * matrix cannot read them. PreviewTest covers them instead.
+ *
+ * @var array<int, string>
+ */
+const CONTROLLER_GUARDED = [
+    'admin.preview.store',
+];
+
+/**
  * Every admin route, crossed with both roles.
  *
  * Built from the router rather than hand-listed, so a route added next year is
@@ -82,7 +95,7 @@ function adminRoutes(): array
             continue;
         }
 
-        if (in_array($name, FLAG_GATED, true)) {
+        if (in_array($name, FLAG_GATED, true) || in_array($name, CONTROLLER_GUARDED, true)) {
             continue;
         }
 

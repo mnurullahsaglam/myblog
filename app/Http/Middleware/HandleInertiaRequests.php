@@ -45,6 +45,12 @@ final class HandleInertiaRequests extends Middleware
 
             'appearance' => fn (): array => Appearance::forUser($user),
 
+            'preview' => fn (): array => [
+                'active' => app(AccessProfile::class)->isPreviewing(),
+                'role' => $request->session()->get('preview_role'),
+                'available' => $user !== null && $user->abilities() !== [] && ! app(AccessProfile::class)->isPreviewing(),
+            ],
+
             'flash' => [
                 'notification' => fn (): mixed => $request->session()->get(NotifiesAdmin::SESSION_KEY),
             ],
