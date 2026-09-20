@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tables\Definitions;
 
+use App\Enums\Ability;
 use App\Enums\Currencies;
 use App\Models\Income;
 use App\Tables\Column;
@@ -34,7 +35,8 @@ final class IncomeTable extends ResourceTable
                 ->color(fn (Income $record): string => $record->incomeCategory?->color ? 'primary' : 'gray')
                 ->default('—'),
             Column::text('source')->default('—'),
-            Column::text('client.title')->label('Client')->default('—')->toggleable(hiddenByDefault: true),
+            Column::text('client.title')->label('Client')->default('—')->toggleable(hiddenByDefault: true)
+                ->hiddenWithout(Ability::SeeClientIdentity),
             Column::text('description')->limit(50)->tooltip(),
             Column::datetime('created_at')->label('Created')->sortable()->toggleable(hiddenByDefault: true),
         ];
@@ -45,7 +47,8 @@ final class IncomeTable extends ResourceTable
         return [
             Filter::relationship('income_category_id', 'incomeCategory', 'name')->label('Category')->multiple(),
             Filter::enum('currency', Currencies::class)->multiple(),
-            Filter::relationship('client_id', 'client', 'title')->label('Client')->multiple(),
+            Filter::relationship('client_id', 'client', 'title')->label('Client')->multiple()
+                ->hiddenWithout(Ability::SeeClientIdentity),
             Filter::dateRange('date'),
             Filter::custom('source_invoice', 'From an invoice', fn (Builder $query): Builder => $query->whereNotNull('invoice_id')),
             Filter::custom('source_debt', 'From debt repayment', fn (Builder $query): Builder => $query->whereNotNull('debt_id')),

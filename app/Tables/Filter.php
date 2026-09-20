@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tables;
 
+use App\Enums\Ability;
+use App\Support\Access\AccessProfile;
 use App\Support\Contracts\HasLabel;
 use BackedEnum;
 use Closure;
@@ -45,6 +47,25 @@ final class Filter
         private readonly ?string $enumClass = null,
         private readonly ?Closure $query = null,
     ) {}
+
+    private ?Ability $requires = null;
+
+    /**
+     * Hidden from anyone without this ability, everywhere rather than only in
+     * the header: the definition is what every other method reads, so removing
+     * it removes the value from the payload too.
+     */
+    public function hiddenWithout(Ability $ability): self
+    {
+        $this->requires = $ability;
+
+        return $this;
+    }
+
+    public function visibleTo(AccessProfile $profile): bool
+    {
+        return ! $this->requires instanceof Ability || $profile->allows($this->requires);
+    }
 
     public static function relationship(string $key, string $relation, string $labelColumn): self
     {

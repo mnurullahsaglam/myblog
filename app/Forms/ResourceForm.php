@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Forms;
 
+use App\Support\Access\AccessProfile;
 use BackedEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -24,12 +25,31 @@ abstract class ResourceForm
     abstract protected function fields(): array;
 
     /**
+     * The fields this request may see.
+     *
+     * Every other method reads this rather than fields(), so a hidden field is
+     * absent from the schema, from the values, from the show page, from the bulk
+     * editable whitelist and from the relations that get synced.
+     *
+     * @return array<int, Field>
+     */
+    final protected function visibleFields(): array
+    {
+        $profile = app(AccessProfile::class);
+
+        return array_values(array_filter(
+            $this->fields(),
+            fn (Field $field): bool => $field->visibleTo($profile),
+        ));
+    }
+
+    /**
      * @return array{fields: array<int, array<string, mixed>>, columns: int}
      */
     public function schema(): array
     {
         return [
-            'fields' => array_map(fn (Field $field): array => $field->schema(), $this->fields()),
+            'fields' => array_map(fn (Field $field): array => $field->schema(), $this->visibleFields()),
             'columns' => $this->columns,
         ];
     }
@@ -43,7 +63,7 @@ abstract class ResourceForm
     {
         $values = [];
 
-        foreach ($this->fields() as $field) {
+        foreach ($this->visibleFields() as $field) {
             if ($field->type === 'placeholder') {
                 continue;
             }
@@ -75,7 +95,7 @@ abstract class ResourceForm
 
         $values = [];
 
-        foreach ($this->fields() as $field) {
+        foreach ($this->visibleFields() as $field) {
             if ($field->type !== 'placeholder') {
                 continue;
             }
@@ -110,7 +130,7 @@ abstract class ResourceForm
 
         $types = ['select', 'multiselect', 'toggle', 'date', 'datetime', 'number', 'money'];
 
-        foreach ($this->fields() as $field) {
+        foreach ($this->visibleFields() as $field) {
             if (! in_array($field->type, $types, true)) {
                 continue;
             }
@@ -135,7 +155,7 @@ abstract class ResourceForm
      */
     public function bulkValueRules(string $key): array
     {
-        foreach ($this->fields() as $field) {
+        foreach ($this->visibleFields() as $field) {
             if ($field->key !== $key) {
                 continue;
             }
@@ -189,7 +209,7 @@ abstract class ResourceForm
     {
         $keys = [];
 
-        foreach ($this->fields() as $field) {
+        foreach ($this->visibleFields() as $field) {
             if ($field->isRelationSync()) {
                 $keys[] = $field->key;
             }

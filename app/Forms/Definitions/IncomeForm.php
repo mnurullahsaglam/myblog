@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Forms\Definitions;
 
+use App\Enums\Ability;
 use App\Enums\Currencies;
 use App\Forms\Field;
 use App\Forms\ResourceForm;
@@ -22,7 +23,8 @@ final class IncomeForm extends ResourceForm
             Field::date('date')->required()->default(now()->toDateString()),
             Field::text('source')->help('Where the money came from.'),
             Field::relationship('income_category_id', 'incomeCategory', 'name')->label('Category')->searchable(),
-            Field::relationship('client_id', 'client', 'title')->label('Client')->searchable(),
+            Field::relationship('client_id', 'client', 'title')->label('Client')->searchable()
+                ->hiddenWithout(Ability::SeeClientIdentity),
             Field::relationship('invoice_id', 'invoice', 'invoice_number')->label('Invoice')->searchable()
                 ->help('Set if this is an invoice payment.'),
             Field::relationship('debt_id', 'debt', 'creditor_name')->label('Debt')->searchable()

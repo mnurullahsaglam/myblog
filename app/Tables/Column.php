@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tables;
 
+use App\Enums\Ability;
 use App\Enums\Currencies;
+use App\Support\Access\AccessProfile;
 use App\Support\Contracts\HasColor;
 use App\Support\Contracts\HasLabel;
 use BackedEnum;
@@ -55,6 +57,25 @@ final class Column
         private readonly ?string $currency = null,
         private readonly ?string $currencyFrom = null,
     ) {}
+
+    private ?Ability $requires = null;
+
+    /**
+     * Hidden from anyone without this ability, everywhere rather than only in
+     * the header: the definition is what every other method reads, so removing
+     * it removes the value from the payload too.
+     */
+    public function hiddenWithout(Ability $ability): self
+    {
+        $this->requires = $ability;
+
+        return $this;
+    }
+
+    public function visibleTo(AccessProfile $profile): bool
+    {
+        return ! $this->requires instanceof Ability || $profile->allows($this->requires);
+    }
 
     public static function text(string $key): self
     {

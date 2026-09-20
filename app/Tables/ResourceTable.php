@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tables;
 
+use App\Support\Access\AccessProfile;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -40,6 +41,38 @@ abstract class ResourceTable
      * @return array<int, Column>
      */
     abstract protected function columns(): array;
+
+    /**
+     * The columns this request may see.
+     *
+     * Every other method reads this rather than columns(), so a hidden column is
+     * absent from the schema, from the serialised cells, from what may be sorted
+     * by and from what may be filtered by, all at once.
+     *
+     * @return array<int, Column>
+     */
+    final protected function visibleColumns(): array
+    {
+        $profile = app(AccessProfile::class);
+
+        return array_values(array_filter(
+            $this->columns(),
+            fn (Column $column): bool => $column->visibleTo($profile),
+        ));
+    }
+
+    /**
+     * @return array<int, Filter>
+     */
+    final protected function visibleFilters(): array
+    {
+        $profile = app(AccessProfile::class);
+
+        return array_values(array_filter(
+            $this->filters(),
+            fn (Filter $filter): bool => $filter->visibleTo($profile),
+        ));
+    }
 
     /**
      * @return array<int, Filter>
@@ -108,8 +141,8 @@ abstract class ResourceTable
     public function schema(): array
     {
         return [
-            'columns' => array_map(fn (Column $column): array => $column->schema(), $this->columns()),
-            'filters' => array_map(fn (Filter $filter): array => $filter->schema(), $this->filters()),
+            'columns' => array_map(fn (Column $column): array => $column->schema(), $this->visibleColumns()),
+            'filters' => array_map(fn (Filter $filter): array => $filter->schema(), $this->visibleFilters()),
             'defaultSort' => $this->defaultSort,
             'searchable' => $this->searchable() !== [],
             'perPage' => $this->perPage,
@@ -135,7 +168,7 @@ abstract class ResourceTable
         $this->applyFilters($query, $request);
         $this->applySort($query, $request);
 
-        $columns = $this->columns();
+        $columns = $this->visibleColumns();
 
         $page = $request->integer('page');
 
@@ -253,7 +286,7 @@ abstract class ResourceTable
         /** @var array<string, mixed> $values */
         $values = $request->array('filter');
 
-        foreach ($this->filters() as $filter) {
+        foreach ($this->visibleFilters() as $filter) {
             $filter->apply($query, $values[$filter->key] ?? $filter->schema()['default']);
         }
     }
@@ -287,7 +320,7 @@ abstract class ResourceTable
             return true;
         }
 
-        return array_any($this->columns(), fn (Column $candidate): bool => $candidate->key === $column && $candidate->isSortable());
+        return array_any($this->visibleColumns(), fn (Column $candidate): bool => $candidate->key === $column && $candidate->isSortable());
     }
 
     private function resolvePerPage(Request $request): int
