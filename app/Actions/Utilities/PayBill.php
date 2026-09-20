@@ -22,9 +22,7 @@ final class PayBill
 {
     public function handle(UtilityBill $bill): Expense
     {
-        if ($bill->isPaid()) {
-            throw new RuntimeException('This bill is already paid.');
-        }
+        throw_if($bill->isPaid(), RuntimeException::class, 'This bill is already paid.');
 
         return DB::transaction(function () use ($bill): Expense {
             $expense = Expense::create([

@@ -70,9 +70,8 @@ it('refuses a bill that is already paid', function (): void {
     $bill = UtilityBill::factory()->paid()->create();
 
     expect(fn () => resolve(PayBill::class)->handle($bill))
-        ->toThrow(RuntimeException::class, 'already paid');
-
-    expect(Expense::count())->toBe(0);
+        ->toThrow(RuntimeException::class, 'already paid')
+        ->and(Expense::count())->toBe(0);
 });
 
 it('does not double count when called twice', function (): void {
@@ -80,9 +79,8 @@ it('does not double count when called twice', function (): void {
 
     resolve(PayBill::class)->handle($bill);
 
-    expect(fn () => resolve(PayBill::class)->handle($bill->refresh()))->toThrow(RuntimeException::class);
-
-    expect(Expense::count())->toBe(1);
+    expect(fn () => resolve(PayBill::class)->handle($bill->refresh()))->toThrow(RuntimeException::class)
+        ->and(Expense::count())->toBe(1);
 });
 
 it('leaves nothing behind when the transaction fails', function (): void {
