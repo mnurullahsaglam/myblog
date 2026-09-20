@@ -5,6 +5,34 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0] - 2026-09-20
+
+### Added
+
+- ISBN lookup on the book form. Paste an ISBN, press Fetch, and the title,
+  publisher, year, place, page count and cover fill in from Open Library.
+  Nothing is written until you save, and fields you have already typed into
+  are left alone.
+- A unique `books.isbn` column, so a lookup can say the book is already in the
+  library instead of letting a duplicate be created.
+- `App\Support\Isbn`, which validates the check digit before any request is
+  made, so a typo fails instantly rather than after a round trip.
+
+### Notes
+
+- Open Library's `/api/books?jscmd=data` endpoint returns 404 and is not used.
+  The edition record supplies the facts and `search.json` supplies only the
+  author name, because its publisher and year are aggregates across every
+  edition of a work.
+- Cover requests send `?default=false`. Without it a missing cover returns
+  HTTP 200 carrying a blank placeholder image.
+- Writer and publisher matching lowercases both sides rather than relying on
+  the database collation: MySQL compares case insensitively by default and
+  SQLite does not, and the suite runs on SQLite.
+- ISBN-13 uses a mod-10 checksum, which cannot detect a transposition of two
+  digits differing by 5. `IsbnTest` pins that limitation rather than implying
+  the validation is stronger than the format allows.
+
 ## [0.6.1] - 2026-09-20
 
 ### Fixed

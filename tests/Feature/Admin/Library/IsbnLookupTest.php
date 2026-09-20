@@ -69,7 +69,7 @@ it('refuses a relation type outside writer and publisher', function (string $typ
     $this->postJson(route('admin.books.isbn-relation'), ['type' => $type, 'name' => 'Anything'])
         ->assertStatus(422)
         ->assertJsonValidationErrors('type');
-})->with(['book', 'user', 'App\Models\User', 'category']);
+})->with(['book', 'user', User::class, 'category']);
 
 it('requires a name for the relation', function (): void {
     $this->postJson(route('admin.books.isbn-relation'), ['type' => 'writer', 'name' => ''])
