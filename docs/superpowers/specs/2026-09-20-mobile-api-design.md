@@ -40,34 +40,30 @@ where none of them currently apply.
 
 ---
 
-## Part 1 — The access profile learns about tokens
+## Part 1 — The access profile already answers for tokens
 
-**This comes first because nothing else works without it.**
+**This section originally claimed the opposite, and was wrong.**
 
-`AccessServiceProvider` resolves the user with
-`$app->make('auth')->guard()->user()` — the *default* guard, which is `web`. A
-Sanctum request authenticates on the `sanctum` guard, so that call returns null,
-the profile is empty, and every area 404s, every ability denies, every
-`hiddenWithout()` field hides and every record becomes uneditable.
+The draft reasoned that `AccessServiceProvider` resolves the user with
+`$app->make('auth')->guard()->user()` — the *default* guard, `web` — so a Sanctum
+request would resolve nobody and the whole API would 404.
 
-It fails closed, which is the right direction and worth keeping. But the
-resolution has to become guard-aware:
+That is not what happens. Laravel's `Authenticate` middleware calls
+`$this->auth->shouldUse($guard)` once it has authenticated, which makes
+`sanctum` the default guard for the remainder of the request. `guard()->user()`
+therefore returns the token's user, and areas, abilities and flags all resolve
+exactly as they do for a session.
 
-```php
-$user = $request->user() ?? $app->make('auth')->guard()->user();
-```
+Verified before any change was made: a member authenticating with a token
+resolves Budget, Utilities and Library and no abilities, identically to the same
+member on a session.
 
-`Request::user()` consults the resolver the authenticating middleware installed,
-so it answers correctly for both session and token requests. The default-guard
-fallback stays because `actingAs()` in a test sets the guard without setting a
-request resolver, and that is how most of this application's 1300 tests
-authenticate.
-
-A test asserts the profile resolves identically for the same user under both
-session and token authentication. That single assertion is what stops the two
-halves of the application drifting apart.
-
----
+**No code changes.** What this part contributes is a test, not a fix:
+`GuardParityTest` asserts the same user resolves an identical profile under both
+guards. The mechanism is a framework detail that could change under us, and the
+consequence if it did would be silent: the API would either 404 everything or,
+worse, resolve the wrong person. That assertion is cheap and the failure it
+guards against is not.
 
 ## Part 2 — Authentication
 
@@ -258,5 +254,5 @@ what a method returns.
 | The API and the panel drift apart | The same middleware, the same FormRequests, the same filters |
 | A stolen password becomes a permanent token | 2FA is enforced at issue; tokens are revocable per device from the panel |
 | A queued write posts twice | Idempotency keys, scoped per user, remembered for 24 hours |
-| Token auth silently bypasses the access model | It fails closed today; Part 1 makes it correct, and a test pins both guards to one answer |
+| Token auth silently bypasses the access model | It already resolves correctly through `shouldUse()`; a test pins both guards to one answer in case that changes |
 | Sanctum abilities become a second permission model | Deliberately unused; role decides |

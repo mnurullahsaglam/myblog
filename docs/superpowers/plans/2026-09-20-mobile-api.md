@@ -72,11 +72,16 @@
 **Interfaces:**
 - Produces: an `AccessProfile` that resolves correctly under session *and* token authentication; `User` with `HasApiTokens`.
 
-**Why first.** `AccessServiceProvider` reads `$app->make('auth')->guard()->user()` — the
-default guard, which is `web`. A Sanctum request authenticates on the `sanctum`
-guard, so that returns null, the profile is empty, and every area 404s, every
-ability denies and every field hides. It fails closed, which is the right
-direction, but it means no API route can work until this is fixed.
+**Corrected during execution.** This task was written believing
+`AccessServiceProvider` would resolve nobody for a token request, because it
+reads the *default* guard and that is `web`. Laravel's `Authenticate` middleware
+calls `shouldUse($guard)` once it authenticates, which makes `sanctum` the
+default for the rest of the request, so the profile already resolves correctly.
+
+The test below passed before any change was made. **Step 6 is therefore not
+performed** — there is nothing to fix. The task still earns its place: the
+parity test is what notices if that framework behaviour ever changes, and the
+failure it guards against would otherwise be silent.
 
 - [ ] **Step 1: Add Sanctum**
 
@@ -205,13 +210,20 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function (): void {
 });
 ```
 
-- [ ] **Step 5: Run it and watch it fail**
+- [ ] **Step 5: Run it**
 
 Run: `php artisan test --filter=GuardParityTest`
-Expected: the token cases FAIL with empty areas and abilities, because the
-profile resolved from the `web` guard and found nobody.
+Expected: **PASS**, contrary to the original plan. If it fails, the framework
+behaviour described above has changed and Step 6 becomes necessary after all.
 
-- [ ] **Step 6: Make the resolution guard-aware**
+- [ ] **Step 6: ~~Make the resolution guard-aware~~ — not needed**
+
+Skipped. See the correction above: `shouldUse()` already makes this work, and
+the tests pass without it. Left here rather than deleted so the reasoning is
+visible to anyone reading the plan against the commits.
+
+<details>
+<summary>What this step originally said</summary>
 
 In `app/Providers/AccessServiceProvider.php`:
 
@@ -231,10 +243,12 @@ with the reasoning in the class docblock:
  */
 ```
 
+</details>
+
 - [ ] **Step 7: Run the tests**
 
 Run: `php artisan test --filter=GuardParityTest`
-Expected: PASS.
+Expected: PASS, without Step 6.
 
 - [ ] **Step 8: Run everything**
 
