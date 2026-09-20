@@ -111,4 +111,23 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Markdown Mail Settings
+    |--------------------------------------------------------------------------
+    |
+    | The theme is a Blade view rather than a plain stylesheet, so it receives
+    | the message's view data and can paint the recipient's own colour scheme
+    | and accent. See resources/views/vendor/mail/html/themes/myblog.blade.php.
+    |
+    */
+
+    'markdown' => [
+        'theme' => 'myblog',
+
+        'paths' => [
+            resource_path('views/vendor/mail'),
+        ],
+    ],
+
 ];

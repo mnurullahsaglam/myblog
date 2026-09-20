@@ -8,8 +8,13 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
+use App\Models\User;
+use App\Support\Theme\Palette;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -24,6 +29,37 @@ final class FortifyServiceProvider extends ServiceProvider
      * Register any application services.
      */
     public function register(): void {}
+
+    /**
+     * Fortify leans on Illuminate's stock reset notification, which renders the
+     * framework's own markdown. Replacing the message keeps every email this
+     * application sends on one design, and lets the reset carry the recipient's
+     * own scheme and accent rather than a fixed one.
+     */
+    private function sendPasswordResetsThroughOurOwnTemplate(): void
+    {
+        ResetPassword::toMailUsing(function (mixed $notifiable, string $token): MailMessage {
+            $email = $notifiable instanceof CanResetPassword ? $notifiable->getEmailForPasswordReset() : '';
+
+            $name = config('app.name');
+
+            return (new MailMessage)
+                ->subject('Reset your '.(is_string($name) ? $name : 'panel').' password')
+                ->markdown('mail.reset-password', [
+                    'url' => url(route('password.reset', ['token' => $token, 'email' => $email], false)),
+                    'expiresInMinutes' => $this->passwordResetExpiryInMinutes(),
+                    'palette' => Palette::forUser($notifiable instanceof User ? $notifiable : null),
+                ]);
+        });
+    }
+
+    private function passwordResetExpiryInMinutes(): int
+    {
+        $broker = config('auth.defaults.passwords');
+        $expiry = config('auth.passwords.'.(is_string($broker) ? $broker : 'users').'.expire');
+
+        return is_numeric($expiry) ? (int) $expiry : 60;
+    }
 
     /**
      * Bootstrap any application services.
@@ -52,6 +88,8 @@ final class FortifyServiceProvider extends ServiceProvider
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
         Fortify::redirectUserForTwoFactorAuthenticationUsing(RedirectIfTwoFactorAuthenticatable::class);
+
+        $this->sendPasswordResetsThroughOurOwnTemplate();
 
         RateLimiter::for('login', function (Request $request): Limit {
             $throttleKey = Str::transliterate(

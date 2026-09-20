@@ -1,4 +1,4 @@
-<x-mail::message>
+<x-mail::message :palette="$palette">
 # You have been invited
 
 You have been invited to {{ config('app.name') }}@if ($invitedByName !== config('app.name')) by {{ $invitedByName }}@endif.
