@@ -1,6 +1,8 @@
 @import 'tailwindcss';
 @import 'tailwindcss-primeui';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @source '../js/**/*.vue';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -26,7 +28,11 @@
 
 @layer base {
   html {
-    color-scheme: light dark;
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
   }
 
   .font-mono {

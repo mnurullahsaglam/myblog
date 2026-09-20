@@ -113,3 +113,30 @@ it('leaves system scheme for the client script to resolve', function (): void {
         ->assertSee('data-color-scheme="system"', escape: false)
         ->assertSee('prefers-color-scheme: dark', escape: false);
 });
+
+it('puts the dark class on the document for a dark preference and not for a light one', function (): void {
+    Setting::set('appearance', 'color_scheme', 'dark');
+
+    $this->actingAs($this->admin)
+        ->get(route('admin.dashboard'))
+        ->assertSee('class="dark"', escape: false);
+
+    Setting::set('appearance', 'color_scheme', 'light');
+
+    $this->actingAs($this->admin)
+        ->get(route('admin.dashboard'))
+        ->assertDontSee('class="dark"', escape: false);
+});
+
+it('binds the dark variant to that class rather than to the operating system', function (): void {
+    expect(file_get_contents(resource_path('css/app.css')))
+        ->toContain('@custom-variant dark (&:where(.dark, .dark *));');
+});
+
+it('hands native controls the same scheme as the rest of the panel', function (): void {
+    $stylesheet = file_get_contents(resource_path('css/app.css'));
+
+    expect($stylesheet)->toContain('color-scheme: light;')
+        ->and($stylesheet)->toContain('html.dark')
+        ->and($stylesheet)->not->toContain('color-scheme: light dark;');
+});
