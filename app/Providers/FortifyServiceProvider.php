@@ -105,6 +105,14 @@ final class FortifyServiceProvider extends ServiceProvider
 
         RateLimiter::for('invite', fn (Request $request): Limit => Limit::perMinute(6)->by($request->ip() ?? 'unknown'));
 
+        RateLimiter::for('isbn', function (Request $request): Limit {
+            $identifier = $request->user()?->getAuthIdentifier();
+
+            return Limit::perMinute(20)->by(
+                'isbn|'.(is_scalar($identifier) ? (string) $identifier : ($request->ip() ?? 'unknown'))
+            );
+        });
+
         RateLimiter::for('two-factor', function (Request $request): Limit {
             $loginId = $request->session()->get('login.id');
 

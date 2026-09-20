@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\V1\Budget\ExpenseController;
 use App\Http\Controllers\Api\V1\Budget\IncomeController;
 use App\Http\Controllers\Api\V1\General\CategoryController;
 use App\Http\Controllers\Api\V1\Library\BookController;
+use App\Http\Controllers\Api\V1\Library\IsbnLookupController;
 use App\Http\Controllers\Api\V1\Library\PublisherController;
 use App\Http\Controllers\Api\V1\Library\WriterController;
 use App\Http\Controllers\Api\V1\MeController;
@@ -44,6 +45,9 @@ Route::middleware('auth:sanctum')->prefix('v1')->name('api.v1.')->group(function
     });
 
     Route::middleware('area:'.Area::Library->value)->group(function (): void {
+        Route::post('books/isbn', IsbnLookupController::class)
+            ->middleware('throttle:isbn')
+            ->name('books.isbn');
         Route::get('books/schema', [BookController::class, 'schema'])->name('books.schema');
         Route::apiResource('books', BookController::class);
         Route::get('writers/schema', [WriterController::class, 'schema'])->name('writers.schema');
