@@ -8,9 +8,21 @@ use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 
 abstract class ApiResource extends JsonResource
 {
+    /**
+     * Attributes holding a path on the public disk rather than a value.
+     *
+     * @return array<int, string>
+     */
+    protected function fileAttributes(): array
+    {
+        return [];
+    }
+
     /**
      * @return array<string, mixed>
      */
@@ -39,6 +51,14 @@ abstract class ApiResource extends JsonResource
             $attributes[$key] = $dateOnly
                 ? Date::instance($raw)->toDateString()
                 : Date::instance($raw)->toIso8601String();
+        }
+
+        foreach ($this->fileAttributes() as $key) {
+            $path = $attributes[$key] ?? null;
+
+            if (is_string($path) && $path !== '') {
+                $attributes[$key] = URL::to(Storage::disk('public')->url($path));
+            }
         }
 
         return $attributes;

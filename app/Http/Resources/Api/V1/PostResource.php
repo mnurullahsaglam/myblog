@@ -21,4 +21,13 @@ final class PostResource extends ApiResource
     {
         return $this->normalisedAttributes();
     }
+
+    /**
+     * @return array<int, string>
+     */
+    #[Override]
+    protected function fileAttributes(): array
+    {
+        return ['image'];
+    }
 }

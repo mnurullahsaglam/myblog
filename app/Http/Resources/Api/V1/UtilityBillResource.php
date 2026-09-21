@@ -21,4 +21,13 @@ final class UtilityBillResource extends ApiResource
     {
         return $this->normalisedAttributes();
     }
+
+    /**
+     * @return array<int, string>
+     */
+    #[Override]
+    protected function fileAttributes(): array
+    {
+        return ['document_path'];
+    }
 }

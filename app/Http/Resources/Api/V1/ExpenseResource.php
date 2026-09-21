@@ -21,4 +21,13 @@ final class ExpenseResource extends ApiResource
     {
         return $this->normalisedAttributes();
     }
+
+    /**
+     * @return array<int, string>
+     */
+    #[Override]
+    protected function fileAttributes(): array
+    {
+        return ['receipt_path'];
+    }
 }

@@ -42,4 +42,12 @@ final class UtilityBillController extends ApiResourceController
     {
         return UtilityBillResource::class;
     }
+
+    /**
+     * @return array<string, string>
+     */
+    protected function uploads(): array
+    {
+        return ['document_path' => 'utility-bills'];
+    }
 }

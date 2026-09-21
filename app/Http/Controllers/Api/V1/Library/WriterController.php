@@ -42,4 +42,12 @@ final class WriterController extends ApiResourceController
     {
         return WriterResource::class;
     }
+
+    /**
+     * @return array<string, string>
+     */
+    protected function uploads(): array
+    {
+        return ['image' => 'writers'];
+    }
 }

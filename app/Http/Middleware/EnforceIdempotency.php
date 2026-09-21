@@ -7,6 +7,7 @@ namespace App\Http\Middleware;
 use App\Models\IdempotencyKey;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 
 final class EnforceIdempotency
@@ -17,6 +18,27 @@ final class EnforceIdempotency
      * @var array<int, string>
      */
     private const array SAFE = ['GET', 'HEAD', 'OPTIONS'];
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function fingerprint(Request $request): array
+    {
+        $files = $request->allFiles();
+        $input = [];
+
+        foreach ($request->except(array_keys($files)) as $key => $value) {
+            $input[(string) $key] = $value;
+        }
+
+        foreach ($files as $field => $file) {
+            $input[(string) $field] = $file instanceof UploadedFile
+                ? ['name' => $file->getClientOriginalName(), 'size' => $file->getSize()]
+                : null;
+        }
+
+        return $input;
+    }
 
     /**
      * @param  Closure(Request): Response  $next
@@ -31,7 +53,7 @@ final class EnforceIdempotency
         }
 
         $endpoint = $request->method().' '.$request->path();
-        $hash = hash('sha256', $endpoint.'|'.json_encode($request->all()));
+        $hash = hash('sha256', $endpoint.'|'.json_encode($this->fingerprint($request)));
 
         $existing = IdempotencyKey::query()
             ->where('user_id', $user->getAuthIdentifier())

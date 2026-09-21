@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 
 abstract class ApiResourceController extends Controller
@@ -27,6 +28,14 @@ abstract class ApiResourceController extends Controller
      * @return class-string<Model>
      */
     abstract protected function modelClass(): string;
+
+    /**
+     * @return array<string, string>
+     */
+    protected function uploads(): array
+    {
+        return [];
+    }
 
     abstract protected function resourceName(): string;
 
@@ -141,6 +150,20 @@ abstract class ApiResourceController extends Controller
 
         /** @var array<string, mixed> $data */
         $data = $request->validated();
+
+        foreach ($this->uploads() as $field => $directory) {
+            if (! $request->hasFile($field)) {
+                unset($data[$field]);
+
+                continue;
+            }
+
+            $file = $request->file($field);
+
+            $data[$field] = $file instanceof UploadedFile
+                ? $file->store($directory, 'public')
+                : null;
+        }
 
         return $data;
     }

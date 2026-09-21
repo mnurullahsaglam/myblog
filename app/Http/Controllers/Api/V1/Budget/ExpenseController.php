@@ -42,4 +42,12 @@ final class ExpenseController extends ApiResourceController
     {
         return ExpenseResource::class;
     }
+
+    /**
+     * @return array<string, string>
+     */
+    protected function uploads(): array
+    {
+        return ['receipt_path' => 'receipts'];
+    }
 }

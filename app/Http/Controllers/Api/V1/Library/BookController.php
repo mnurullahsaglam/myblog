@@ -42,4 +42,12 @@ final class BookController extends ApiResourceController
     {
         return BookResource::class;
     }
+
+    /**
+     * @return array<string, string>
+     */
+    protected function uploads(): array
+    {
+        return ['image' => 'books'];
+    }
 }

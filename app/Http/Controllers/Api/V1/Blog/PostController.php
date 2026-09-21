@@ -42,4 +42,12 @@ final class PostController extends ApiResourceController
     {
         return PostResource::class;
     }
+
+    /**
+     * @return array<string, string>
+     */
+    protected function uploads(): array
+    {
+        return ['image' => 'posts'];
+    }
 }
