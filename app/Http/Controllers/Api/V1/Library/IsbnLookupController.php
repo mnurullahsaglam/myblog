@@ -31,10 +31,12 @@ final class IsbnLookupController extends Controller
         $resolved = $resolveIsbn->handle($isbn);
         $cover = $resolved['image'];
 
-        $resolved['image'] = is_string($cover)
-            ? URL::to(Storage::disk('public')->url($cover))
-            : null;
-
-        return response()->json(['data' => $resolved]);
+        return response()->json(['data' => [
+            'duplicate' => $resolved['duplicate'],
+            'values' => (object) $resolved['values'],
+            'writer' => $resolved['writer'],
+            'publisher' => $resolved['publisher'],
+            'image' => is_string($cover) ? URL::to(Storage::disk('public')->url($cover)) : null,
+        ]]);
     }
 }

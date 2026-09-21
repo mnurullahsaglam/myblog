@@ -209,3 +209,23 @@ it('throttles the lookup, because every miss calls out to Open Library', functio
 
     isbnLookup($this->owner, '9789753638029')->assertStatus(429);
 });
+
+it('sends values as a JSON object even when it holds nothing', function (): void {
+    Http::fake(['openlibrary.org/*' => Http::response([], 404)]);
+
+    $body = isbnLookup($this->owner, '9789753638029')->assertOk()->getContent();
+
+    expect($body)->toContain('"values":{}')
+        ->and($body)->not->toContain('"values":[]');
+});
+
+it('sends values as a JSON object for a book already on the shelf', function (): void {
+    fakeIsbnEdition();
+
+    Book::factory()->create(['isbn' => '9789753638029', 'name' => 'Kürk Mantolu Madonna']);
+
+    $body = isbnLookup($this->owner, '9789753638029')->assertOk()->getContent();
+
+    expect($body)->toContain('"values":{}')
+        ->and($body)->not->toContain('"values":[]');
+});
