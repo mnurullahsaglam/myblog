@@ -37,6 +37,26 @@ abstract class ApiResourceController extends Controller
         return [];
     }
 
+    /**
+     * Take the rows of a repeater out of the payload before it is written.
+     *
+     * A repeater's key is a field on the form and not a column on the table, so
+     * leaving it in place makes Eloquent insert it. Models are unguarded here,
+     * which means nothing refuses it and the insert fails on the value instead.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<int, array<string, mixed>>
+     */
+    protected function pullChildren(array &$data): array
+    {
+        return [];
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $children
+     */
+    protected function writeChildren(Model $record, array $children): void {}
+
     abstract protected function resourceName(): string;
 
     /**
@@ -76,12 +96,16 @@ abstract class ApiResourceController extends Controller
 
     public function store(): JsonResponse
     {
-        ['attributes' => $attributes, 'relations' => $relations] = $this->form()->partition($this->validated());
+        $data = $this->validated();
+        $children = $this->pullChildren($data);
+
+        ['attributes' => $attributes, 'relations' => $relations] = $this->form()->partition($data);
 
         $model = $this->modelClass();
         $record = $model::query()->create($attributes);
 
         $this->syncRelations($record, $relations);
+        $this->writeChildren($record, $children);
 
         $resource = $this->resourceClass();
 
@@ -94,11 +118,15 @@ abstract class ApiResourceController extends Controller
 
         abort_unless($this->isRecordEditable($record), 404);
 
-        ['attributes' => $attributes, 'relations' => $relations] = $this->form()->partition($this->validated());
+        $data = $this->validated();
+        $children = $this->pullChildren($data);
+
+        ['attributes' => $attributes, 'relations' => $relations] = $this->form()->partition($data);
 
         $record->update($attributes);
 
         $this->syncRelations($record, $relations);
+        $this->writeChildren($record, $children);
 
         $resource = $this->resourceClass();
 
