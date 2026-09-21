@@ -17,7 +17,8 @@ final class MakeAdmin extends Command
     protected $signature = 'make:admin
                             {--name= : The display name for the account}
                             {--email= : The address the account signs in with}
-                            {--password= : Skips the prompt, at the cost of leaving the password in your shell history}';
+                            {--password= : Skips the prompt, at the cost of leaving the password in your shell history}
+                            {--force : Promote an existing account without asking first}';
 
     #[Override]
     protected $description = 'Create an administrator, or promote an existing account to one';
@@ -67,7 +68,7 @@ final class MakeAdmin extends Command
 
     private function promote(User $user, string $name, string $password): int
     {
-        $confirmed = $this->confirm(
+        $confirmed = $this->option('force') === true || $this->confirm(
             $user->email.' already exists. Reset its password and make it an administrator?',
             default: false,
         );

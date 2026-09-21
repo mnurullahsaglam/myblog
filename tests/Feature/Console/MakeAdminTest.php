@@ -88,3 +88,19 @@ it('refuses an address that is not an email', function (): void {
 
     expect(User::query()->count())->toBe(0);
 });
+
+it('skips the confirmation when forced', function (): void {
+    $member = User::factory()->member()->create(['email' => 'member@example.test']);
+
+    $this->artisan('make:admin', [
+        '--name' => 'Renamed',
+        '--email' => 'member@example.test',
+        '--password' => 'correct-horse-battery',
+        '--force' => true,
+    ])->assertSuccessful();
+
+    $member->refresh();
+
+    expect($member->role)->toBe(UserRole::Admin)
+        ->and(Hash::check('correct-horse-battery', $member->password))->toBeTrue();
+});
