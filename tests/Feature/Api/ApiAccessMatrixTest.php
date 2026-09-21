@@ -58,6 +58,7 @@ function apiAreaOf(string $routeName): ?string
         'api.v1.repositories.' => 'work',
         'api.v1.invoices.' => 'work',
         'api.v1.waka-time-summaries.' => 'work',
+        'api.v1.waka-time.' => 'work',
         'api.v1.incomes.' => 'budget',
         'api.v1.expenses.' => 'budget',
         'api.v1.debts.' => 'budget',

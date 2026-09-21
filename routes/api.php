@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\V1\TokenController;
 use App\Http\Controllers\Api\V1\Utilities\UtilityAccountController;
 use App\Http\Controllers\Api\V1\Utilities\UtilityBillController;
 use App\Http\Controllers\Api\V1\Work\ClientController;
+use App\Http\Controllers\Api\V1\Work\CodingDashboardController;
 use App\Http\Controllers\Api\V1\Work\InvoiceController;
 use App\Http\Controllers\Api\V1\Work\ProjectController;
 use App\Http\Controllers\Api\V1\Work\RepositoryController;
@@ -72,6 +73,7 @@ Route::middleware('auth:sanctum')->prefix('v1')->name('api.v1.')->group(function
         Route::apiResource('repositories', RepositoryController::class);
         Route::get('invoices/schema', [InvoiceController::class, 'schema'])->name('invoices.schema');
         Route::apiResource('invoices', InvoiceController::class);
+        Route::get('waka-time/dashboard', CodingDashboardController::class)->name('waka-time.dashboard');
         Route::get('waka-time-summaries/schema', [WakaTimeSummaryController::class, 'schema'])->name('waka-time-summaries.schema');
         Route::get('waka-time-summaries', [WakaTimeSummaryController::class, 'index'])->name('waka-time-summaries.index');
         Route::get('waka-time-summaries/{wakaTimeSummary}', [WakaTimeSummaryController::class, 'show'])->name('waka-time-summaries.show');

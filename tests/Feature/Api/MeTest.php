@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Enums\Ability;
+use App\Models\Setting;
 use App\Models\User;
 
 beforeEach(function (): void {
@@ -44,4 +45,34 @@ it('never reports a password or a token', function (): void {
 
     expect($body)->not->toContain('password')
         ->and($body)->not->toContain('two_factor');
+});
+
+it('tells the phone which accent to draw', function (): void {
+    $user = User::factory()->admin()->create(['preferences' => ['accent' => 'emerald']]);
+
+    expect(apiAs($user)->get(route('api.v1.me'))->json('data.accent'))->toBe('emerald');
+});
+
+/**
+ * One person's accent is one fact. The panel, the email templates and now the
+ * phone all read it through Appearance::forUser rather than each deciding.
+ */
+it('falls back to the household accent, then to khaki', function (): void {
+    Setting::set('appearance', 'accent', 'sky');
+
+    $user = User::factory()->admin()->create(['preferences' => []]);
+
+    expect(apiAs($user)->get(route('api.v1.me'))->json('data.accent'))->toBe('sky');
+
+    Setting::set('appearance', 'accent', 'chartreuse');
+
+    expect(apiAs($user)->get(route('api.v1.me'))->json('data.accent'))->toBe('khaki');
+});
+
+/**
+ * The phone follows the phone. Sending a scheme it ignores would say otherwise.
+ */
+it('says nothing about light or dark', function (): void {
+    expect(apiAs($this->owner)->get(route('api.v1.me'))->json('data'))
+        ->not->toHaveKey('colorScheme');
 });

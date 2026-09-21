@@ -8,6 +8,7 @@ use App\Enums\Ability;
 use App\Enums\Area;
 use App\Http\Controllers\Controller;
 use App\Support\Access\AccessProfile;
+use App\Support\Theme\Appearance;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -26,6 +27,7 @@ final class MeController extends Controller
                 'id' => $user->getAuthIdentifier(),
                 'name' => $user->name,
                 'email' => $user->email,
+                'accent' => Appearance::forUser($user)['accent'],
                 'areas' => array_map(fn (Area $area): string => $area->value, $profile->areas()),
                 'abilities' => array_map(
                     fn (Ability $ability): string => $ability->value,
