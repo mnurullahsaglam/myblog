@@ -16,6 +16,7 @@
     "laravel/pennant": "^1.26",
     "laravel/sanctum": "^4.3",
     "laravel/tinker": "^3.0",
+    "plesk/ext-laravel-integration": "*",
     "resend/resend-php": "^1.15",
     "spatie/laravel-sluggable": "^4.0",
     "symfony/css-selector": "^8.0",
